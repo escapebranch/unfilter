@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 Color getStackColor(String stack, bool isDark) {
   switch (stack.toLowerCase()) {
     case 'flutter':
+    case 'flutter (hybrid)':
+    case 'flutter (webview wrapper)':
       return isDark ? const Color(0xFF5CACEE) : const Color(0xFF1E88E5);
     case 'react native':
       return isDark ? const Color(0xFF61DAFB) : const Color(0xFF00ACC1);
@@ -40,6 +42,8 @@ String getStackIconPath(String stack) {
   final stackLower = stack.toLowerCase();
   switch (stackLower) {
     case 'flutter':
+    case 'flutter (hybrid)':
+    case 'flutter (webview wrapper)':
       return 'assets/vectors/icon_flutter.svg';
     case 'react native':
       return 'assets/vectors/icon_reactnative.svg';

@@ -53,6 +53,8 @@ final filteredAppsProvider = Provider<List<DeviceApp>>((ref) {
         if (techStack != null && techStack != 'All') {
           if (techStack == 'Android') {
             matchesStack = ['Java', 'Kotlin', 'Android'].contains(app.stack);
+          } else if (techStack == 'Flutter') {
+            matchesStack = app.stack.startsWith('Flutter');
           } else {
             matchesStack = app.stack.toLowerCase() == techStack.toLowerCase();
           }

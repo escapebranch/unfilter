@@ -20,6 +20,18 @@ class FrameworkInfoData {
           'Flutter is Google\'s UI toolkit for building beautiful, natively compiled applications for mobile, web, and desktop from a single codebase. Known for its fast performance, expressive UIs, and hot reload feature.',
       docsUrl: 'https://flutter.dev',
     ),
+    'Flutter (Hybrid)': FrameworkInfo(
+      name: 'Flutter (Hybrid)',
+      description:
+          'This Flutter application incorporates bundled web assets (HTML, JS, CSS) alongside its native Flutter UI. It likely uses platforms like flutter_inappwebview or webview_flutter to deliver a hybrid experience.',
+      docsUrl: 'https://flutter.dev',
+    ),
+    'Flutter (WebView wrapper)': FrameworkInfo(
+      name: 'Flutter (WebView wrapper)',
+      description:
+          'This app uses Flutter as a container to wrap a web-based experience. While the core shell is Flutter, it heavily relies on WebView to render significant portions of the application or external web content.',
+      docsUrl: 'https://flutter.dev',
+    ),
     'React Native': FrameworkInfo(
       name: 'React Native',
       description:

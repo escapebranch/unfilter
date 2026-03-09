@@ -83,8 +83,9 @@ class AppCard extends StatelessWidget {
                         Text(
                           app.packageName,
                           style: theme.textTheme.bodySmall?.copyWith(
-                            color: theme.textTheme.bodySmall?.color
-                                ?.withValues(alpha: 0.7),
+                            color: theme.textTheme.bodySmall?.color?.withValues(
+                              alpha: 0.7,
+                            ),
                           ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -120,7 +121,9 @@ class AppCard extends StatelessWidget {
                                   const SizedBox(width: 6),
                                   Flexible(
                                     child: Text(
-                                      app.stack,
+                                      app.stack.startsWith('Flutter')
+                                          ? 'Flutter'
+                                          : app.stack,
                                       style: TextStyle(
                                         color: stackColor,
                                         fontSize: 11,
@@ -138,8 +141,8 @@ class AppCard extends StatelessWidget {
                               Icon(
                                 Icons.access_time_filled,
                                 size: 14,
-                                color: theme.colorScheme.primary.withValues(alpha: 
-                                  0.5,
+                                color: theme.colorScheme.primary.withValues(
+                                  alpha: 0.5,
                                 ),
                               ),
                               const SizedBox(width: 4),
@@ -158,8 +161,8 @@ class AppCard extends StatelessWidget {
                                 color: theme.colorScheme.surface,
                                 borderRadius: BorderRadius.circular(10),
                                 border: Border.all(
-                                  color: theme.colorScheme.outline.withValues(alpha: 
-                                    0.1,
+                                  color: theme.colorScheme.outline.withValues(
+                                    alpha: 0.1,
                                   ),
                                 ),
                                 boxShadow: [
@@ -176,8 +179,9 @@ class AppCard extends StatelessWidget {
                                 child: Icon(
                                   Icons.chevron_right_rounded,
                                   size: 20,
-                                  color: theme.colorScheme.onSurface
-                                      .withValues(alpha: 0.6),
+                                  color: theme.colorScheme.onSurface.withValues(
+                                    alpha: 0.6,
+                                  ),
                                 ),
                               ),
                             ),

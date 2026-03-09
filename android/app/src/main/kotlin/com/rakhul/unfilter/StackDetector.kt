@@ -9,6 +9,10 @@ class StackDetector {
 
     private val KOTLIN_METADATA_BYTES = "Lkotlin/Metadata;".toByteArray(Charsets.UTF_8)
     private val COMPOSE_MARKER_BYTES = "Landroidx/compose/ui/".toByteArray(Charsets.UTF_8)
+    private val WEBVIEW_PLUGINS_MARKERS = listOf(
+        "Lio/flutter/plugins/webviewflutter/".toByteArray(Charsets.UTF_8),
+        "Lcom/pichillilorenzo/flutter_inappwebview/".toByteArray(Charsets.UTF_8)
+    )
 
     fun detectStackAndLibs(appInfo: ApplicationInfo, preOpenedZip: ZipFile? = null): Pair<String, List<String>> {
         val apkPath = appInfo.sourceDir
@@ -33,6 +37,7 @@ class StackDetector {
         var hasCordova = false
         var hasNativeScript = false
         var hasCorona = false
+        var hasWebAssets = false
 
 
 
@@ -54,6 +59,7 @@ class StackDetector {
                             if (res.hasCordova) hasCordova = true
                             if (res.hasNativeScript) hasNativeScript = true
                             if (res.hasCorona) hasCorona = true
+                            if (res.hasWebAssets) hasWebAssets = true
 
                             if (res.isKotlin) isKotlin = true
                         }
@@ -71,6 +77,7 @@ class StackDetector {
                                 if (res.hasCordova) hasCordova = true
                                 if (res.hasNativeScript) hasNativeScript = true
                                 if (res.hasCorona) hasCorona = true
+                                if (res.hasWebAssets) hasWebAssets = true
 
                                 if (res.isKotlin) isKotlin = true
                             }
@@ -81,7 +88,27 @@ class StackDetector {
         }
 
         var stack = "Native"
-        if (libs.contains("flutter") || hasFlutterAssets) stack = "Flutter"
+        if (libs.contains("flutter") || hasFlutterAssets) {
+            stack = "Flutter"
+            if (hasWebAssets) {
+                stack = "Flutter (Hybrid)"
+            } else {
+                // Check for high-signal WebView plugins
+                var hasWebViewPlugin = false
+                for (marker in WEBVIEW_PLUGINS_MARKERS) {
+                    if (deepScanForString(apkPaths, marker, preOpenedZip)) {
+                        hasWebViewPlugin = true
+                        break
+                    }
+                }
+                
+                if (hasWebViewPlugin) {
+                    // If it has a dedicated WebView plugin but NO local assets, 
+                    // it's almost certainly a Remote WebView Wrapper.
+                    stack = "Flutter (WebView wrapper)"
+                }
+            }
+        }
         else if (libs.contains("reactnativejni") || libs.contains("hermes") || hasReactNativeBundle) stack = "React Native"
         else if (libs.contains("unity") || hasUnity) stack = "Unity"
         else if (libs.contains("godot_android") || hasGodot) stack = "Godot"
@@ -126,7 +153,8 @@ class StackDetector {
         var hasCapacitor: Boolean = false,
         var hasCordova: Boolean = false,
         var hasNativeScript: Boolean = false,
-        var hasCorona: Boolean = false
+        var hasCorona: Boolean = false,
+        var hasWebAssets: Boolean = false
     )
 
     private fun scanZipEntries(zip: ZipFile, libs: MutableSet<String>, setKotlin: (Boolean) -> Unit): ScanResult {
@@ -168,6 +196,18 @@ class StackDetector {
             else if (name.contains("www/cordova.js")) result.hasCordova = true
             else if (name.contains("libNativeScript.so") || name.contains("app/tns_modules")) result.hasNativeScript = true
              else if (name.contains("libcorona.so") || name.endsWith("main.lua")) result.hasCorona = true
+
+            if (name.endsWith("index.html") && name.contains("assets/")) {
+                result.hasWebAssets = true
+            }
+            // Additional check for JS/CSS in assets but outside standard flutter patterns
+            if ((name.endsWith(".js") || name.endsWith(".css")) && 
+                !name.contains("flutter_assets/") && 
+                name.contains("assets/") && 
+                !name.contains("META-INF/") &&
+                !name.contains("google/")) {
+                result.hasWebAssets = true
+            }
         }
         return result
     }
