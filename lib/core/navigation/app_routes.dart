@@ -9,6 +9,7 @@ import '../../features/task_manager/presentation/pages/task_manager_page.dart';
 import '../../features/home/presentation/pages/info/about_page.dart';
 import '../../features/home/presentation/pages/info/how_it_works_page.dart';
 import '../../features/home/presentation/pages/info/privacy_page.dart';
+import '../../features/home/presentation/pages/info/deeplink_tester_page.dart';
 import '../../features/apps/presentation/pages/app_details_page.dart';
 import '../../features/apps/presentation/pages/app_details_by_package_page.dart';
 import '../../features/apps/domain/entities/device_app.dart';
@@ -28,6 +29,7 @@ abstract class AppRoutes {
   static const String about = '/about';
   static const String howItWorks = '/how-it-works';
   static const String privacy = '/privacy';
+  static const String deeplinkTester = '/deeplink-tester';
   static const String appDetails = '/app-details';
   static const String storageInsights = '/storage-insights';
   static const String updateCheck = '/update-check';
@@ -97,6 +99,13 @@ class AppRouteFactory {
       case AppRoutes.privacy:
         return BubbleRevealPageRoute(
           page: const PrivacyPage(),
+          settings: settings,
+          tapPosition: TapTracker.lastTapPosition,
+        );
+
+      case AppRoutes.deeplinkTester:
+        return BubbleRevealPageRoute(
+          page: const DeeplinkTesterPage(),
           settings: settings,
           tapPosition: TapTracker.lastTapPosition,
         );
@@ -176,6 +185,10 @@ class AppRouteFactory {
 
   static Future<void> toPrivacy(BuildContext context) {
     return PremiumNavigation.push(context, const PrivacyPage());
+  }
+
+  static Future<void> toDeeplinkTester(BuildContext context) {
+    return PremiumNavigation.push(context, const DeeplinkTesterPage());
   }
 
   static Future<void> toStorageInsights(BuildContext context) {

@@ -123,6 +123,15 @@ class AppDrawer extends ConsumerWidget {
             AppRouteFactory.toPrivacy(context);
           },
         ),
+        DrawerNavTile(
+          title: 'Deep Link Tester',
+          subtitle: 'Test and inspect URI behavior',
+          icon: Icons.link_rounded,
+          onTap: () {
+            Navigator.pop(context);
+            AppRouteFactory.toDeeplinkTester(context);
+          },
+        ),
         _buildUpdateCheckTile(context, ref),
         _buildAboutTile(context, ref),
         const SizedBox(height: 8),
