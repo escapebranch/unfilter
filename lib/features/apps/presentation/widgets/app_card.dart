@@ -71,20 +71,44 @@ class AppCard extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          app.appName,
-                          style: theme.textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                app.appName,
+                                style: theme.textTheme.titleMedium?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                            if (app.totalTimeInForeground > 0) ...[
+                              const SizedBox(width: 8),
+                              Icon(
+                                Icons.access_time_filled,
+                                size: 14,
+                                color: theme.colorScheme.primary.withValues(
+                                  alpha: 0.5,
+                                ),
+                              ),
+                              const SizedBox(width: 4),
+                              Text(
+                                _formatDuration(app.totalUsageDuration),
+                                style: theme.textTheme.bodySmall?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ],
                         ),
                         const SizedBox(height: 4),
                         Text(
                           app.packageName,
                           style: theme.textTheme.bodySmall?.copyWith(
-                            color: theme.textTheme.bodySmall?.color
-                                ?.withValues(alpha: 0.7),
+                            color: theme.textTheme.bodySmall?.color?.withValues(
+                              alpha: 0.7,
+                            ),
                           ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -133,23 +157,6 @@ class AppCard extends StatelessWidget {
                                 ],
                               ),
                             ),
-                            if (app.totalTimeInForeground > 0) ...[
-                              const SizedBox(width: 8),
-                              Icon(
-                                Icons.access_time_filled,
-                                size: 14,
-                                color: theme.colorScheme.primary.withValues(alpha: 
-                                  0.5,
-                                ),
-                              ),
-                              const SizedBox(width: 4),
-                              Text(
-                                _formatDuration(app.totalUsageDuration),
-                                style: theme.textTheme.bodySmall?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
                             Spacer(),
                             Container(
                               width: 32,
@@ -158,8 +165,8 @@ class AppCard extends StatelessWidget {
                                 color: theme.colorScheme.surface,
                                 borderRadius: BorderRadius.circular(10),
                                 border: Border.all(
-                                  color: theme.colorScheme.outline.withValues(alpha: 
-                                    0.1,
+                                  color: theme.colorScheme.outline.withValues(
+                                    alpha: 0.1,
                                   ),
                                 ),
                                 boxShadow: [
@@ -176,8 +183,9 @@ class AppCard extends StatelessWidget {
                                 child: Icon(
                                   Icons.chevron_right_rounded,
                                   size: 20,
-                                  color: theme.colorScheme.onSurface
-                                      .withValues(alpha: 0.6),
+                                  color: theme.colorScheme.onSurface.withValues(
+                                    alpha: 0.6,
+                                  ),
                                 ),
                               ),
                             ),
@@ -188,7 +196,7 @@ class AppCard extends StatelessWidget {
                   ),
                 ],
               ),
-              const SizedBox(width: 8),
+              const SizedBox(height: 8),
             ],
           ),
         ),
