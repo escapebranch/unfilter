@@ -153,33 +153,10 @@ class AppDrawer extends ConsumerWidget {
   }
 
   Widget _buildUpdateCheckTile(BuildContext context, WidgetRef ref) {
-    final updateAsync = ref.watch(updateCheckProvider);
-
-    return DrawerNavTile(
-      title: 'Check for Updates',
-      subtitle: updateAsync.when(
-        data: (result) {
-          if (result.status == UpdateStatus.forceUpdate ||
-              result.status == UpdateStatus.softUpdate) {
-            return 'v${result.config?.latestNativeVersion} Available';
-          }
-          return "You're up to date";
-        },
-        loading: () => 'Checking...',
-        error: (_, _) => 'Tap to retry',
-      ),
-      icon: Icons.system_update_rounded,
-      onTap: () {
-        Navigator.pop(context);
-        AppRouteFactory.toUpdateCheck(context);
-      },
-      showBadge: updateAsync.maybeWhen(
-        data: (result) =>
-            result.status == UpdateStatus.forceUpdate ||
-            result.status == UpdateStatus.softUpdate,
-        orElse: () => false,
-      ),
-    );
+    // Temporarily hide update check menu entry (out of scope).
+    // Keeping the original implementation in source history but
+    // returning an empty widget so it's not visible or callable.
+    return const SizedBox.shrink();
   }
 
   Widget _buildAboutTile(BuildContext context, WidgetRef ref) {

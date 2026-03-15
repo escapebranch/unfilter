@@ -44,10 +44,8 @@ class UnfilterApp extends ConsumerWidget {
       themeAnimationDuration: Duration.zero,
       builder: (context, child) => RepaintBoundary(
         key: PremiumNavigation.rootBoundaryKey,
-        child: VersionCheckGate(
-          child: TapPositionProvider(
-            child: ThemeTransitionWrapper(child: child!),
-          ),
+        child: TapPositionProvider(
+          child: ThemeTransitionWrapper(child: child!),
         ),
       ),
       home: const AppEntry(),
