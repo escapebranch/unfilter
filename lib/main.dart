@@ -6,8 +6,6 @@ import 'core/widgets/theme_transition_wrapper.dart';
 import 'core/widgets/app_entry.dart';
 import 'core/navigation/navigation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'features/update/presentation/widgets/update_ui.dart';
-
 import 'package:shared_preferences/shared_preferences.dart';
 import 'core/providers/shared_preferences_provider.dart';
 
