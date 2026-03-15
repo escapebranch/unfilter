@@ -1,4 +1,4 @@
-package com.rakhul.unfilter
+package com.escapebranch.unfilter
 
 import android.content.Intent
 import android.os.Handler
@@ -13,8 +13,8 @@ import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.withLock
 
 class MainActivity : FlutterActivity() {
-    private val CHANNEL = "com.rakhul.unfilter/apps"
-    private val EVENT_CHANNEL = "com.rakhul.unfilter/scan_progress"
+private val CHANNEL = "com.escapebranch.unfilter/apps"
+private val EVENT_CHANNEL = "com.escapebranch.unfilter/scan_progress"
     
     private val executor = Executors.newFixedThreadPool(4) 
     private val handler = Handler(Looper.getMainLooper())

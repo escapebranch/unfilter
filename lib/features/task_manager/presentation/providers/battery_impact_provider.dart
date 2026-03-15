@@ -8,11 +8,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../domain/entities/battery_impact.dart';
 
-const _channel = MethodChannel('com.rakhul.unfilter/apps');
+const _channel = MethodChannel('com.escapebranch.unfilter/apps');
 const _fetchTimeout = Duration(seconds: 15);
-const _refreshInterval = Duration(
-  minutes: 5,
-);
+const _refreshInterval = Duration(minutes: 5);
 
 List<AppBatteryImpact> _parseBatteryImpactData(dynamic result) {
   if (result is List) {

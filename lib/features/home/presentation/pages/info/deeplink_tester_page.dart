@@ -78,11 +78,20 @@ class _DeeplinkTesterPageState extends State<DeeplinkTesterPage> {
     if (scheme.isEmpty) return '';
 
     try {
-      // Use Uri class to construct valid formatting
+      // Use Uri class to construct valid formatting.
+      // If there's no host (opaque URI like mailto:, tel:, sms:),
+      // do not prepend a leading '/'. Otherwise, ensure path starts with '/'.
+      String? uriPath;
+      if (host.isEmpty) {
+        uriPath = path.isEmpty ? null : (path.startsWith('/') ? path.substring(1) : path);
+      } else {
+        uriPath = path.isEmpty ? null : (path.startsWith('/') ? path : '/$path');
+      }
+
       final uri = Uri(
         scheme: scheme,
         host: host.isEmpty ? null : host,
-        path: path.isEmpty ? null : (path.startsWith('/') ? path : '/$path'),
+        path: uriPath,
         query: query.isEmpty ? null : query,
         fragment: fragment.isEmpty ? null : fragment,
       );

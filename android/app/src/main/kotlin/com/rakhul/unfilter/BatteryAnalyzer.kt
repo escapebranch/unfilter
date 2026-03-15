@@ -1,4 +1,4 @@
-package com.rakhul.unfilter
+package com.escapebranch.unfilter
 
 import android.app.usage.UsageEvents
 import android.app.usage.UsageStatsManager

@@ -1,4 +1,4 @@
-package com.rakhul.unfilter
+package com.escapebranch.unfilter
 
 import android.content.Context
 import android.database.Cursor

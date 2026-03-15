@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import '../../domain/entities/storage_breakdown.dart';
 
 class StorageRepository {
-  static const _channel = MethodChannel('com.rakhul.unfilter/apps');
+  static const _channel = MethodChannel('com.escapebranch.unfilter/apps');
 
   Future<StorageBreakdown> getStorageBreakdown(
     String packageName, {
