@@ -10,11 +10,9 @@ import '../../domain/entities/active_app.dart';
 import '../../domain/entities/android_process.dart';
 import '../../domain/entities/system_details.dart';
 
-const _channel = MethodChannel('com.rakhul.unfilter/apps');
+const _channel = MethodChannel('com.escapebranch.unfilter/apps');
 const _fetchTimeout = Duration(seconds: 10);
-const _refreshInterval = Duration(
-  seconds: 3,
-);
+const _refreshInterval = Duration(seconds: 3);
 const _activeAppsRefreshInterval = Duration(seconds: 30);
 
 class ProcessFetchException implements Exception {

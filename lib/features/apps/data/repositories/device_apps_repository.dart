@@ -7,8 +7,10 @@ import '../datasources/apps_local_datasource.dart';
 import '../../domain/entities/app_usage_point.dart';
 
 class DeviceAppsRepository {
-  static const platform = MethodChannel('com.rakhul.unfilter/apps');
-  static const eventChannel = EventChannel('com.rakhul.unfilter/scan_progress');
+  static const platform = MethodChannel('com.escapebranch.unfilter/apps');
+  static const eventChannel = EventChannel(
+    'com.escapebranch.unfilter/scan_progress',
+  );
 
   Completer<List<DeviceApp>>? _scanInProgress;
   bool _lastScanIncludedDetails = false;

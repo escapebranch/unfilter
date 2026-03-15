@@ -7,12 +7,12 @@
 -keep class io.flutter.plugins.**  { *; }
 
 # Keep MainActivity as it's the entry point
--keep class com.rakhul.unfilter.MainActivity { *; }
+-keep class com.escapebranch.unfilter.MainActivity { *; }
 
 # Keep our custom classes to ensure internal logic (MethodChannels helpers) is preserved
 # Since we manually invoke these from MainActivity, R8 should track them, but explicit keep
 # prevents accidental stripping or aggressive obfuscation if future reflection is added.
--keep class com.rakhul.unfilter.** { *; }
+-keep class com.escapebranch.unfilter.** { *; }
 
 # Default Android checks and harmless warnings
 -dontwarn android.support.**

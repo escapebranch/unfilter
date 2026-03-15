@@ -67,7 +67,7 @@ class UpdateService {
   }
 
   static const MethodChannel _channel = MethodChannel(
-    'com.rakhul.unfilter/apps',
+    'com.escapebranch.unfilter/apps',
   );
 
   Future<String?> getDeviceAbi() async {
