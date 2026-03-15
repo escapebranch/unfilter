@@ -55,6 +55,8 @@ class AppDrawer extends ConsumerWidget {
                     const SizedBox(height: 32),
                     _buildInsightsSection(context),
                     const SizedBox(height: 24),
+                    _buildToolsSection(context),
+                    const SizedBox(height: 24),
                     _buildInformationSection(context, ref),
                     const SizedBox(height: 32),
                     const DrawerSectionHeader(title: 'COMMUNITY'),
@@ -108,6 +110,25 @@ class AppDrawer extends ConsumerWidget {
     );
   }
 
+  Widget _buildToolsSection(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const DrawerSectionHeader(title: 'TOOLS'),
+        const SizedBox(height: 12),
+        DrawerNavTile(
+          title: 'Deep Link Tester',
+          subtitle: 'Test and inspect URI behavior',
+          icon: Icons.link_rounded,
+          onTap: () {
+            Navigator.pop(context);
+            AppRouteFactory.toDeeplinkTester(context);
+          },
+        ),
+      ],
+    );
+  }
+
   Widget _buildInformationSection(BuildContext context, WidgetRef ref) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -121,15 +142,6 @@ class AppDrawer extends ConsumerWidget {
           onTap: () {
             Navigator.pop(context);
             AppRouteFactory.toPrivacy(context);
-          },
-        ),
-        DrawerNavTile(
-          title: 'Deep Link Tester',
-          subtitle: 'Test and inspect URI behavior',
-          icon: Icons.link_rounded,
-          onTap: () {
-            Navigator.pop(context);
-            AppRouteFactory.toDeeplinkTester(context);
           },
         ),
         _buildUpdateCheckTile(context, ref),
@@ -211,7 +223,9 @@ class AppDrawer extends ConsumerWidget {
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
           decoration: BoxDecoration(
-            color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+            color: theme.colorScheme.surfaceContainerHighest.withValues(
+              alpha: 0.3,
+            ),
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
               color: theme.colorScheme.outlineVariant.withValues(alpha: 0.3),
@@ -239,7 +253,9 @@ class AppDrawer extends ConsumerWidget {
               Icon(
                 Icons.open_in_new_rounded,
                 size: 14,
-                color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
+                color: theme.colorScheme.onSurfaceVariant.withValues(
+                  alpha: 0.5,
+                ),
               ),
             ],
           ),
