@@ -83,9 +83,13 @@ class _DeeplinkTesterPageState extends State<DeeplinkTesterPage> {
       // do not prepend a leading '/'. Otherwise, ensure path starts with '/'.
       String? uriPath;
       if (host.isEmpty) {
-        uriPath = path.isEmpty ? null : (path.startsWith('/') ? path.substring(1) : path);
+        uriPath = path.isEmpty
+            ? null
+            : (path.startsWith('/') ? path.substring(1) : path);
       } else {
-        uriPath = path.isEmpty ? null : (path.startsWith('/') ? path : '/$path');
+        uriPath = path.isEmpty
+            ? null
+            : (path.startsWith('/') ? path : '/$path');
       }
 
       final uri = Uri(
