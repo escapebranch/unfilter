@@ -1,3 +1,6 @@
+import java.util.Properties
+import java.io.FileInputStream
+
 plugins {
     id("com.android.application")
     id("kotlin-android")
@@ -16,7 +19,7 @@ android {
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_17.toString()
+        jvmTarget = "17"
     }
 
     defaultConfig {
@@ -31,16 +34,33 @@ android {
     }
 
     signingConfigs {
-        // CI/Produiction Signing
+        // CI / Production Signing: prefer env vars, then key.properties, then debug
+        // Load key.properties (optional) from project root
+        val keystorePropertiesFile = rootProject.file("key.properties")
+        val keystoreProperties = Properties()
+        if (keystorePropertiesFile.exists()) {
+            keystoreProperties.load(FileInputStream(keystorePropertiesFile))
+        }
+
         create("release") {
+            // 1 Prefer explicit environment variables (CI)
             val keystorePath = System.getenv("ANDROID_KEYSTORE_PATH")
             if (keystorePath != null && file(keystorePath).exists()) {
                 storeFile = file(keystorePath)
                 storePassword = System.getenv("ANDROID_STORE_PASSWORD")
                 keyAlias = System.getenv("ANDROID_KEY_ALIAS")
                 keyPassword = System.getenv("ANDROID_KEY_PASSWORD")
+            } else if (keystoreProperties.containsKey("storeFile")) {
+                // 2 Then prefer key.properties for local signing
+                val storeFilePath = keystoreProperties.getProperty("storeFile")
+                if (storeFilePath != null && file(storeFilePath).exists()) {
+                    storeFile = file(storeFilePath)
+                }
+                storePassword = keystoreProperties.getProperty("storePassword")
+                keyAlias = keystoreProperties.getProperty("keyAlias")
+                keyPassword = keystoreProperties.getProperty("keyPassword")
             } else {
-                // Fallback to debug for local builds without env vars
+                // 3 Fallback to debug for local builds without env vars or key.properties
                 val debug = getByName("debug")
                 storeFile = debug.storeFile
                 storePassword = debug.storePassword
