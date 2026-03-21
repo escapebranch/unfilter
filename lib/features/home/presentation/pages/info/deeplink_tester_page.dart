@@ -17,7 +17,6 @@ class _DeeplinkTesterPageState extends State<DeeplinkTesterPage> {
   final ScrollController _scrollController = ScrollController();
 
   final TextEditingController _fullUrlController = TextEditingController();
-  final FocusNode _fullUrlFocusNode = FocusNode();
   final TextEditingController _schemeController = TextEditingController();
   final TextEditingController _hostController = TextEditingController();
   final TextEditingController _pathController = TextEditingController();
@@ -33,7 +32,6 @@ class _DeeplinkTesterPageState extends State<DeeplinkTesterPage> {
   void dispose() {
     _scrollController.dispose();
     _fullUrlController.dispose();
-    _fullUrlFocusNode.dispose();
     _schemeController.dispose();
     _hostController.dispose();
     _pathController.dispose();
@@ -274,75 +272,64 @@ class _DeeplinkTesterPageState extends State<DeeplinkTesterPage> {
             ],
           ),
           const SizedBox(height: 16),
-          Focus(
-            onFocusChange: (_) => setState(() {}),
-            child: Container(
-              decoration: BoxDecoration(
-                color: theme.colorScheme.surfaceContainerHighest.withValues(
-                  alpha: 0.25,
+          Container(
+            decoration: BoxDecoration(
+              color: theme.colorScheme.surfaceContainerHighest.withValues(
+                alpha: 0.25,
+              ),
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(
+                color: theme.colorScheme.outlineVariant.withValues(alpha: 0.35),
+              ),
+            ),
+            child: TextField(
+              controller: _fullUrlController,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                fontFamily: 'monospace',
+              ),
+              decoration: InputDecoration(
+                hintText: 'Paste full URL here (e.g., myapp://host/path)',
+                hintStyle: theme.textTheme.bodyMedium?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant.withValues(
+                    alpha: 0.5,
+                  ),
+                  fontFamily: null,
                 ),
-                borderRadius: BorderRadius.circular(14),
-                border: Border.all(
-                  color: _fullUrlFocusNode.hasFocus
-                      ? theme.colorScheme.primary
-                      : theme.colorScheme.outlineVariant.withValues(
-                          alpha: 0.35,
+                prefixIcon: Icon(
+                  Icons.content_paste_rounded,
+                  size: 20,
+                  color: theme.colorScheme.primary.withValues(alpha: 0.7),
+                ),
+                prefixIconConstraints: const BoxConstraints(
+                  minWidth: 48,
+                  minHeight: 48,
+                ),
+                suffixIcon: _fullUrlController.text.isNotEmpty
+                    ? IconButton(
+                        icon: Icon(
+                          Icons.arrow_forward_rounded,
+                          size: 20,
+                          color: theme.colorScheme.primary,
                         ),
+                        onPressed: () {
+                          _parseFullUrl(_fullUrlController.text);
+                          _fullUrlController.clear();
+                        },
+                      )
+                    : null,
+                border: InputBorder.none,
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 14,
                 ),
               ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(14),
-                child: TextField(
-                  focusNode: _fullUrlFocusNode,
-                  controller: _fullUrlController,
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    fontFamily: 'monospace',
-                  ),
-                  decoration: InputDecoration(
-                    hintText: 'Paste full URL here (e.g., myapp://host/path)',
-                    hintStyle: theme.textTheme.bodyMedium?.copyWith(
-                      color: theme.colorScheme.onSurfaceVariant.withValues(
-                        alpha: 0.5,
-                      ),
-                      fontFamily: null,
-                    ),
-                    prefixIcon: Icon(
-                      Icons.content_paste_rounded,
-                      size: 20,
-                      color: theme.colorScheme.primary.withValues(alpha: 0.7),
-                    ),
-                    prefixIconConstraints: const BoxConstraints(
-                      minWidth: 48,
-                      minHeight: 48,
-                    ),
-                    suffixIcon: _fullUrlController.text.isNotEmpty
-                        ? IconButton(
-                            icon: Icon(
-                              Icons.arrow_forward_rounded,
-                              size: 20,
-                              color: theme.colorScheme.primary,
-                            ),
-                            onPressed: () {
-                              _parseFullUrl(_fullUrlController.text);
-                              _fullUrlController.clear();
-                            },
-                          )
-                        : null,
-                    border: InputBorder.none,
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 14,
-                    ),
-                  ),
-                  keyboardType: TextInputType.url,
-                  textInputAction: TextInputAction.done,
-                  onChanged: (value) => setState(() {}),
-                  onSubmitted: (value) {
-                    _parseFullUrl(value);
-                    _fullUrlController.clear();
-                  },
-                ),
-              ),
+              keyboardType: TextInputType.url,
+              textInputAction: TextInputAction.done,
+              onChanged: (value) => setState(() {}),
+              onSubmitted: (value) {
+                _parseFullUrl(value);
+                _fullUrlController.clear();
+              },
             ),
           ),
           const SizedBox(height: 8),
