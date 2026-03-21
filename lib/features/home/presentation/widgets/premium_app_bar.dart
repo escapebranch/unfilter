@@ -55,6 +55,10 @@ class _PremiumAppBarState extends State<PremiumAppBar> {
   void _onScroll() {
     if (!mounted) return;
 
+    if (_isMenuOpen) {
+      _removeOverlay();
+    }
+
     // Immediately hide on scroll - snappy response
     if (_isVisible) {
       setState(() => _isVisible = false);
@@ -115,70 +119,81 @@ class _PremiumAppBarState extends State<PremiumAppBar> {
     bool hasResync,
     bool hasShare,
   ) {
-    return Positioned(
-      width: 160,
-      child: CompositedTransformFollower(
-        link: _layerLink,
-        showWhenUnlinked: false,
-        offset: const Offset(-120, 45),
-        child: Material(
-          color: Colors.transparent,
-          child: Container(
-            decoration: BoxDecoration(
-              color: isDark
-                  ? const Color(0xFF1A1A1A).withValues(alpha: 0.92)
-                  : const Color(0xFFF0F0F0).withValues(alpha: 0.92),
-              borderRadius: BorderRadius.circular(18),
-              border: Border.all(
-                color: theme.colorScheme.onSurface.withValues(alpha: 0.1),
-                width: 1,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.2),
-                  blurRadius: 20,
-                  offset: const Offset(0, 10),
-                ),
-              ],
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(18),
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    if (hasResync)
-                      _OverlayMenuItem(
-                        icon: Icons.sync,
-                        label: 'Resync App',
-                        onTap: () {
-                          widget.onResync?.call();
-                          _removeOverlay();
-                        },
-                      ),
-                    if (hasResync && hasShare)
-                      Divider(
-                        height: 1,
-                        thickness: 1,
-                        color: theme.colorScheme.onSurface.withValues(alpha: 0.08),
-                      ),
-                    if (hasShare)
-                      _OverlayMenuItem(
-                        icon: Icons.ios_share_rounded,
-                        label: 'Share',
-                        onTap: () {
-                          widget.onShare?.call();
-                          _removeOverlay();
-                        },
-                      ),
+    return Stack(
+      children: [
+        Positioned.fill(
+          child: GestureDetector(
+            behavior: HitTestBehavior.translucent,
+            onTap: _removeOverlay,
+          ),
+        ),
+        Positioned(
+          width: 160,
+          child: CompositedTransformFollower(
+            link: _layerLink,
+            showWhenUnlinked: false,
+            offset: const Offset(-120, 45),
+            child: Material(
+              color: Colors.transparent,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: isDark
+                      ? const Color(0xFF1A1A1A).withValues(alpha: 0.92)
+                      : const Color(0xFFF0F0F0).withValues(alpha: 0.92),
+                  borderRadius: BorderRadius.circular(18),
+                  border: Border.all(
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.1),
+                    width: 1,
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.2),
+                      blurRadius: 20,
+                      offset: const Offset(0, 10),
+                    ),
                   ],
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(18),
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        if (hasResync)
+                          _OverlayMenuItem(
+                            icon: Icons.sync,
+                            label: 'Resync App',
+                            onTap: () {
+                              widget.onResync?.call();
+                              _removeOverlay();
+                            },
+                          ),
+                        if (hasResync && hasShare)
+                          Divider(
+                            height: 1,
+                            thickness: 1,
+                            color:
+                                theme.colorScheme.onSurface.withValues(alpha: 0.08),
+                          ),
+                        if (hasShare)
+                          _OverlayMenuItem(
+                            icon: Icons.ios_share_rounded,
+                            label: 'Share',
+                            onTap: () {
+                              widget.onShare?.call();
+                              _removeOverlay();
+                            },
+                          ),
+                      ],
+                    ),
+                  ),
                 ),
               ),
             ),
           ),
         ),
-      ),
+      ],
     );
   }
 
