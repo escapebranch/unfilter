@@ -83,7 +83,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage>
         curve: Curves.easeOutCubic,
       );
     } else {
-      if (!_isUsageGranted || !_isInstallGranted) {
+      if (!_isUsageGranted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: const Text(
@@ -169,18 +169,19 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage>
                                         .requestUsagePermission();
                                   },
                                 ),
-                                const SizedBox(height: 12),
-                                PermissionCard(
-                                  title: "Package Access",
-                                  description: "Seamless updates & scans.",
-                                  icon: Icons.install_mobile_rounded,
-                                  isGranted: _isInstallGranted,
-                                  onTap: () async {
-                                    await ref
-                                        .read(deviceAppsRepositoryProvider)
-                                        .requestInstallPermission();
-                                  },
-                                ),
+                                // const SizedBox(height: 12),
+                                // PermissionCard(
+                                //   title: "Package Access",
+                                //   description: "Seamless updates & scans.",
+                                //   icon: Icons.install_mobile_rounded,
+                                //   isGranted: _isInstallGranted,
+                                //   onTap: () async {
+                                //     // Requesting install permission is disabled for now.
+                                //     // await ref
+                                //     //     .read(deviceAppsRepositoryProvider)
+                                //     //     .requestInstallPermission();
+                                //   },
+                                // ),
                               ],
                             ),
                           ),

@@ -161,6 +161,7 @@ class _TaskManagerSkeleton extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          const SizedBox(height: 24),
           Container(
             height: 240,
             width: double.infinity,
