@@ -58,28 +58,28 @@ class _HowItWorksPageState extends State<HowItWorksPage> {
                       const SizedBox(height: 30),
                       const _StepCard(
                         step: '01',
-                        title: 'Deep Scan',
+                        title: 'Collect Clues',
                         description:
-                            "We dig through each app's package info and native "
-                            "libraries sitting right on your phone. Nothing leaves "
-                            "your device.",
+                            "We look at each app's package info and native "
+                            "libraries already sitting on your phone. No uploads, "
+                            "no account, no drama.",
                         icon: Icons.radar_rounded,
                       ),
                       const _StepCard(
                         step: '02',
-                        title: 'Signature Matching',
+                        title: 'Match Signals',
                         description:
-                            'We run those files against a local database of 50+ '
-                            'frameworks—Flutter, React Native, Unity, you name '
-                            'it—to find matches.',
+                            'We compare those clues against local framework '
+                            'fingerprints to spot Flutter, React Native, Unity, '
+                            'and the rest of the usual suspects.',
                         icon: Icons.fingerprint_rounded,
                       ),
                       const _StepCard(
                         step: '03',
-                        title: 'Zero Cloud',
+                        title: 'Stay Local',
                         description:
-                            'Start to finish, every scan happens locally. Your app '
-                            "data stays on your phone—we literally can't see it.",
+                            'Every scan happens on-device. The fun stays private '
+                            'and your app data never leaves your phone.',
                         icon: Icons.cloud_off_rounded,
                         isLast: true,
                       ),
@@ -102,7 +102,7 @@ class _HowItWorksPageState extends State<HowItWorksPage> {
 
   Widget _buildHeader(ThemeData theme) {
     return Text(
-      'Under\nthe Hood',
+      'App\nClues',
       style: theme.textTheme.headlineMedium?.copyWith(
         fontWeight: FontWeight.w800,
         height: 1.1,
@@ -113,8 +113,8 @@ class _HowItWorksPageState extends State<HowItWorksPage> {
 
   Widget _buildIntroText(ThemeData theme) {
     return Text(
-      'No decompiling. No uploads. Just smart static analysis that reads '
-      "what's already there and tells you exactly what an app is built with.",
+      'No decompiling. No uploads. Just smart local analysis that reads '
+      "what's already there and tells you what an app is made of.",
       style: theme.textTheme.bodyLarge?.copyWith(
         color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
         height: 1.5,

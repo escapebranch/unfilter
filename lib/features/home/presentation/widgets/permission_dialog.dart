@@ -141,8 +141,9 @@ class _PermissionDialogState extends State<PermissionDialog>
 
   Widget _buildDescription(ThemeData theme) {
     return Text(
-      'UnFilter needs secure access to your usage stats to detect app '
-      'technologies and provide analytics.\n\nYour data never leaves your device.',
+      'UnFilter needs secure access to your usage stats so it can help you '
+      'spot what apps are made of and power the analytics view.\n\n'
+      'Your data never leaves your device.',
       style: theme.textTheme.bodyMedium?.copyWith(
         color: theme.colorScheme.onSurfaceVariant,
         height: 1.5,

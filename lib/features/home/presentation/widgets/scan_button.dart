@@ -171,7 +171,7 @@ class _ScanOptionsDialog extends StatelessWidget {
                 const SizedBox(height: 24),
                 _ScanOptionTile(
                   title: 'Full System Scan',
-                  description: 'Deep analysis & stack detection',
+                  description: 'Deep analysis & app fingerprinting',
                   icon: Icons.travel_explore_rounded,
                   color: isDark
                       ? const Color(0xFF64B5F6)
@@ -221,7 +221,7 @@ class _ScanOptionsDialog extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         Text(
-          'Choose how you want to update your app database.',
+          'Choose how you want to refresh your app intel.',
           textAlign: TextAlign.center,
           style: theme.textTheme.bodyMedium?.copyWith(
             color: theme.colorScheme.onSurfaceVariant,
@@ -349,7 +349,9 @@ class _RevalidateLoadingDialog extends StatelessWidget {
                 height: 24,
                 child: CircularProgressIndicator(
                   strokeWidth: 2.5,
-                  backgroundColor: theme.colorScheme.primary.withValues(alpha: 0.1),
+                  backgroundColor: theme.colorScheme.primary.withValues(
+                    alpha: 0.1,
+                  ),
                   valueColor: AlwaysStoppedAnimation<Color>(
                     theme.colorScheme.primary,
                   ),

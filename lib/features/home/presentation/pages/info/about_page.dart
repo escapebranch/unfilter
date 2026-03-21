@@ -81,9 +81,9 @@ class _AboutPageState extends ConsumerState<AboutPage> {
 
   Widget _buildDescription(ThemeData theme) {
     return Text(
-      'Ever wondered what your favorite apps are actually built with? '
-      'UnFilter cracks them open so you can see the frameworks, engines, '
-      'and tech stacks under the hood.',
+      'Built for developers, tinkerers, and anyone who likes knowing what '
+      'the apps they use are made of. UnFilter turns installed apps into a '
+      'fun little dossier of frameworks, libraries, and device clues.',
       style: theme.textTheme.bodyLarge?.copyWith(
         color: theme.colorScheme.onSurface.withValues(alpha: 0.8),
         height: 1.6,
@@ -255,7 +255,9 @@ class _HowItWorksCard extends StatelessWidget {
                 Expanded(child: _buildContent(theme)),
                 Icon(
                   Icons.arrow_forward_rounded,
-                  color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
+                  color: theme.colorScheme.onSurfaceVariant.withValues(
+                    alpha: 0.5,
+                  ),
                   size: 20,
                 ),
               ],
@@ -294,7 +296,7 @@ class _HowItWorksCard extends StatelessWidget {
         ),
         const SizedBox(height: 4),
         Text(
-          'See how the magic actually works',
+          'See how the app turns clues into useful dev insight',
           style: theme.textTheme.bodySmall?.copyWith(
             color: theme.colorScheme.onSurfaceVariant,
           ),

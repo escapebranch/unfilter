@@ -19,17 +19,19 @@
 
 </div>
 
-Unfilter uncovers the technology stack behind the apps on your phone.
+Unfilter is a playful dev tool for peeking into the apps on your phone.
 
-It scans your installed applications and detects if they are built with native tools or cross-platform frameworks like Flutter, React Native, Kotlin Multiplatform, Unity, and more.
+It helps you learn what apps are made of by spotting frameworks, native clues, shared libraries, and other fingerprints left behind by the build.
 
-## Capabilities
+## What It Does
 
-- **Stack Detection**: Identifies the development framework (Flutter, React Native, etc).
+- **App Fingerprinting**: Surfaces the frameworks, engines, and native signals hiding inside installed apps.
+- **Dev-Friendly Insight**: Gives you a quick read on what an app is made of, without making it feel like a lab report.
 - **Task Manager**: Real-time view of active processes and memory usage.
 - **Storage & Usage**: Detailed analysis of app size, cache, and daily screen time.
 - **System Info**: Overview of device sensor data, battery health, and hardware specs.
-- **Clean UI**: Minimalist design with full dark and light mode support.
+- **Private by Design**: Everything runs locally on your device.
+- **Fun to Explore**: A polished UI that makes poking around feel lightweight instead of dry.
 
 ## Gallery
 
@@ -50,7 +52,7 @@ It scans your installed applications and detects if they are built with native t
   </tr>
   <tr>
     <td align="center" valign="top" width="33.33%">
-      <b>Filters</b><br><sub>Sort by stack</sub><br>
+      <b>Filters</b><br><sub>Sort by app fingerprint</sub><br>
       <img src="docs/assets/filter-stack-bottomsheet-white.jpg" width="40%" align="middle" alt="Light" />&nbsp;│&nbsp;<img src="docs/assets/filter-stack-bottomsheet-black.jpg" width="40%" align="middle" alt="Dark" />
     </td>
     <td align="center" valign="top" width="33.33%">
@@ -92,7 +94,7 @@ To set up the project locally and build from source:
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/r4khul/findstack.git
+   git clone https://github.com/r4khul/unfilter.git
    ```
 2. **Install dependencies**:
    ```bash
@@ -104,6 +106,11 @@ To set up the project locally and build from source:
    ```
 
 For more detailed instructions, check the [Contributing Guide](CONTRIBUTING.md).
+
+## Privacy
+
+- [Privacy Policy](https://unfilter-web.vercel.app/privacy)
+- [Terms and Conditions](https://unfilter-web.vercel.app/terms)
 
 ## Project Documents
 

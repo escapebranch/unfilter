@@ -206,8 +206,8 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage>
                               decoration: BoxDecoration(
                                 color: _currentPage == index
                                     ? theme.colorScheme.primary
-                                    : theme.colorScheme.onSurface.withValues(alpha: 
-                                        0.2,
+                                    : theme.colorScheme.onSurface.withValues(
+                                        alpha: 0.2,
                                       ),
                                 shape: BoxShape.circle,
                               ),
@@ -239,29 +239,74 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage>
                           ),
                         ),
                         const SizedBox(height: 20),
-                        TextButton(
-                          onPressed: () => _launchURL(
-                            'https://gist.github.com/r4khul/cd8f4828a89dcbd1bae661eed659e1c3',
-                          ),
-                          style: TextButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 16,
-                              vertical: 8,
-                            ),
-                            minimumSize: Size.zero,
-                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                          ),
-                          child: Text(
-                            "Privacy Policy",
-                            style: theme.textTheme.labelMedium?.copyWith(
-                              color: theme.colorScheme.onSurface.withValues(alpha: 
-                                0.5,
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            TextButton(
+                              onPressed: () => _launchURL(
+                                'https://unfilter-web.vercel.app/privacy',
                               ),
-                              decoration: TextDecoration.underline,
-                              decorationColor: theme.colorScheme.onSurface
-                                  .withValues(alpha: 0.3),
+                              style: TextButton.styleFrom(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                  vertical: 8,
+                                ),
+                                minimumSize: Size.zero,
+                                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                              ),
+                              child: Text(
+                                'Privacy Policy',
+                                style: theme.textTheme.labelMedium?.copyWith(
+                                  color: theme.colorScheme.onSurface.withValues(
+                                    alpha: 0.5,
+                                  ),
+                                  decoration: TextDecoration.underline,
+                                  decorationColor: theme.colorScheme.onSurface
+                                      .withValues(alpha: 0.3),
+                                ),
+                              ),
                             ),
-                          ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 4,
+                              ),
+                              child: Text(
+                                '·',
+                                style: theme.textTheme.labelMedium?.copyWith(
+                                  color: theme.colorScheme.onSurface.withValues(
+                                    alpha: 0.35,
+                                  ),
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                            TextButton(
+                              onPressed: () => _launchURL(
+                                'https://unfilter-web.vercel.app/terms',
+                              ),
+                              style: TextButton.styleFrom(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                  vertical: 8,
+                                ),
+                                minimumSize: Size.zero,
+                                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                              ),
+                              child: Text(
+                                'Terms & Conditions',
+                                style: theme.textTheme.labelMedium?.copyWith(
+                                  color: theme.colorScheme.onSurface.withValues(
+                                    alpha: 0.5,
+                                  ),
+                                  decoration: TextDecoration.underline,
+                                  decorationColor: theme.colorScheme.onSurface
+                                      .withValues(alpha: 0.3),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                         const SizedBox(height: 8),
                       ],
@@ -292,7 +337,9 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage>
     return SizedBox(
       width: 100,
       height: 100,
-      child: Center(child: Icon(icon, size: 64, color: color.withValues(alpha: 0.9))),
+      child: Center(
+        child: Icon(icon, size: 64, color: color.withValues(alpha: 0.9)),
+      ),
     );
   }
 

@@ -52,10 +52,14 @@ class _PrivacyPageState extends State<PrivacyPage> {
                       _buildIntroText(theme),
                       const SizedBox(height: 24),
                       const ExternalLinkTile(
-                        label: 'Detailed Policy',
-                        value: 'Check Here',
-                        url:
-                            'https://gist.github.com/r4khul/cd8f4828a89dcbd1bae661eed659e1c3',
+                        label: 'Privacy Policy',
+                        value: 'Open',
+                        url: 'https://unfilter-web.vercel.app/privacy',
+                      ),
+                      const ExternalLinkTile(
+                        label: 'Terms & Conditions',
+                        value: 'Open',
+                        url: 'https://unfilter-web.vercel.app/terms',
                       ),
                       const SizedBox(height: 48),
                       const _PolicySection(
@@ -71,7 +75,7 @@ class _PrivacyPageState extends State<PrivacyPage> {
                         content:
                             'We ask for exactly two things: permission to see what '
                             'apps you have installed, and storage access for '
-                            "digging into native libraries. That's it.",
+                            "looking through native libraries. That's it.",
                         icon: Icons.verified_user_rounded,
                       ),
                       const _PolicySection(
@@ -85,8 +89,8 @@ class _PrivacyPageState extends State<PrivacyPage> {
                       const _PolicySection(
                         title: 'Limited Networking',
                         content:
-                            'The only time we hit the internet? To check for '
-                            "updates and grab the GitHub star count. That's it—"
+                            'The only time we hit the internet is to check for '
+                            "updates and grab the GitHub star count. That's it - "
                             'nothing about you leaves this app.',
                         icon: Icons.wifi_rounded,
                       ),
@@ -122,8 +126,8 @@ class _PrivacyPageState extends State<PrivacyPage> {
 
   Widget _buildIntroText(ThemeData theme) {
     return Text(
-      "Privacy isn't a feature we tacked on—it's baked into how this app "
-      'works. UnFilter runs offline because the only way to do this right.',
+      'Privacy is part of the product, not an afterthought. UnFilter runs '
+      'offline so it can stay useful without ever becoming nosy about you.',
       style: theme.textTheme.bodyLarge?.copyWith(
         color: theme.colorScheme.onSurface.withValues(alpha: 0.8),
         height: 1.6,

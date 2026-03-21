@@ -456,7 +456,7 @@ class _AnalyticsPageState extends ConsumerState<AnalyticsPage>
           files: [XFile(file.path)],
           text: '''Unfilter exposed my screen addiction 💀
 
-See what apps are really built with. Real usage stats. No sugar coating.
+See what apps are really made of. Real usage stats. No sugar coating.
 
 100% open source. No trackers. No BS.
 
