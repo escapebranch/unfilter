@@ -6,7 +6,6 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
-import 'package:open_filex/open_filex.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pub_semver/pub_semver.dart';
@@ -192,11 +191,9 @@ class UpdateService {
       throw Exception('APK file not found');
     }
 
-    debugPrint('Installing APK: ${file.path}');
-    final result = await OpenFilex.open(file.path);
-    if (result.type != ResultType.done) {
-      debugPrint('OpenFilex result: ${result.type} - ${result.message}');
-    }
+    // open_filex removed temporarily to avoid Play Store media permissions.
+    // TODO: Re-enable installation flow (using SAF/PackageInstaller) when ready.
+    throw UnsupportedError('APK install flow is disabled while open_filex is removed.');
   }
 
   bool _isLowerThan(Version current, Version target) {
