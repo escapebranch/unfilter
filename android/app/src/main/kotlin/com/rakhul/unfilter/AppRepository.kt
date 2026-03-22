@@ -14,8 +14,11 @@ import java.io.File
 import java.util.concurrent.Executors
 import java.util.concurrent.Future
 import java.util.concurrent.Callable
+import java.util.concurrent.TimeUnit
+import java.util.concurrent.TimeoutException
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.stream.Collectors
+import android.util.Log
 
 class AppRepository(private val context: Context) {
 
@@ -25,7 +28,13 @@ class AppRepository(private val context: Context) {
 
     private val deepAnalyzer = DeepAnalyzer(context)
     
-    private val scanExecutor = Executors.newFixedThreadPool(4)
+    private val scanExecutor = Executors.newFixedThreadPool(6)
+    
+    companion object {
+        private const val TAG = "AppRepository"
+        private const val BATCH_SIZE = 25
+        private const val FUTURE_TIMEOUT_SECONDS = 30L
+    }
 
     fun getInstalledApps(
         includeDetails: Boolean,
@@ -51,48 +60,18 @@ class AppRepository(private val context: Context) {
 
         val total = packages.size
         val usageMap = if (includeDetails) usageManager.getUsageMap() else emptyMap()
+        
+        Log.d(TAG, "Starting scan: total=$total packages, includeDetails=$includeDetails")
 
         if (includeDetails) {
-             val counter = AtomicInteger(0)
-             val futures = mutableListOf<Future<Map<String, Any?>?>>()
-             
-             for (pkg in packages) {
-                 if (checkScanCancelled()) break
-                 
-                 futures.add(scanExecutor.submit(Callable {
-                     if (checkScanCancelled()) return@Callable null
-                     
-                     val index = counter.incrementAndGet()
-                     val packageName = pkg.packageName
-                     
-                     if (index % 10 == 0) {
-                         onProgress(index, total, packageName)
-                     }
-
-                     val appInfo = pkg.applicationInfo ?: return@Callable null
-                     val isSystem = (appInfo.flags and ApplicationInfo.FLAG_SYSTEM) != 0
-                     val isUpdatedSystem = (appInfo.flags and ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0
-                     val shouldInclude = launchablePackages.contains(packageName) || (!isSystem || isUpdatedSystem)
-
-                     if (shouldInclude) {
-                         try {
-                             convertPackageToMap(pkg, true, usageMap)
-                         } catch (e: Exception) { null }
-                     } else {
-                         null
-                     }
-                 }))
-             }
-
-             val results = mutableListOf<Map<String, Any?>>()
-             for (future in futures) {
-                 try {
-                     val result = future.get()
-                     if (result != null) results.add(result)
-                 } catch (e: Exception) {
-                 }
-             }
-             return results
+             return processBatchedWithDetails(
+                 packages,
+                 launchablePackages,
+                 usageMap,
+                 total,
+                 onProgress,
+                 checkScanCancelled
+             )
         } else {
             val appList = mutableListOf<Map<String, Any?>>()
             for ((index, pkg) in packages.withIndex()) {
@@ -100,7 +79,7 @@ class AppRepository(private val context: Context) {
 
                 val packageName = pkg.packageName
 
-                if (includeDetails && index % 10 == 0) {
+                if (index % 10 == 0) {
                      onProgress(index + 1, total, packageName)
                 }
 
@@ -112,11 +91,94 @@ class AppRepository(private val context: Context) {
                 if (shouldInclude) {
                     try {
                         appList.add(convertPackageToMap(pkg, includeDetails, usageMap))
-                    } catch (e: Exception) { }
+                    } catch (e: Exception) {
+                        Log.w(TAG, "Failed to process package ${pkg.packageName}: ${e.message}")
+                    }
                 }
             }
+            Log.d(TAG, "Scan complete: ${appList.size} apps processed")
             return appList
         }
+    }
+    
+    private fun processBatchedWithDetails(
+        packages: List<PackageInfo>,
+        launchablePackages: Set<String>,
+        usageMap: Map<String, android.app.usage.UsageStats>,
+        total: Int,
+        onProgress: (current: Int, total: Int, currentApp: String) -> Unit,
+        checkScanCancelled: () -> Boolean
+    ): List<Map<String, Any?>> {
+        val results = mutableListOf<Map<String, Any?>>()
+        val counter = AtomicInteger(0)
+        var failedCount = 0
+        var timeoutCount = 0
+        
+        val filteredPackages = packages.filter { pkg ->
+            val appInfo = pkg.applicationInfo
+            if (appInfo == null) return@filter false
+            
+            val isSystem = (appInfo.flags and ApplicationInfo.FLAG_SYSTEM) != 0
+            val isUpdatedSystem = (appInfo.flags and ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0
+            launchablePackages.contains(pkg.packageName) || (!isSystem || isUpdatedSystem)
+        }
+        
+        Log.d(TAG, "Filtered to ${filteredPackages.size} packages for detailed scan")
+        
+        for (batchStart in filteredPackages.indices step BATCH_SIZE) {
+            if (checkScanCancelled()) {
+                Log.d(TAG, "Scan cancelled by user")
+                break
+            }
+            
+            val batchEnd = minOf(batchStart + BATCH_SIZE, filteredPackages.size)
+            val batch = filteredPackages.subList(batchStart, batchEnd)
+            val futures = mutableListOf<Pair<String, Future<Map<String, Any?>?>>>()
+            
+            for (pkg in batch) {
+                if (checkScanCancelled()) break
+                
+                val packageName = pkg.packageName
+                val future = scanExecutor.submit(Callable {
+                    if (checkScanCancelled()) return@Callable null
+                    
+                    try {
+                        convertPackageToMap(pkg, true, usageMap)
+                    } catch (e: Exception) {
+                        Log.w(TAG, "Error processing $packageName: ${e.message}")
+                        null
+                    }
+                })
+                futures.add(packageName to future)
+            }
+            
+            for ((packageName, future) in futures) {
+                try {
+                    val result = future.get(FUTURE_TIMEOUT_SECONDS, TimeUnit.SECONDS)
+                    val index = counter.incrementAndGet()
+                    
+                    if (index % 10 == 0) {
+                        onProgress(index, total, packageName)
+                    }
+                    
+                    if (result != null) {
+                        results.add(result)
+                    } else {
+                        failedCount++
+                    }
+                } catch (e: TimeoutException) {
+                    timeoutCount++
+                    future.cancel(true)
+                    Log.e(TAG, "Timeout processing $packageName after ${FUTURE_TIMEOUT_SECONDS}s")
+                } catch (e: Exception) {
+                    failedCount++
+                    Log.e(TAG, "Exception processing $packageName: ${e.message}", e)
+                }
+            }
+        }
+        
+        Log.d(TAG, "Scan complete: ${results.size} apps, $failedCount failed, $timeoutCount timeouts")
+        return results
     }
 
     fun getAppsDetails(packageNames: List<String>): List<Map<String, Any?>> {
@@ -128,25 +190,34 @@ class AppRepository(private val context: Context) {
                 PackageManager.GET_PROVIDERS or
                 (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) PackageManager.GET_SIGNING_CERTIFICATES else PackageManager.GET_SIGNATURES)
 
-        val futures = mutableListOf<Future<Map<String, Any?>?>>()
+        val futures = mutableListOf<Pair<String, Future<Map<String, Any?>?>>>()
         
         for (name in packageNames) {
-            futures.add(scanExecutor.submit(Callable {
+            val future = scanExecutor.submit(Callable {
                 try {
                     val pkg = packageManager.getPackageInfo(name, flags)
                     if (pkg.applicationInfo != null) {
                         convertPackageToMap(pkg, true, usageMap)
                     } else null
-                } catch (e: Exception) { null }
-            }))
+                } catch (e: Exception) {
+                    Log.w(TAG, "Failed to get details for $name: ${e.message}")
+                    null
+                }
+            })
+            futures.add(name to future)
         }
 
         val results = mutableListOf<Map<String, Any?>>()
-        for (future in futures) {
+        for ((name, future) in futures) {
             try {
-                val result = future.get()
+                val result = future.get(FUTURE_TIMEOUT_SECONDS, TimeUnit.SECONDS)
                 if (result != null) results.add(result)
-            } catch (e: Exception) { }
+            } catch (e: TimeoutException) {
+                future.cancel(true)
+                Log.e(TAG, "Timeout getting details for $name")
+            } catch (e: Exception) {
+                Log.e(TAG, "Error getting details for $name: ${e.message}")
+            }
         }
         return results
     }
@@ -191,7 +262,9 @@ class AppRepository(private val context: Context) {
                 try {
                     val iconDrawable = packageManager.getApplicationIcon(appInfo)
                     iconBytes = drawableToByteArray(iconDrawable)
-                } catch (e: Exception) { }
+                } catch (e: Exception) {
+                    Log.w(TAG, "Failed to load icon for ${pkg.packageName}: ${e.message}")
+                }
                 
                 permissions = pkg.requestedPermissions?.toList() ?: emptyList()
                 services = pkg.services?.map { it.name } ?: emptyList()
@@ -225,6 +298,9 @@ class AppRepository(private val context: Context) {
                 dataSize = stats.dataBytes
                 cacheSize = stats.cacheBytes
                 externalCacheSize = stats.externalCacheBytes
+            } catch (e: SecurityException) {
+                Log.w(TAG, "SecurityException getting storage stats for ${pkg.packageName}")
+                if (appInfo.sourceDir != null) appSize = File(appInfo.sourceDir).length()
             } catch (e: Exception) {
                 if (appInfo.sourceDir != null) appSize = File(appInfo.sourceDir).length()
             }
@@ -285,6 +361,7 @@ class AppRepository(private val context: Context) {
     private fun drawableToByteArray(drawable: Drawable): ByteArray {
         var bitmap: Bitmap? = null
         var scaledBitmap: Bitmap? = null
+        var stream: ByteArrayOutputStream? = null
         try {
             if (drawable is BitmapDrawable) {
                 bitmap = drawable.bitmap
@@ -301,12 +378,24 @@ class AppRepository(private val context: Context) {
 
             scaledBitmap = Bitmap.createScaledBitmap(bitmap, 96, 96, true)
 
-            val stream = ByteArrayOutputStream()
-            scaledBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
-            return stream.toByteArray()
+            stream = ByteArrayOutputStream(4096)
+            scaledBitmap.compress(Bitmap.CompressFormat.PNG, 90, stream)
+            val result = stream.toByteArray()
+            
+            stream.close()
+            stream = null
+            
+            return result
+        } catch (e: OutOfMemoryError) {
+            Log.e(TAG, "OutOfMemoryError creating icon bitmap", e)
+            return ByteArray(0)
         } catch (e: Exception) {
+            Log.w(TAG, "Error converting drawable to byte array: ${e.message}")
             return ByteArray(0)
         } finally {
+            try {
+                stream?.close()
+            } catch (e: Exception) { }
             try {
                 if (scaledBitmap != null && scaledBitmap != bitmap) {
                     scaledBitmap.recycle()
@@ -315,6 +404,7 @@ class AppRepository(private val context: Context) {
                     bitmap.recycle()
                 }
             } catch (e: Exception) {
+                Log.w(TAG, "Error recycling bitmaps: ${e.message}")
             }
         }
     }

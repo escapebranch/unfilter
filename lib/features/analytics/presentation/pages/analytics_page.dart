@@ -10,6 +10,7 @@ import 'package:share_plus/share_plus.dart';
 
 import '../../../apps/domain/entities/device_app.dart';
 import '../../../apps/presentation/providers/apps_provider.dart';
+import '../providers/usage_stats_providers.dart';
 
 import '../../../home/presentation/widgets/premium_app_bar.dart';
 import '../../../../core/widgets/top_shadow_gradient.dart';
@@ -76,6 +77,8 @@ class _AnalyticsPageState extends ConsumerState<AnalyticsPage>
   }
 
   Widget _buildDataState(List<DeviceApp> apps, ThemeData theme) {
+    final persistentStatsAsync = ref.watch(persistentUsageStatsProvider);
+
     var validApps = apps.where((a) => a.totalTimeInForeground > 0).toList();
 
     if (_searchQuery.isNotEmpty) {
@@ -101,7 +104,12 @@ class _AnalyticsPageState extends ConsumerState<AnalyticsPage>
       (a, b) => b.totalTimeInForeground.compareTo(a.totalTimeInForeground),
     );
 
-    return _buildAnalyticsContent(validApps, theme);
+    return persistentStatsAsync.when(
+      data: (persistentStats) =>
+          _buildAnalyticsContent(validApps, theme, persistentStats),
+      loading: () => _buildAnalyticsContent(validApps, theme, null),
+      error: (_, __) => _buildAnalyticsContent(validApps, theme, null),
+    );
   }
 
   Widget _buildEmptyState(bool hasPermission) {
@@ -169,7 +177,11 @@ class _AnalyticsPageState extends ConsumerState<AnalyticsPage>
     );
   }
 
-  Widget _buildAnalyticsContent(List<DeviceApp> validApps, ThemeData theme) {
+  Widget _buildAnalyticsContent(
+    List<DeviceApp> validApps,
+    ThemeData theme,
+    PersistentUsageStats? persistentStats,
+  ) {
     final totalUsage = validApps.fold<int>(
       0,
       (sum, app) => sum + app.totalTimeInForeground,
@@ -196,6 +208,10 @@ class _AnalyticsPageState extends ConsumerState<AnalyticsPage>
               ),
             ),
             const SliverToBoxAdapter(child: SizedBox(height: 10)),
+            if (persistentStats != null)
+              _buildTrackedPeriodSliver(persistentStats, theme),
+            if (persistentStats != null)
+              const SliverToBoxAdapter(child: SizedBox(height: 16)),
             _buildSearchBarSliver(),
             const SliverToBoxAdapter(child: SizedBox(height: 24)),
             _buildRoastSliver(totalUsage),
@@ -229,6 +245,72 @@ class _AnalyticsPageState extends ConsumerState<AnalyticsPage>
             _searchController.clear();
             setState(() => _searchQuery = '');
           },
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTrackedPeriodSliver(
+    PersistentUsageStats persistentStats,
+    ThemeData theme,
+  ) {
+    final aggregationService = ref.read(usageAggregationServiceProvider);
+    final periodText = aggregationService.formatTrackedPeriod(
+      persistentStats.trackedPeriod,
+    );
+
+    return SliverToBoxAdapter(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: theme.colorScheme.surfaceContainerHighest,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: theme.colorScheme.outline.withValues(alpha: 0.2),
+              width: 1,
+            ),
+          ),
+          child: Row(
+            children: [
+              Icon(
+                Icons.timeline_rounded,
+                size: 20,
+                color: theme.colorScheme.primary,
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Tracking for $periodText',
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    if (persistentStats.storedSnapshotCount > 0)
+                      Text(
+                        '${persistentStats.storedSnapshotCount} days stored locally',
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+              if (persistentStats.hasDataGap)
+                Tooltip(
+                  message: 'Some historical data was cleared by your device',
+                  child: Icon(
+                    Icons.info_outline,
+                    size: 18,
+                    color: theme.colorScheme.tertiary,
+                  ),
+                ),
+            ],
+          ),
         ),
       ),
     );

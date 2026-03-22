@@ -8,12 +8,33 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.drawable.BitmapDrawable
 import android.os.Build
+import android.util.Log
 import java.io.ByteArrayOutputStream
+import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 
 class UsageManager(private val context: Context) {
 
     private val packageManager: PackageManager = context.packageManager
+    
+    companion object {
+        private const val TAG = "UsageManager"
+    }
+    
+    data class UsageDataRange(
+        val oldestTimestamp: Long,
+        val newestTimestamp: Long,
+        val availableDays: Int,
+        val hasData: Boolean
+    )
+    
+    data class DailyUsageSnapshot(
+        val date: String,
+        val timestamp: Long,
+        val appUsages: Map<String, Long>
+    )
 
     fun hasPermission(): Boolean {
         val appOps = context.getSystemService(Context.APP_OPS_SERVICE) as AppOpsManager
@@ -26,15 +47,197 @@ class UsageManager(private val context: Context) {
     }
 
     fun getUsageMap(): Map<String, android.app.usage.UsageStats> {
-        if (!hasPermission()) return emptyMap()
+        if (!hasPermission()) {
+            Log.d(TAG, "Usage permission not granted")
+            return emptyMap()
+        }
         
-        val usageStatsManager = context.getSystemService(Context.USAGE_STATS_SERVICE) as UsageStatsManager
-        val calendar = Calendar.getInstance()
-        val endTime = calendar.timeInMillis
-        calendar.add(Calendar.YEAR, -2)
-        val startTime = calendar.timeInMillis
+        return try {
+            val usageStatsManager = context.getSystemService(Context.USAGE_STATS_SERVICE) as? UsageStatsManager
+            if (usageStatsManager == null) {
+                Log.e(TAG, "UsageStatsManager is null")
+                return emptyMap()
+            }
+            
+            val calendar = Calendar.getInstance()
+            val endTime = calendar.timeInMillis
+            calendar.add(Calendar.YEAR, -2)
+            val startTime = calendar.timeInMillis
+            
+            var usageMap = usageStatsManager.queryAndAggregateUsageStats(startTime, endTime)
+            
+            if (usageMap == null || usageMap.isEmpty()) {
+                Log.w(TAG, "queryAndAggregateUsageStats returned null/empty, falling back to queryUsageStats")
+                usageMap = queryUsageStatsFallback(usageStatsManager, startTime, endTime)
+            }
+            
+            Log.d(TAG, "Retrieved usage stats for ${usageMap.size} packages")
+            usageMap ?: emptyMap()
+        } catch (e: SecurityException) {
+            Log.e(TAG, "SecurityException getting usage stats: ${e.message}")
+            emptyMap()
+        } catch (e: Exception) {
+            Log.e(TAG, "Error getting usage stats: ${e.message}", e)
+            emptyMap()
+        }
+    }
+    
+    private fun queryUsageStatsFallback(
+        usageStatsManager: UsageStatsManager,
+        startTime: Long,
+        endTime: Long
+    ): Map<String, android.app.usage.UsageStats> {
+        return try {
+            val usageStatsList = usageStatsManager.queryUsageStats(
+                UsageStatsManager.INTERVAL_BEST,
+                startTime,
+                endTime
+            )
+            
+            if (usageStatsList == null || usageStatsList.isEmpty()) {
+                Log.w(TAG, "Fallback queryUsageStats also returned null/empty")
+                return emptyMap()
+            }
+            
+            val aggregated = mutableMapOf<String, android.app.usage.UsageStats>()
+            for (stats in usageStatsList) {
+                val existing = aggregated[stats.packageName]
+                if (existing == null || stats.lastTimeUsed > existing.lastTimeUsed) {
+                    aggregated[stats.packageName] = stats
+                }
+            }
+            
+            Log.d(TAG, "Fallback aggregated ${aggregated.size} packages from ${usageStatsList.size} stats")
+            aggregated
+        } catch (e: Exception) {
+            Log.e(TAG, "Fallback queryUsageStats failed: ${e.message}")
+            emptyMap()
+        }
+    }
+    
+    fun getAvailableDataRange(): UsageDataRange {
+        if (!hasPermission()) {
+            Log.d(TAG, "No permission for getAvailableDataRange")
+            return UsageDataRange(0, 0, 0, false)
+        }
         
-        return usageStatsManager.queryAndAggregateUsageStats(startTime, endTime)
+        return try {
+            val usageStatsManager = context.getSystemService(Context.USAGE_STATS_SERVICE) as? UsageStatsManager
+            if (usageStatsManager == null) {
+                Log.e(TAG, "UsageStatsManager is null in getAvailableDataRange")
+                return UsageDataRange(0, 0, 0, false)
+            }
+            
+            val now = System.currentTimeMillis()
+            val twoYearsAgo = now - (730L * 24 * 60 * 60 * 1000)
+            
+            var usageMap = usageStatsManager.queryAndAggregateUsageStats(twoYearsAgo, now)
+            
+            if (usageMap == null || usageMap.isEmpty()) {
+                usageMap = queryUsageStatsFallback(usageStatsManager, twoYearsAgo, now)
+            }
+            
+            if (usageMap.isEmpty()) {
+                Log.w(TAG, "No usage data available")
+                return UsageDataRange(0, 0, 0, false)
+            }
+            
+            var oldest = Long.MAX_VALUE
+            var newest = 0L
+            
+            for (stats in usageMap.values) {
+                if (stats.firstTimeStamp > 0 && stats.firstTimeStamp < oldest) {
+                    oldest = stats.firstTimeStamp
+                }
+                if (stats.lastTimeUsed > newest) {
+                    newest = stats.lastTimeUsed
+                }
+            }
+            
+            if (oldest == Long.MAX_VALUE) oldest = 0
+            
+            val days = if (oldest > 0 && newest > oldest) {
+                ((newest - oldest) / (24 * 60 * 60 * 1000)).toInt()
+            } else {
+                0
+            }
+            
+            Log.d(TAG, "Available data range: $days days (${Date(oldest)} to ${Date(newest)})")
+            UsageDataRange(oldest, newest, days, true)
+        } catch (e: Exception) {
+            Log.e(TAG, "Error getting available data range: ${e.message}", e)
+            UsageDataRange(0, 0, 0, false)
+        }
+    }
+    
+    fun getDailyUsageSnapshots(startDate: Long, endDate: Long): List<Map<String, Any>> {
+        if (!hasPermission()) {
+            Log.d(TAG, "No permission for getDailyUsageSnapshots")
+            return emptyList()
+        }
+        
+        return try {
+            val usageStatsManager = context.getSystemService(Context.USAGE_STATS_SERVICE) as? UsageStatsManager
+            if (usageStatsManager == null) {
+                Log.e(TAG, "UsageStatsManager is null in getDailyUsageSnapshots")
+                return emptyList()
+            }
+            
+            val snapshots = mutableListOf<Map<String, Any>>()
+            val calendar = Calendar.getInstance()
+            val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.US)
+            
+            var currentDate = startDate
+            val maxDate = minOf(endDate, System.currentTimeMillis())
+            
+            while (currentDate < maxDate) {
+                calendar.timeInMillis = currentDate
+                calendar.set(Calendar.HOUR_OF_DAY, 0)
+                calendar.set(Calendar.MINUTE, 0)
+                calendar.set(Calendar.SECOND, 0)
+                calendar.set(Calendar.MILLISECOND, 0)
+                val dayStart = calendar.timeInMillis
+                
+                calendar.set(Calendar.HOUR_OF_DAY, 23)
+                calendar.set(Calendar.MINUTE, 59)
+                calendar.set(Calendar.SECOND, 59)
+                calendar.set(Calendar.MILLISECOND, 999)
+                val dayEnd = calendar.timeInMillis
+                
+                val usageStats = usageStatsManager.queryUsageStats(
+                    UsageStatsManager.INTERVAL_DAILY,
+                    dayStart,
+                    dayEnd
+                )
+                
+                if (usageStats != null && usageStats.isNotEmpty()) {
+                    val appUsages = mutableMapOf<String, Long>()
+                    
+                    for (stats in usageStats) {
+                        if (stats.totalTimeInForeground > 0) {
+                            val existing = appUsages[stats.packageName] ?: 0L
+                            appUsages[stats.packageName] = existing + stats.totalTimeInForeground
+                        }
+                    }
+                    
+                    if (appUsages.isNotEmpty()) {
+                        snapshots.add(mapOf(
+                            "date" to dateFormat.format(Date(dayStart)),
+                            "timestamp" to dayStart,
+                            "appUsages" to appUsages
+                        ))
+                    }
+                }
+                
+                currentDate += 24 * 60 * 60 * 1000
+            }
+            
+            Log.d(TAG, "Generated ${snapshots.size} daily snapshots")
+            snapshots
+        } catch (e: Exception) {
+            Log.e(TAG, "Error getting daily usage snapshots: ${e.message}", e)
+            emptyList()
+        }
     }
 
     

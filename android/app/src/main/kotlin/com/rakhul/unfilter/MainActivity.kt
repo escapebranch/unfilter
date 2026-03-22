@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Handler
 import android.os.Looper
 import android.provider.Settings
+import android.util.Log
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.EventChannel
@@ -15,6 +16,10 @@ import kotlin.concurrent.withLock
 class MainActivity : FlutterActivity() {
 private val CHANNEL = "com.escapebranch.unfilter/apps"
 private val EVENT_CHANNEL = "com.escapebranch.unfilter/scan_progress"
+    
+    companion object {
+        private const val TAG = "MainActivity"
+    }
     
     private val executor = Executors.newFixedThreadPool(4) 
     private val handler = Handler(Looper.getMainLooper())
@@ -111,6 +116,7 @@ private val EVENT_CHANNEL = "com.escapebranch.unfilter/scan_progress"
                         }
                         
                         try {
+                            Log.d(TAG, "Starting full app scan with details")
                             handler.post { eventSink?.success(mapOf("status" to "Fetching app list...", "percent" to 0)) }
 
                             val apps = appRepository.getInstalledApps(
@@ -134,11 +140,20 @@ private val EVENT_CHANNEL = "com.escapebranch.unfilter/scan_progress"
                                 scanInProgress = false
                             }
                             
+                            Log.d(TAG, "Scan completed successfully: ${apps.size} apps")
                             handler.post { 
                                 eventSink?.success(mapOf("status" to "Complete", "percent" to 100))
                                 result.success(apps) 
                             }
+                        } catch (e: OutOfMemoryError) {
+                            Log.e(TAG, "OutOfMemoryError during scan", e)
+                            scanLock.withLock {
+                                scanInProgress = false
+                                lastScanResult = null
+                            }
+                            handler.post { result.error("OUT_OF_MEMORY", "Device ran out of memory during scan", null) }
                         } catch (e: Exception) {
+                            Log.e(TAG, "Error during scan: ${e.message}", e)
                             scanLock.withLock {
                                 scanInProgress = false
                                 lastScanResult = null
@@ -302,6 +317,34 @@ private val EVENT_CHANNEL = "com.escapebranch.unfilter/scan_progress"
                 "getDeviceAbi" -> {
                     val abi = android.os.Build.SUPPORTED_ABIS.firstOrNull() ?: "unknown"
                     result.success(abi)
+                }
+                "getAvailableDataRange" -> {
+                    executor.execute {
+                        try {
+                            val dataRange = usageManager.getAvailableDataRange()
+                            val response = mapOf(
+                                "oldestTimestamp" to dataRange.oldestTimestamp,
+                                "newestTimestamp" to dataRange.newestTimestamp,
+                                "availableDays" to dataRange.availableDays,
+                                "hasData" to dataRange.hasData
+                            )
+                            handler.post { result.success(response) }
+                        } catch (e: Exception) {
+                            handler.post { result.error("ERROR", e.message, null) }
+                        }
+                    }
+                }
+                "getDailyUsageSnapshots" -> {
+                    val startDate = call.argument<Long>("startDate") ?: 0L
+                    val endDate = call.argument<Long>("endDate") ?: System.currentTimeMillis()
+                    executor.execute {
+                        try {
+                            val snapshots = usageManager.getDailyUsageSnapshots(startDate, endDate)
+                            handler.post { result.success(snapshots) }
+                        } catch (e: Exception) {
+                            handler.post { result.error("ERROR", e.message, null) }
+                        }
+                    }
                 }
                 else -> result.notImplemented()
             }

@@ -5,6 +5,7 @@ import '../../domain/entities/device_app.dart';
 import '../../../scan/domain/entities/scan_progress.dart';
 import '../datasources/apps_local_datasource.dart';
 import '../../domain/entities/app_usage_point.dart';
+import '../../../analytics/data/datasources/usage_stats_local_datasource.dart';
 
 class DeviceAppsRepository {
   static const platform = MethodChannel('com.escapebranch.unfilter/apps');
@@ -192,4 +193,69 @@ class DeviceAppsRepository {
       // Ignore error during cache clearing
     }
   }
+
+  Future<UsageDataRange> getAvailableDataRange() async {
+    try {
+      final Map<dynamic, dynamic> result = await platform.invokeMethod(
+        'getAvailableDataRange',
+      );
+
+      return UsageDataRange(
+        oldestTimestamp: result['oldestTimestamp'] as int? ?? 0,
+        newestTimestamp: result['newestTimestamp'] as int? ?? 0,
+        availableDays: result['availableDays'] as int? ?? 0,
+        hasData: result['hasData'] as bool? ?? false,
+      );
+    } on PlatformException catch (e) {
+      debugPrint("Failed to get available data range: '${e.message}'");
+      return UsageDataRange(
+        oldestTimestamp: 0,
+        newestTimestamp: 0,
+        availableDays: 0,
+        hasData: false,
+      );
+    }
+  }
+
+  Future<List<DailyUsageSnapshot>> getDailyUsageSnapshots({
+    required int startDate,
+    required int endDate,
+  }) async {
+    try {
+      final List<dynamic> result = await platform.invokeMethod(
+        'getDailyUsageSnapshots',
+        {'startDate': startDate, 'endDate': endDate},
+      );
+
+      return result.map((snapshot) {
+        final map = snapshot as Map<dynamic, dynamic>;
+        final appUsages = map['appUsages'] as Map<dynamic, dynamic>;
+
+        return DailyUsageSnapshot(
+          date: map['date'] as String,
+          timestamp: map['timestamp'] as int,
+          appUsages: appUsages.map(
+            (key, value) => MapEntry(key as String, value as int),
+          ),
+        );
+      }).toList();
+    } on PlatformException catch (e) {
+      debugPrint("Failed to get daily usage snapshots: '${e.message}'");
+      return [];
+    }
+  }
+}
+
+class UsageDataRange {
+  final int oldestTimestamp;
+  final int newestTimestamp;
+  final int availableDays;
+  final bool hasData;
+
+  UsageDataRange({
+    required this.oldestTimestamp,
+    required this.newestTimestamp,
+    required this.availableDays,
+    required this.hasData,
+  });
 }
