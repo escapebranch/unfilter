@@ -56,14 +56,52 @@ class DeviceAppsRepository {
     _lastScanIncludedDetails = includeDetails;
 
     try {
-      final List<Object?> result = await platform.invokeMethod(
+      final dynamic rawResult = await platform.invokeMethod(
         'getInstalledApps',
         {'includeDetails': includeDetails},
       );
-      final apps = result
-          .cast<Map<Object?, Object?>>()
-          .map((e) => DeviceApp.fromMap(Map<String, dynamic>.from(e)))
-          .toList();
+
+      List<DeviceApp> apps;
+
+      // Check if native side is using chunked transfer (to avoid Binder 1MB limit)
+      if (rawResult is Map && rawResult['chunked'] == true) {
+        final int totalApps = rawResult['totalApps'] as int;
+        final int totalChunks = rawResult['totalChunks'] as int;
+        debugPrint(
+          "[DeviceAppsRepo] Chunked transfer: $totalApps apps in $totalChunks chunks",
+        );
+
+        final allMaps = <Map<String, dynamic>>[];
+
+        for (int i = 0; i < totalChunks; i++) {
+          try {
+            final List<Object?> chunk = await platform.invokeMethod(
+              'getAppChunk',
+              {'chunkIndex': i},
+            );
+            allMaps.addAll(
+              chunk.cast<Map<Object?, Object?>>().map(
+                (e) => Map<String, dynamic>.from(e),
+              ),
+            );
+            debugPrint(
+              "[DeviceAppsRepo] Chunk $i/${totalChunks - 1}: ${chunk.length} apps received",
+            );
+          } catch (e) {
+            debugPrint("[DeviceAppsRepo] Chunk $i failed: $e, continuing...");
+            // Continue with remaining chunks even if one fails
+          }
+        }
+
+        apps = allMaps.map((e) => DeviceApp.fromMap(e)).toList();
+      } else {
+        // Legacy non-chunked transfer (small device with few apps, or non-detailed scan)
+        final List<Object?> result = (rawResult as List<Object?>);
+        apps = result
+            .cast<Map<Object?, Object?>>()
+            .map((e) => DeviceApp.fromMap(Map<String, dynamic>.from(e)))
+            .toList();
+      }
 
       if (includeDetails) {
         await _localDataSource.cacheApps(apps);
@@ -83,11 +121,11 @@ class DeviceAppsRepository {
       }
       debugPrint("Failed to get apps: '${e.message}'");
       completer.completeError(e);
-      return [];
+      rethrow;
     } catch (e) {
       debugPrint("Failed to get apps: '$e'");
       completer.completeError(e);
-      return [];
+      rethrow;
     } finally {
       Future.delayed(const Duration(milliseconds: 500), () {
         if (_scanInProgress == completer) {

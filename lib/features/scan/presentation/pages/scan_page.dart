@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/navigation/app_routes.dart';
 import '../../domain/entities/scan_progress.dart';
 import '../widgets/scan_progress_widget.dart';
+import '../widgets/error_report_dialog.dart';
 import '../../../apps/presentation/providers/apps_provider.dart';
 import '../../../home/presentation/widgets/permission_dialog.dart';
 
@@ -161,21 +163,42 @@ class _ScanPageState extends ConsumerState<ScanPage>
             setState(() => _hasStartedScan = false);
             _retryCount = 0;
 
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: const Text(
-                  'Something went wrong during scan. Please try again.',
+            final errorDetails = error is PlatformException
+                ? error.details
+                : null;
+            final errorReport =
+                errorDetails is Map && errorDetails.containsKey('errorReport')
+                ? errorDetails['errorReport'] as String
+                : null;
+            final errorType =
+                errorDetails is Map && errorDetails.containsKey('errorType')
+                ? errorDetails['errorType'] as String
+                : 'UNKNOWN';
+
+            if (errorReport != null && errorReport.isNotEmpty) {
+              showDialog(
+                context: context,
+                barrierDismissible: false,
+                builder: (context) => ErrorReportDialog(
+                  errorReport: errorReport,
+                  errorType: errorType,
                 ),
-                backgroundColor: Theme.of(context).colorScheme.error,
-                behavior: SnackBarBehavior.floating,
-                duration: const Duration(seconds: 5),
-                action: SnackBarAction(
-                  label: 'Retry',
-                  textColor: Colors.white,
-                  onPressed: _startScan,
+              );
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('Scan error: ${error.toString()}'),
+                  backgroundColor: Theme.of(context).colorScheme.error,
+                  behavior: SnackBarBehavior.floating,
+                  duration: const Duration(seconds: 5),
+                  action: SnackBarAction(
+                    label: 'Retry',
+                    textColor: Colors.white,
+                    onPressed: _startScan,
+                  ),
                 ),
-              ),
-            );
+              );
+            }
           }
         });
   }

@@ -17,7 +17,6 @@ import java.util.concurrent.Callable
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
 import java.util.concurrent.atomic.AtomicInteger
-import java.util.stream.Collectors
 import android.util.Log
 
 class AppRepository(private val context: Context) {
@@ -25,15 +24,126 @@ class AppRepository(private val context: Context) {
     private val packageManager: PackageManager = context.packageManager
     private val stackDetector = StackDetector()
     private val usageManager = UsageManager(context)
-
     private val deepAnalyzer = DeepAnalyzer(context)
     
-    private val scanExecutor = Executors.newFixedThreadPool(6)
+    // Thread pool: min 3, max 6 — matches original perf while staying safe 
+    private val threadCount = Runtime.getRuntime().availableProcessors().coerceIn(3, 6)
+    private val scanExecutor = Executors.newFixedThreadPool(threadCount)
     
     companion object {
         private const val TAG = "AppRepository"
-        private const val BATCH_SIZE = 25
-        private const val FUTURE_TIMEOUT_SECONDS = 30L
+        private const val FUTURE_TIMEOUT_SECONDS = 45L  // More generous for slow devices
+        private const val MIN_FREE_MEMORY_MB = 30L      // Lower threshold, rely on GC
+        private const val ICON_SIZE = 48                 // Smaller icons = much less memory
+    }
+    
+    class ScanFailureException(val errorReport: String) : Exception(errorReport)
+    
+    /**
+     * Determines optimal batch size based on device available memory.
+     * Aggressive but safe — minimum 5 (never goes sequential).
+     * Critical (< 80MB free): batch of 5 (still parallel, just smaller)
+     * Low-end (80-200MB free): batch of 8
+     * Normal (200-400MB free): batch of 12
+     * High-end (> 400MB free): batch of 15
+     */
+    private fun getAdaptiveBatchSize(): Int {
+        val runtime = Runtime.getRuntime()
+        val freeMemoryMB = runtime.freeMemory() / 1024 / 1024
+        val maxMemoryMB = runtime.maxMemory() / 1024 / 1024
+        val usedPercent = ((runtime.totalMemory() - runtime.freeMemory()) * 100) / runtime.maxMemory()
+        
+        val batchSize = when {
+            freeMemoryMB < 80 || usedPercent > 85 -> 5    // Critical — small parallel batch
+            freeMemoryMB < 200 || usedPercent > 70 -> 8   // Low-end
+            freeMemoryMB < 400 -> 12                       // Normal
+            else -> 15                                      // High-end
+        }
+        
+        Log.d(TAG, "Adaptive batch: $batchSize (free: ${freeMemoryMB}MB, max: ${maxMemoryMB}MB, used: $usedPercent%)")
+        return batchSize
+    }
+    
+    private fun generateErrorReport(
+        filteredTotal: Int,
+        failedCount: Int,
+        timeoutCount: Int,
+        exceptionCount: Int,
+        initialFreeMemory: Long
+    ): String {
+        val runtime = Runtime.getRuntime()
+        val currentFreeMemory = runtime.freeMemory() / 1024 / 1024
+        val totalMemory = runtime.totalMemory() / 1024 / 1024
+        val maxMemory = runtime.maxMemory() / 1024 / 1024
+        
+        val deviceInfo = StringBuilder()
+        deviceInfo.append("═══════════════════════════════════════\n")
+        deviceInfo.append("SCAN FAILURE ERROR REPORT\n")
+        deviceInfo.append("═══════════════════════════════════════\n\n")
+        
+        deviceInfo.append("📱 DEVICE INFO:\n")
+        deviceInfo.append("  • Manufacturer: ${Build.MANUFACTURER}\n")
+        deviceInfo.append("  • Model: ${Build.MODEL}\n")
+        deviceInfo.append("  • Android: ${Build.VERSION.RELEASE} (API ${Build.VERSION.SDK_INT})\n")
+        deviceInfo.append("  • Build: ${Build.DISPLAY}\n")
+        deviceInfo.append("  • CPU Cores: ${Runtime.getRuntime().availableProcessors()}\n\n")
+        
+        deviceInfo.append("💾 MEMORY STATUS:\n")
+        deviceInfo.append("  • Initial Free: ${initialFreeMemory}MB\n")
+        deviceInfo.append("  • Current Free: ${currentFreeMemory}MB\n")
+        deviceInfo.append("  • Total: ${totalMemory}MB\n")
+        deviceInfo.append("  • Max: ${maxMemory}MB\n")
+        deviceInfo.append("  • Used: ${totalMemory - currentFreeMemory}MB\n\n")
+        
+        deviceInfo.append("📊 SCAN STATISTICS:\n")
+        deviceInfo.append("  • Total Packages: $filteredTotal\n")
+        deviceInfo.append("  • Successful: 0\n")
+        deviceInfo.append("  • Failed (null): $failedCount\n")
+        deviceInfo.append("  • Timeouts: $timeoutCount\n")
+        deviceInfo.append("  • Exceptions: $exceptionCount\n")
+        deviceInfo.append("  • Success Rate: 0%\n\n")
+        
+        deviceInfo.append("⚙️ SCAN CONFIG:\n")
+        deviceInfo.append("  • Thread Pool: $threadCount threads\n")
+        deviceInfo.append("  • Timeout: ${FUTURE_TIMEOUT_SECONDS}s\n")
+        deviceInfo.append("  • Min Free Memory: ${MIN_FREE_MEMORY_MB}MB\n")
+        deviceInfo.append("  • Icon Size: ${ICON_SIZE}px\n\n")
+        
+        deviceInfo.append("❌ FAILURE ANALYSIS:\n")
+        when {
+            currentFreeMemory < 50 -> {
+                deviceInfo.append("  ⚠️ CRITICAL: Very low memory (${currentFreeMemory}MB)\n")
+                deviceInfo.append("  → Device is under extreme memory pressure\n")
+                deviceInfo.append("  → OEM ROM may be killing processes\n")
+            }
+            timeoutCount > filteredTotal / 2 -> {
+                deviceInfo.append("  ⚠️ CRITICAL: High timeout rate ($timeoutCount/$filteredTotal)\n")
+                deviceInfo.append("  → Tasks taking >${FUTURE_TIMEOUT_SECONDS}s to complete\n")
+                deviceInfo.append("  → Device may be extremely slow\n")
+            }
+            exceptionCount > filteredTotal / 2 -> {
+                deviceInfo.append("  ⚠️ CRITICAL: High exception rate ($exceptionCount/$filteredTotal)\n")
+                deviceInfo.append("  → Unexpected errors during processing\n")
+                deviceInfo.append("  → Check logcat for details\n")
+            }
+            else -> {
+                deviceInfo.append("  ⚠️ All tasks failed - unknown cause\n")
+                deviceInfo.append("  → Check logcat for detailed errors\n")
+            }
+        }
+        deviceInfo.append("\n")
+        
+        deviceInfo.append("📋 NEXT STEPS:\n")
+        deviceInfo.append("  1. Screenshot this entire message\n")
+        deviceInfo.append("  2. Send to developer for analysis\n")
+        deviceInfo.append("  3. Try freeing up storage space\n")
+        deviceInfo.append("  4. Restart device and try again\n\n")
+        
+        deviceInfo.append("═══════════════════════════════════════\n")
+        deviceInfo.append("Error Code: SCAN_COMPLETE_FAILURE\n")
+        deviceInfo.append("═══════════════════════════════════════")
+        
+        return deviceInfo.toString()
     }
 
     fun getInstalledApps(
@@ -41,9 +151,9 @@ class AppRepository(private val context: Context) {
         onProgress: (current: Int, total: Int, currentApp: String) -> Unit,
         checkScanCancelled: () -> Boolean
     ): List<Map<String, Any?>> {
-        var flags = 0
+        var detailsFlags = 0
         if (includeDetails) {
-            flags = PackageManager.GET_META_DATA or
+            detailsFlags = PackageManager.GET_META_DATA or
                     PackageManager.GET_PERMISSIONS or
                     PackageManager.GET_SERVICES or
                     PackageManager.GET_RECEIVERS or
@@ -51,7 +161,8 @@ class AppRepository(private val context: Context) {
                     (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) PackageManager.GET_SIGNING_CERTIFICATES else PackageManager.GET_SIGNATURES)
         }
 
-        val packages = packageManager.getInstalledPackages(flags)
+        // Always use lightweight query for the list — avoids Binder TransactionTooLarge
+        val packages = packageManager.getInstalledPackages(0)
         
         val launchIntent = android.content.Intent(android.content.Intent.ACTION_MAIN, null)
         launchIntent.addCategory(android.content.Intent.CATEGORY_LAUNCHER)
@@ -61,7 +172,7 @@ class AppRepository(private val context: Context) {
         val total = packages.size
         val usageMap = if (includeDetails) usageManager.getUsageMap() else emptyMap()
         
-        Log.d(TAG, "Starting scan: total=$total packages, includeDetails=$includeDetails")
+        Log.d(TAG, "Starting scan: total=$total packages, includeDetails=$includeDetails, threads=$threadCount")
 
         if (includeDetails) {
              return processBatchedWithDetails(
@@ -69,6 +180,7 @@ class AppRepository(private val context: Context) {
                  launchablePackages,
                  usageMap,
                  total,
+                 detailsFlags,
                  onProgress,
                  checkScanCancelled
              )
@@ -106,6 +218,7 @@ class AppRepository(private val context: Context) {
         launchablePackages: Set<String>,
         usageMap: Map<String, android.app.usage.UsageStats>,
         total: Int,
+        detailsFlags: Int,
         onProgress: (current: Int, total: Int, currentApp: String) -> Unit,
         checkScanCancelled: () -> Boolean
     ): List<Map<String, Any?>> {
@@ -113,6 +226,7 @@ class AppRepository(private val context: Context) {
         val counter = AtomicInteger(0)
         var failedCount = 0
         var timeoutCount = 0
+        var exceptionCount = 0
         
         val filteredPackages = packages.filter { pkg ->
             val appInfo = pkg.applicationInfo
@@ -123,16 +237,39 @@ class AppRepository(private val context: Context) {
             launchablePackages.contains(pkg.packageName) || (!isSystem || isUpdatedSystem)
         }
         
-        Log.d(TAG, "Filtered to ${filteredPackages.size} packages for detailed scan")
+        val filteredTotal = filteredPackages.size
+        Log.d(TAG, "Filtered to $filteredTotal packages for detailed scan (from $total total)")
         
-        for (batchStart in filteredPackages.indices step BATCH_SIZE) {
+        val runtime = Runtime.getRuntime()
+        val initialFreeMemory = runtime.freeMemory() / 1024 / 1024
+        Log.d(TAG, "Initial free memory: ${initialFreeMemory}MB, max: ${runtime.maxMemory() / 1024 / 1024}MB")
+        
+        // Get initial batch size — recalculated every few batches
+        var currentBatchSize = getAdaptiveBatchSize()
+        
+        for (batchStart in filteredPackages.indices step currentBatchSize) {
             if (checkScanCancelled()) {
                 Log.d(TAG, "Scan cancelled by user")
                 break
             }
             
-            val batchEnd = minOf(batchStart + BATCH_SIZE, filteredPackages.size)
+            // Recalculate batch size every 3 batches (not every batch — avoid overhead)
+            val batchNumber = batchStart / currentBatchSize + 1
+            if (batchNumber % 3 == 0) {
+                currentBatchSize = getAdaptiveBatchSize()
+            }
+            
+            val freeMemory = runtime.freeMemory() / 1024 / 1024
+            if (freeMemory < MIN_FREE_MEMORY_MB) {
+                Log.w(TAG, "Low memory: ${freeMemory}MB free, GC")
+                System.gc()
+                try { Thread.sleep(50) } catch (e: InterruptedException) { break }
+            }
+            
+            val batchEnd = minOf(batchStart + currentBatchSize, filteredPackages.size)
             val batch = filteredPackages.subList(batchStart, batchEnd)
+            
+            // Always parallel — thread pool handles the concurrency limit naturally
             val futures = mutableListOf<Pair<String, Future<Map<String, Any?>?>>>()
             
             for (pkg in batch) {
@@ -140,10 +277,15 @@ class AppRepository(private val context: Context) {
                 
                 val packageName = pkg.packageName
                 val future = scanExecutor.submit(Callable {
-                    if (checkScanCancelled()) return@Callable null
+                    if (checkScanCancelled() || Thread.currentThread().isInterrupted) return@Callable null
                     
                     try {
-                        convertPackageToMap(pkg, true, usageMap)
+                        val detailedPkg = packageManager.getPackageInfo(packageName, detailsFlags)
+                        convertPackageToMap(detailedPkg, true, usageMap)
+                    } catch (e: OutOfMemoryError) {
+                        Log.e(TAG, "OOM: $packageName - ${e.message}")
+                        System.gc()
+                        null
                     } catch (e: Exception) {
                         Log.w(TAG, "Error processing $packageName: ${e.message}")
                         null
@@ -153,12 +295,13 @@ class AppRepository(private val context: Context) {
             }
             
             for ((packageName, future) in futures) {
+                val index = counter.incrementAndGet()
+                
                 try {
                     val result = future.get(FUTURE_TIMEOUT_SECONDS, TimeUnit.SECONDS)
-                    val index = counter.incrementAndGet()
                     
-                    if (index % 10 == 0) {
-                        onProgress(index, total, packageName)
+                    if (index % 5 == 0 || index == filteredTotal) {
+                        onProgress(index, filteredTotal, packageName)
                     }
                     
                     if (result != null) {
@@ -169,15 +312,40 @@ class AppRepository(private val context: Context) {
                 } catch (e: TimeoutException) {
                     timeoutCount++
                     future.cancel(true)
-                    Log.e(TAG, "Timeout processing $packageName after ${FUTURE_TIMEOUT_SECONDS}s")
+                    Log.e(TAG, "TIMEOUT: $packageName after ${FUTURE_TIMEOUT_SECONDS}s")
+                } catch (e: OutOfMemoryError) {
+                    exceptionCount++
+                    Log.e(TAG, "OOM: $packageName - ${e.message}")
+                    System.gc()
                 } catch (e: Exception) {
-                    failedCount++
-                    Log.e(TAG, "Exception processing $packageName: ${e.message}", e)
+                    exceptionCount++
+                    Log.e(TAG, "EXCEPTION: $packageName - ${e.javaClass.simpleName}: ${e.message}")
                 }
+            }
+            
+            // Light GC every 5 batches — not every 3
+            if (batchNumber % 5 == 0) {
+                System.gc()
             }
         }
         
-        Log.d(TAG, "Scan complete: ${results.size} apps, $failedCount failed, $timeoutCount timeouts")
+        val successRate = if (filteredTotal > 0) (results.size * 100) / filteredTotal else 0
+        Log.d(TAG, "Scan complete: ${results.size}/$filteredTotal apps ($successRate%), $failedCount failed, $timeoutCount timeouts, $exceptionCount exceptions")
+        
+        if (results.isEmpty() && filteredTotal > 0) {
+            Log.e(TAG, "CRITICAL: Scan returned 0 apps from $filteredTotal packages - all failed!")
+            Log.e(TAG, "Breakdown: $failedCount null results, $timeoutCount timeouts, $exceptionCount exceptions")
+            
+            val errorReport = generateErrorReport(
+                filteredTotal = filteredTotal,
+                failedCount = failedCount,
+                timeoutCount = timeoutCount,
+                exceptionCount = exceptionCount,
+                initialFreeMemory = initialFreeMemory
+            )
+            throw ScanFailureException(errorReport)
+        }
+        
         return results
     }
 
@@ -228,7 +396,16 @@ class AppRepository(private val context: Context) {
         includeDetails: Boolean,
         usageMap: Map<String, android.app.usage.UsageStats>?
     ): Map<String, Any?> {
-        val appInfo = pkg.applicationInfo!!
+        // Check thread interruption early
+        if (Thread.currentThread().isInterrupted) {
+            throw InterruptedException("Thread interrupted for ${pkg.packageName}")
+        }
+        
+        val appInfo = pkg.applicationInfo
+        if (appInfo == null) {
+            Log.e(TAG, "ApplicationInfo is null for ${pkg.packageName}")
+            throw IllegalStateException("ApplicationInfo is null for ${pkg.packageName}")
+        }
 
         var stack = "Unknown"
         var libs = emptyList<String>()
@@ -248,32 +425,61 @@ class AppRepository(private val context: Context) {
                 if (sourceDir != null && File(sourceDir).exists()) {
                     zipFile = java.util.zip.ZipFile(File(sourceDir))
                 }
-            } catch (e: Exception) { 
+            } catch (e: OutOfMemoryError) {
+                Log.e(TAG, "OOM opening ZipFile for ${pkg.packageName}, skipping deep analysis")
+                // Don't throw — continue without deep analysis
+                zipFile = null
+            } catch (e: Exception) {
+                Log.w(TAG, "Error opening ZipFile for ${pkg.packageName}: ${e.message}")
             }
 
             try {
+                if (Thread.currentThread().isInterrupted) return createMinimalMap(pkg, appInfo)
+                
                 val pair = stackDetector.detectStackAndLibs(appInfo, zipFile)
                 stack = pair.first
                 libs = pair.second
 
                 usage = usageMap?.get(pkg.packageName)
-                deepData = deepAnalyzer.analyze(pkg, packageManager, zipFile)
+                
+                if (Thread.currentThread().isInterrupted) return createMinimalMap(pkg, appInfo)
+                
+                deepData = try {
+                    deepAnalyzer.analyze(pkg, packageManager, zipFile)
+                } catch (e: OutOfMemoryError) {
+                    Log.e(TAG, "OOM in deepAnalyzer for ${pkg.packageName}")
+                    emptyMap()
+                }
 
                 try {
                     val iconDrawable = packageManager.getApplicationIcon(appInfo)
                     iconBytes = drawableToByteArray(iconDrawable)
+                } catch (e: OutOfMemoryError) {
+                    Log.e(TAG, "OOM loading icon for ${pkg.packageName}")
+                    iconBytes = ByteArray(0)
                 } catch (e: Exception) {
                     Log.w(TAG, "Failed to load icon for ${pkg.packageName}: ${e.message}")
+                    iconBytes = ByteArray(0)
                 }
                 
                 permissions = pkg.requestedPermissions?.toList() ?: emptyList()
                 services = pkg.services?.map { it.name } ?: emptyList()
                 receivers = pkg.receivers?.map { it.name } ?: emptyList()
                 providers = pkg.providers?.map { it.name } ?: emptyList()
+            } catch (e: OutOfMemoryError) {
+                Log.e(TAG, "OOM in convertPackageToMap for ${pkg.packageName}, returning partial data")
+                // Return partial data instead of throwing
+                return createMinimalMap(pkg, appInfo)
+            } catch (e: InterruptedException) {
+                return createMinimalMap(pkg, appInfo)
+            } catch (e: Exception) {
+                Log.e(TAG, "Error in detail processing for ${pkg.packageName}: ${e.javaClass.simpleName} - ${e.message}")
             } finally {
                 try {
                     zipFile?.close()
-                } catch (e: Exception) { }
+                } catch (e: Exception) {
+                    Log.w(TAG, "Error closing ZipFile for ${pkg.packageName}: ${e.message}")
+                }
             }
         }
 
@@ -310,8 +516,19 @@ class AppRepository(private val context: Context) {
 
         val totalSize = appSize + dataSize + cacheSize
 
+        val appName = try {
+            if (includeDetails) {
+                packageManager.getApplicationLabel(appInfo).toString()
+            } else {
+                pkg.packageName
+            }
+        } catch (e: Exception) {
+            Log.w(TAG, "Error getting app label for ${pkg.packageName}: ${e.message}")
+            pkg.packageName
+        }
+        
         val map = mutableMapOf<String, Any?>(
-            "appName" to (if (includeDetails) packageManager.getApplicationLabel(appInfo).toString() else pkg.packageName),
+            "appName" to appName,
             "packageName" to pkg.packageName,
             "version" to (pkg.versionName ?: "Unknown"),
             "icon" to iconBytes,
@@ -357,6 +574,54 @@ class AppRepository(private val context: Context) {
         
         return map
     }
+    
+    /**
+     * Creates a minimal map with just basic info when full processing fails (OOM etc).
+     * This ensures partial data is always returned rather than dropping the app entirely.
+     */
+    private fun createMinimalMap(pkg: PackageInfo, appInfo: ApplicationInfo): Map<String, Any?> {
+        val appName = try {
+            packageManager.getApplicationLabel(appInfo).toString()
+        } catch (e: Exception) {
+            pkg.packageName
+        }
+        
+        val isSystem = (appInfo.flags and ApplicationInfo.FLAG_SYSTEM) != 0
+        var appSize = 0L
+        if (appInfo.sourceDir != null) {
+            try { appSize = File(appInfo.sourceDir).length() } catch (e: Exception) {}
+        }
+        
+        return mapOf(
+            "appName" to appName,
+            "packageName" to pkg.packageName,
+            "version" to (pkg.versionName ?: "Unknown"),
+            "icon" to ByteArray(0),
+            "versionCode" to (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) pkg.longVersionCode else pkg.versionCode.toLong()),
+            "stack" to "Unknown",
+            "nativeLibraries" to emptyList<String>(),
+            "isSystem" to isSystem,
+            "firstInstallTime" to pkg.firstInstallTime,
+            "lastUpdateTime" to pkg.lastUpdateTime,
+            "minSdkVersion" to (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) appInfo.minSdkVersion else 0),
+            "targetSdkVersion" to appInfo.targetSdkVersion,
+            "uid" to appInfo.uid,
+            "permissions" to emptyList<String>(),
+            "services" to emptyList<String>(),
+            "receivers" to emptyList<String>(),
+            "providers" to emptyList<String>(),
+            "totalTimeInForeground" to 0L,
+            "lastTimeUsed" to 0L,
+            "category" to "unknown",
+            "size" to appSize,
+            "appSize" to appSize,
+            "dataSize" to 0L,
+            "cacheSize" to 0L,
+            "externalCacheSize" to 0L,
+            "apkPath" to (appInfo.sourceDir ?: ""),
+            "dataDir" to (appInfo.dataDir ?: "")
+        )
+    }
 
     private fun drawableToByteArray(drawable: Drawable): ByteArray {
         var bitmap: Bitmap? = null
@@ -376,10 +641,18 @@ class AppRepository(private val context: Context) {
             
             if (bitmap == null) return ByteArray(0)
 
-            scaledBitmap = Bitmap.createScaledBitmap(bitmap, 96, 96, true)
+            scaledBitmap = Bitmap.createScaledBitmap(bitmap, ICON_SIZE, ICON_SIZE, true)
 
-            stream = ByteArrayOutputStream(4096)
-            scaledBitmap.compress(Bitmap.CompressFormat.PNG, 90, stream)
+            stream = ByteArrayOutputStream(2048)  // Pre-allocate smaller buffer
+            
+            // Use WEBP for much smaller file sizes (4-6x smaller than PNG)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                scaledBitmap.compress(Bitmap.CompressFormat.WEBP_LOSSY, 75, stream)
+            } else {
+                @Suppress("DEPRECATION")
+                scaledBitmap.compress(Bitmap.CompressFormat.WEBP, 75, stream)
+            }
+            
             val result = stream.toByteArray()
             
             stream.close()

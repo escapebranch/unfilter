@@ -174,6 +174,8 @@ class StackDetector {
 
     private fun deepScanForString(apkPaths: List<String>, pattern: ByteArray, preOpenedZip: ZipFile? = null): Boolean {
         for (path in apkPaths) {
+            if (Thread.currentThread().isInterrupted) return false
+            
             val file = File(path)
             if (!file.exists()) continue
             
@@ -192,10 +194,16 @@ class StackDetector {
     }
 
     private fun scanZipForBytes(zip: ZipFile, pattern: ByteArray): Boolean {
+        val MAX_DEX_SIZE = 50L * 1024 * 1024  // Skip DEX files > 50MB
         val entries = zip.entries()
         while (entries.hasMoreElements()) {
+            if (Thread.currentThread().isInterrupted) return false
+            
             val entry = entries.nextElement()
             if (entry.name.endsWith(".dex")) {
+                // Skip massive DEX files to avoid memory bombs
+                if (entry.size > MAX_DEX_SIZE) continue
+                
                  zip.getInputStream(entry).use { stream ->
                      if (scanStreamForBytes(stream, pattern)) {
                          return true
@@ -207,7 +215,7 @@ class StackDetector {
     }
 
     private fun scanStreamForBytes(stream: InputStream, pattern: ByteArray): Boolean {
-        val bufferSize = 64 * 1024
+        val bufferSize = 64 * 1024  // 64KB buffer for fast DEX scanning
         val buffer = ByteArray(bufferSize)
         var bytesRead: Int
         
@@ -215,6 +223,8 @@ class StackDetector {
         var carryOverLength = 0
         
         while (stream.read(buffer, carryOverLength, bufferSize - carryOverLength).also { bytesRead = it } != -1) {
+            if (Thread.currentThread().isInterrupted) return false
+            
             val validBytes = carryOverLength + bytesRead
             
             if (indexOf(buffer, validBytes, pattern) != -1) {

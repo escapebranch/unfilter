@@ -43,6 +43,9 @@ class InstalledAppsNotifier extends AsyncNotifier<List<DeviceApp>> {
       state = await AsyncValue.guard(
         () => repository.getInstalledApps(forceRefresh: true),
       );
+      if (state.hasError && state.error != null) {
+        throw state.error!;
+      }
       _lastRevalidationTime = DateTime.now();
     } finally {
       _isScanInProgress = false;
