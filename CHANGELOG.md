@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.1+8] - 2026-03-25
+
+### Added
+
+- **Release Metadata Alignment**: Updated release config to ship synchronized app/update/release information for this version.
+
+### Changed
+
+- **Product Positioning**: Refreshed project messaging in `README` and package metadata to reflect Unfilter as an on-device app intelligence tool.
+
+### Fixed
+
+- **Analytics Lint**: Removed unnecessary wildcard underscore usage in analytics page callbacks.
+- **Onboarding Cleanup**: Removed unused install-permission state and related unused logic.
+
 ## [1.1.0] - 2026-01-29
 
 ### Added

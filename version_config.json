@@ -1,5 +1,5 @@
 {
-  "latest_native_version": "1.1.4+11",
+  "latest_native_version": "1.1.1+8",
   "min_supported_native_version": "1.0.0+1",
   "release_page_url": "https://github.com/r4khul/unfilter/releases",
   "apk_direct_download_url": "https://github.com/r4khul/unfilter/releases/latest/download/UnFilter_universal.apk",
@@ -9,20 +9,16 @@
     "x86_64": "https://github.com/r4khul/unfilter/releases/latest/download/UnFilter_x86_64.apk"
   },
   "use_per_abi": true,
-  "release_notes": "V1.1.4: Detailed Error Reporting for Easy Debugging.",
+  "release_notes": "v1.1.1+8: Product positioning refresh, metadata alignment, and stability cleanups.",
   "force_update": false,
   "features": [
-    "Comprehensive error report dialog with device info",
-    "One-tap copy to clipboard for easy sharing",
-    "Memory status, scan statistics, and failure analysis",
-    "Automatic error categorization (OOM, timeout, exception)",
-    "Screenshot-friendly formatted error reports"
+    "Updated product messaging across project metadata",
+    "Refined app positioning copy for clearer value proposition",
+    "Release metadata now aligned with v1.1.1+8"
   ],
   "fixes": [
-    "Users can now easily send detailed error reports to developer",
-    "Error reports include device info, memory status, and diagnostics",
-    "Copy button for quick error report sharing",
-    "Beautiful error dialog with selectable text",
-    "All scan failures now show actionable error information"
+    "Resolved analyzer warnings for cleaner CI checks",
+    "Removed unused onboarding state tied to install permission",
+    "Fixed wildcard callback lint in analytics page"
   ]
 }
