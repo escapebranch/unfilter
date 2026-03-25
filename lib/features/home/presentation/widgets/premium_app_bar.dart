@@ -7,6 +7,7 @@ class PremiumAppBar extends StatefulWidget {
   final VoidCallback? onResync;
   final VoidCallback? onShare;
   final List<Widget>? actions;
+  final List<PremiumAppBarMenuAction>? menuActions;
   final ScrollController? scrollController;
 
   const PremiumAppBar({
@@ -15,6 +16,7 @@ class PremiumAppBar extends StatefulWidget {
     this.onResync,
     this.onShare,
     this.actions,
+    this.menuActions,
     this.scrollController,
   });
 
@@ -97,10 +99,19 @@ class _PremiumAppBarState extends State<PremiumAppBar> {
     final isDark = theme.brightness == Brightness.dark;
     final hasResync = widget.onResync != null;
     final hasShare = widget.onShare != null;
+    final customActions =
+        widget.menuActions ?? const <PremiumAppBarMenuAction>[];
+    final hasCustomActions = customActions.isNotEmpty;
 
     _overlayEntry = OverlayEntry(
-      builder: (context) =>
-          _buildOverlayMenu(theme, isDark, hasResync, hasShare),
+      builder: (context) => _buildOverlayMenu(
+        theme,
+        isDark,
+        hasResync,
+        hasShare,
+        customActions,
+        hasCustomActions,
+      ),
     );
 
     if (!mounted) {
@@ -118,7 +129,11 @@ class _PremiumAppBarState extends State<PremiumAppBar> {
     bool isDark,
     bool hasResync,
     bool hasShare,
+    List<PremiumAppBarMenuAction> customActions,
+    bool hasCustomActions,
   ) {
+    final menuWidth = hasCustomActions ? 180.0 : 160.0;
+
     return Stack(
       children: [
         Positioned.fill(
@@ -128,7 +143,7 @@ class _PremiumAppBarState extends State<PremiumAppBar> {
           ),
         ),
         Positioned(
-          width: 160,
+          width: menuWidth,
           child: CompositedTransformFollower(
             link: _layerLink,
             showWhenUnlinked: false,
@@ -160,31 +175,54 @@ class _PremiumAppBarState extends State<PremiumAppBar> {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        if (hasResync)
-                          _OverlayMenuItem(
-                            icon: Icons.sync,
-                            label: 'Resync App',
-                            onTap: () {
-                              widget.onResync?.call();
-                              _removeOverlay();
-                            },
-                          ),
-                        if (hasResync && hasShare)
-                          Divider(
-                            height: 1,
-                            thickness: 1,
-                            color:
-                                theme.colorScheme.onSurface.withValues(alpha: 0.08),
-                          ),
-                        if (hasShare)
-                          _OverlayMenuItem(
-                            icon: Icons.ios_share_rounded,
-                            label: 'Share',
-                            onTap: () {
-                              widget.onShare?.call();
-                              _removeOverlay();
-                            },
-                          ),
+                        if (hasCustomActions) ...[
+                          for (int i = 0; i < customActions.length; i++) ...[
+                            _OverlayMenuItem(
+                              icon: customActions[i].icon,
+                              label: customActions[i].label,
+                              isSelected: customActions[i].isSelected,
+                              onTap: () {
+                                customActions[i].onTap();
+                                _removeOverlay();
+                              },
+                            ),
+                            if (i < customActions.length - 1)
+                              Divider(
+                                height: 1,
+                                thickness: 1,
+                                color: theme.colorScheme.onSurface.withValues(
+                                  alpha: 0.08,
+                                ),
+                              ),
+                          ],
+                        ] else ...[
+                          if (hasResync)
+                            _OverlayMenuItem(
+                              icon: Icons.sync,
+                              label: 'Resync App',
+                              onTap: () {
+                                widget.onResync?.call();
+                                _removeOverlay();
+                              },
+                            ),
+                          if (hasResync && hasShare)
+                            Divider(
+                              height: 1,
+                              thickness: 1,
+                              color: theme.colorScheme.onSurface.withValues(
+                                alpha: 0.08,
+                              ),
+                            ),
+                          if (hasShare)
+                            _OverlayMenuItem(
+                              icon: Icons.ios_share_rounded,
+                              label: 'Share',
+                              onTap: () {
+                                widget.onShare?.call();
+                                _removeOverlay();
+                              },
+                            ),
+                        ],
                       ],
                     ),
                   ),
@@ -241,7 +279,10 @@ class _PremiumAppBarState extends State<PremiumAppBar> {
 
   Widget _buildAppBarContent(ThemeData theme, bool isDark) {
     final canPop = Navigator.canPop(context);
-    final hasMenu = widget.onResync != null || widget.onShare != null;
+    final hasMenu =
+        widget.onResync != null ||
+        widget.onShare != null ||
+        (widget.menuActions?.isNotEmpty ?? false);
     final hasActions = widget.actions != null && widget.actions!.isNotEmpty;
 
     return Container(
@@ -345,11 +386,13 @@ class _PremiumAppBarState extends State<PremiumAppBar> {
 class _OverlayMenuItem extends StatelessWidget {
   final IconData icon;
   final String label;
+  final bool isSelected;
   final VoidCallback onTap;
 
   const _OverlayMenuItem({
     required this.icon,
     required this.label,
+    this.isSelected = false,
     required this.onTap,
   });
 
@@ -382,9 +425,29 @@ class _OverlayMenuItem extends StatelessWidget {
                 ),
               ),
             ),
+            if (isSelected)
+              Icon(
+                Icons.check_rounded,
+                size: 16,
+                color: theme.colorScheme.primary,
+              ),
           ],
         ),
       ),
     );
   }
+}
+
+class PremiumAppBarMenuAction {
+  final IconData icon;
+  final String label;
+  final bool isSelected;
+  final VoidCallback onTap;
+
+  const PremiumAppBarMenuAction({
+    required this.icon,
+    required this.label,
+    required this.onTap,
+    this.isSelected = false,
+  });
 }

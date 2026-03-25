@@ -77,9 +77,18 @@ class _AnalyticsPageState extends ConsumerState<AnalyticsPage>
   }
 
   Widget _buildDataState(List<DeviceApp> apps, ThemeData theme) {
-    final persistentStatsAsync = ref.watch(persistentUsageStatsProvider);
+    final selectedRange = ref.watch(selectedUsageTimeRangeProvider);
+    final persistentStatsAsync = ref.watch(filteredUsageStatsProvider);
+    final usageStats = persistentStatsAsync.asData?.value;
 
-    var validApps = apps.where((a) => a.totalTimeInForeground > 0).toList();
+    final rangeAwareApps = _buildRangeAwareApps(
+      apps,
+      selectedRange,
+      usageStats,
+    );
+    var validApps = rangeAwareApps
+        .where((a) => a.totalTimeInForeground > 0)
+        .toList();
 
     if (_searchQuery.isNotEmpty) {
       final query = _searchQuery.toLowerCase();
@@ -92,12 +101,18 @@ class _AnalyticsPageState extends ConsumerState<AnalyticsPage>
     final permissionAsync = ref.watch(usagePermissionProvider);
     final hasPermission = permissionAsync.value ?? false;
 
+    if (persistentStatsAsync.isLoading &&
+        usageStats == null &&
+        selectedRange != UsageTimeRange.all) {
+      return _buildLoadingState(selectedRange);
+    }
+
     if (validApps.isEmpty && _searchQuery.isEmpty) {
-      return _buildEmptyState(hasPermission);
+      return _buildEmptyState(hasPermission, selectedRange);
     }
 
     if (validApps.isEmpty && _searchQuery.isNotEmpty) {
-      return _buildSearchEmptyState(theme);
+      return _buildSearchEmptyState(theme, selectedRange);
     }
 
     validApps.sort(
@@ -105,14 +120,53 @@ class _AnalyticsPageState extends ConsumerState<AnalyticsPage>
     );
 
     return persistentStatsAsync.when(
-      data: (persistentStats) =>
-          _buildAnalyticsContent(validApps, theme, persistentStats),
-      loading: () => _buildAnalyticsContent(validApps, theme, null),
-      error: (_, _) => _buildAnalyticsContent(validApps, theme, null),
+      data: (persistentStats) => _buildAnalyticsContent(
+        validApps,
+        theme,
+        persistentStats,
+        selectedRange,
+      ),
+      loading: () =>
+          _buildAnalyticsContent(validApps, theme, usageStats, selectedRange),
+      error: (_, _) =>
+          _buildAnalyticsContent(validApps, theme, usageStats, selectedRange),
     );
   }
 
-  Widget _buildEmptyState(bool hasPermission) {
+  List<DeviceApp> _buildRangeAwareApps(
+    List<DeviceApp> apps,
+    UsageTimeRange selectedRange,
+    PersistentUsageStats? usageStats,
+  ) {
+    final aggregatedUsage = usageStats?.aggregatedUsage;
+
+    if (selectedRange == UsageTimeRange.all && aggregatedUsage == null) {
+      return apps;
+    }
+
+    return apps.map((app) {
+      final usage =
+          aggregatedUsage?[app.packageName] ??
+          (selectedRange == UsageTimeRange.all ? app.totalTimeInForeground : 0);
+      return app.copyWith(totalTimeInForeground: usage);
+    }).toList();
+  }
+
+  Widget _buildLoadingState(UsageTimeRange selectedRange) {
+    return Stack(
+      children: [
+        const Center(child: CircularProgressIndicator()),
+        const TopShadowGradient(),
+        PremiumAppBar(
+          title: 'Usage Statistics',
+          scrollController: _scrollController,
+          menuActions: _buildUsageRangeMenuActions(selectedRange),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildEmptyState(bool hasPermission, UsageTimeRange selectedRange) {
     return Stack(
       children: [
         CustomScrollView(
@@ -132,12 +186,13 @@ class _AnalyticsPageState extends ConsumerState<AnalyticsPage>
         PremiumAppBar(
           title: 'Usage Statistics',
           scrollController: _scrollController,
+          menuActions: _buildUsageRangeMenuActions(selectedRange),
         ),
       ],
     );
   }
 
-  Widget _buildSearchEmptyState(ThemeData theme) {
+  Widget _buildSearchEmptyState(ThemeData theme, UsageTimeRange selectedRange) {
     return Stack(
       children: [
         CustomScrollView(
@@ -172,6 +227,7 @@ class _AnalyticsPageState extends ConsumerState<AnalyticsPage>
         PremiumAppBar(
           title: 'Usage Statistics',
           scrollController: _scrollController,
+          menuActions: _buildUsageRangeMenuActions(selectedRange),
         ),
       ],
     );
@@ -181,6 +237,7 @@ class _AnalyticsPageState extends ConsumerState<AnalyticsPage>
     List<DeviceApp> validApps,
     ThemeData theme,
     PersistentUsageStats? persistentStats,
+    UsageTimeRange selectedRange,
   ) {
     final totalUsage = validApps.fold<int>(
       0,
@@ -227,9 +284,39 @@ class _AnalyticsPageState extends ConsumerState<AnalyticsPage>
         PremiumAppBar(
           title: 'Usage Statistics',
           scrollController: _scrollController,
+          menuActions: _buildUsageRangeMenuActions(selectedRange),
         ),
       ],
     );
+  }
+
+  List<PremiumAppBarMenuAction> _buildUsageRangeMenuActions(
+    UsageTimeRange selectedRange,
+  ) {
+    return UsageTimeRange.values.map((range) {
+      return PremiumAppBarMenuAction(
+        icon: _usageRangeIcon(range),
+        label: range.label,
+        isSelected: selectedRange == range,
+        onTap: () {
+          ref.read(selectedUsageTimeRangeProvider.notifier).setRange(range);
+          if (mounted) setState(() => _touchedIndex = -1);
+        },
+      );
+    }).toList();
+  }
+
+  IconData _usageRangeIcon(UsageTimeRange range) {
+    switch (range) {
+      case UsageTimeRange.all:
+        return Icons.all_inclusive_rounded;
+      case UsageTimeRange.daily:
+        return Icons.today_rounded;
+      case UsageTimeRange.weekly:
+        return Icons.view_week_rounded;
+      case UsageTimeRange.monthly:
+        return Icons.calendar_month_rounded;
+    }
   }
 
   Widget _buildSearchBarSliver() {

@@ -186,6 +186,48 @@ class DeviceApp extends Equatable {
   DateTime get lastUsedDate =>
       DateTime.fromMillisecondsSinceEpoch(lastTimeUsed);
 
+  DeviceApp copyWith({int? totalTimeInForeground, int? lastTimeUsed}) {
+    return DeviceApp(
+      appName: appName,
+      packageName: packageName,
+      version: version,
+      icon: icon,
+      stack: stack,
+      nativeLibraries: nativeLibraries,
+      permissions: permissions,
+      services: services,
+      receivers: receivers,
+      providers: providers,
+      installDate: installDate,
+      updateDate: updateDate,
+      minSdkVersion: minSdkVersion,
+      targetSdkVersion: targetSdkVersion,
+      uid: uid,
+      versionCode: versionCode,
+      totalTimeInForeground:
+          totalTimeInForeground ?? this.totalTimeInForeground,
+      lastTimeUsed: lastTimeUsed ?? this.lastTimeUsed,
+      category: category,
+      size: size,
+      appSize: appSize,
+      dataSize: dataSize,
+      cacheSize: cacheSize,
+      externalCacheSize: externalCacheSize,
+      apkPath: apkPath,
+      dataDir: dataDir,
+      installerStore: installerStore,
+      signingSha1: signingSha1,
+      signingSha256: signingSha256,
+      kotlinVersion: kotlinVersion,
+      activitiesCount: activitiesCount,
+      servicesCount: servicesCount,
+      receiversCount: receiversCount,
+      providersCount: providersCount,
+      splitApks: splitApks,
+      techVersions: techVersions,
+    );
+  }
+
   Map<String, dynamic> toMap() {
     return {
       'appName': appName,
