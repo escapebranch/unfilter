@@ -19,9 +19,9 @@
 
 </div>
 
-Unfilter is a playful dev tool for peeking into the apps on your phone.
+Unfilter is an on-device app intelligence tool for understanding what runs on your phone.
 
-It helps you learn what apps are made of by spotting frameworks, native clues, shared libraries, and other fingerprints left behind by the build.
+It fingerprints installed apps using framework signals, native clues, and shared libraries, then pairs that with usage, storage, and system insights.
 
 ## What It Does
 

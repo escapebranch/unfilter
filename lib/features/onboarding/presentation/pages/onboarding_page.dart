@@ -23,7 +23,6 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage>
 
   int _currentPage = 0;
   bool _isUsageGranted = false;
-  bool _isInstallGranted = false;
 
   @override
   void initState() {
@@ -49,12 +48,10 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage>
   Future<void> _checkPermissions() async {
     final repo = ref.read(deviceAppsRepositoryProvider);
     final usage = await repo.checkUsagePermission();
-    final install = await repo.checkInstallPermission();
 
     if (mounted) {
       setState(() {
         _isUsageGranted = usage;
-        _isInstallGranted = install;
       });
     }
   }

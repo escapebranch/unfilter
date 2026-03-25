@@ -108,7 +108,7 @@ class _AnalyticsPageState extends ConsumerState<AnalyticsPage>
       data: (persistentStats) =>
           _buildAnalyticsContent(validApps, theme, persistentStats),
       loading: () => _buildAnalyticsContent(validApps, theme, null),
-      error: (_, __) => _buildAnalyticsContent(validApps, theme, null),
+      error: (_, _) => _buildAnalyticsContent(validApps, theme, null),
     );
   }
 
