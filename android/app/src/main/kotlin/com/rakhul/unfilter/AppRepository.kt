@@ -34,7 +34,7 @@ class AppRepository(private val context: Context) {
         private const val TAG = "AppRepository"
         private const val FUTURE_TIMEOUT_SECONDS = 45L  // More generous for slow devices
         private const val MIN_FREE_MEMORY_MB = 30L      // Lower threshold, rely on GC
-        private const val ICON_SIZE = 48                 // Smaller icons = much less memory
+        private const val ICON_SIZE = 128                 // Smaller icons = much less memory
     }
     
     class ScanFailureException(val errorReport: String) : Exception(errorReport)
