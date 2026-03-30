@@ -178,7 +178,36 @@ class _AnalyticsPageState extends ConsumerState<AnalyticsPage>
               ),
             ),
             SliverFillRemaining(
-              child: UsagePermissionCard(hasPermission: hasPermission),
+              child: selectedRange == UsageTimeRange.custom
+                  ? Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.event_busy,
+                            size: 64,
+                            color: Theme.of(context).colorScheme.outline,
+                          ),
+                          const SizedBox(height: 16),
+                          Text(
+                            'No Data Available',
+                            style: Theme.of(context).textTheme.titleLarge
+                                ?.copyWith(fontWeight: FontWeight.bold),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            'Try selecting a different date range',
+                            style: Theme.of(context).textTheme.bodyMedium
+                                ?.copyWith(
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onSurfaceVariant,
+                                ),
+                          ),
+                        ],
+                      ),
+                    )
+                  : UsagePermissionCard(hasPermission: hasPermission),
             ),
           ],
         ),
@@ -298,8 +327,33 @@ class _AnalyticsPageState extends ConsumerState<AnalyticsPage>
         icon: _usageRangeIcon(range),
         label: range.label,
         isSelected: selectedRange == range,
-        onTap: () {
-          ref.read(selectedUsageTimeRangeProvider.notifier).setRange(range);
+        onTap: () async {
+          if (range == UsageTimeRange.custom) {
+            final picked = await showDateRangePicker(
+              context: context,
+              firstDate: DateTime(2020),
+              lastDate: DateTime.now(),
+              currentDate: DateTime.now(),
+              builder: (context, child) {
+                return Theme(
+                  data: Theme.of(context).copyWith(
+                    appBarTheme: const AppBarTheme(
+                      backgroundColor: Colors.transparent,
+                    ),
+                  ),
+                  child: child!,
+                );
+              },
+            );
+            if (picked != null) {
+              ref
+                  .read(selectedCustomDateRangeProvider.notifier)
+                  .setRange(picked);
+              ref.read(selectedUsageTimeRangeProvider.notifier).setRange(range);
+            }
+          } else {
+            ref.read(selectedUsageTimeRangeProvider.notifier).setRange(range);
+          }
           if (mounted) setState(() => _touchedIndex = -1);
         },
       );
@@ -316,6 +370,8 @@ class _AnalyticsPageState extends ConsumerState<AnalyticsPage>
         return Icons.view_week_rounded;
       case UsageTimeRange.monthly:
         return Icons.calendar_month_rounded;
+      case UsageTimeRange.custom:
+        return Icons.edit_calendar_rounded;
     }
   }
 

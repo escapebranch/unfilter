@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../apps/presentation/providers/apps_provider.dart';
 import '../../../../core/providers/shared_preferences_provider.dart';
@@ -5,7 +6,7 @@ import '../../data/datasources/usage_stats_local_datasource.dart';
 import '../../domain/services/usage_aggregation_service.dart';
 import '../../domain/services/usage_stats_sync_service.dart';
 
-enum UsageTimeRange { all, daily, weekly, monthly }
+enum UsageTimeRange { all, daily, weekly, monthly, custom }
 
 extension UsageTimeRangeX on UsageTimeRange {
   String get label {
@@ -18,12 +19,15 @@ extension UsageTimeRangeX on UsageTimeRange {
         return 'Weekly';
       case UsageTimeRange.monthly:
         return 'Monthly';
+      case UsageTimeRange.custom:
+        return 'Custom';
     }
   }
 
   int? get windowDays {
     switch (this) {
       case UsageTimeRange.all:
+      case UsageTimeRange.custom:
         return null;
       case UsageTimeRange.daily:
         return 1;
@@ -66,6 +70,20 @@ class SelectedUsageTimeRangeNotifier extends Notifier<UsageTimeRange> {
 final selectedUsageTimeRangeProvider =
     NotifierProvider<SelectedUsageTimeRangeNotifier, UsageTimeRange>(
       SelectedUsageTimeRangeNotifier.new,
+    );
+
+class SelectedCustomDateRangeNotifier extends Notifier<DateTimeRange?> {
+  @override
+  DateTimeRange? build() => null;
+
+  void setRange(DateTimeRange? range) {
+    state = range;
+  }
+}
+
+final selectedCustomDateRangeProvider =
+    NotifierProvider<SelectedCustomDateRangeNotifier, DateTimeRange?>(
+      SelectedCustomDateRangeNotifier.new,
     );
 
 final persistentUsageStatsProvider = FutureProvider<PersistentUsageStats>((
@@ -120,6 +138,7 @@ final filteredUsageStatsProvider = FutureProvider<PersistentUsageStats>((
   ref,
 ) async {
   final selectedRange = ref.watch(selectedUsageTimeRangeProvider);
+  final customDateRange = ref.watch(selectedCustomDateRangeProvider);
 
   if (selectedRange == UsageTimeRange.all) {
     return ref.watch(persistentUsageStatsProvider.future);
@@ -129,16 +148,36 @@ final filteredUsageStatsProvider = FutureProvider<PersistentUsageStats>((
   final localStorage = ref.watch(usageStatsLocalDataSourceProvider);
 
   final now = DateTime.now();
-  final windowDays = selectedRange.windowDays ?? 1;
-  final rangeStart = DateTime(
-    now.year,
-    now.month,
-    now.day,
-  ).subtract(Duration(days: windowDays - 1));
+  late DateTime rangeStart;
+  late DateTime rangeEnd;
+
+  int windowDaysValue = 1;
+  if (selectedRange == UsageTimeRange.custom && customDateRange != null) {
+    rangeStart = customDateRange.start;
+    rangeEnd = DateTime(
+      customDateRange.end.year,
+      customDateRange.end.month,
+      customDateRange.end.day,
+      23,
+      59,
+      59,
+    );
+    windowDaysValue =
+        customDateRange.end.difference(customDateRange.start).inDays + 1;
+  } else {
+    final windowDays = selectedRange.windowDays ?? 1;
+    windowDaysValue = windowDays;
+    rangeStart = DateTime(
+      now.year,
+      now.month,
+      now.day,
+    ).subtract(Duration(days: windowDays - 1));
+    rangeEnd = now;
+  }
 
   final systemSnapshots = await appsRepo.getDailyUsageSnapshots(
     startDate: rangeStart.millisecondsSinceEpoch,
-    endDate: now.millisecondsSinceEpoch,
+    endDate: rangeEnd.millisecondsSinceEpoch,
   );
 
   final snapshots = systemSnapshots.isNotEmpty
@@ -149,7 +188,7 @@ final filteredUsageStatsProvider = FutureProvider<PersistentUsageStats>((
           );
 
           return !snapshotDate.isBefore(rangeStart) &&
-              !snapshotDate.isAfter(now);
+              !snapshotDate.isAfter(rangeEnd);
         }).toList();
 
   final aggregatedData = <String, int>{};
@@ -163,9 +202,9 @@ final filteredUsageStatsProvider = FutureProvider<PersistentUsageStats>((
 
   return PersistentUsageStats(
     aggregatedUsage: aggregatedData,
-    trackedPeriod: Duration(days: windowDays),
+    trackedPeriod: Duration(days: windowDaysValue),
     hasDataGap: false,
-    systemAvailableDays: windowDays,
+    systemAvailableDays: windowDaysValue,
     storedSnapshotCount: snapshots.length,
   );
 });
