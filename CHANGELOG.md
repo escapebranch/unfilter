@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.1+10] - 2026-04-13
+
+### Added
+
+- **Sponsors Drawer Card**: Added a compact sponsor card in the app drawer that opens the Sponsors page while preserving a focused, precise clickable `r4khul` profile link.
+- **Sponsors Page Route**: Added the dedicated Sponsors page, including a support CTA banner, sponsor provider integration, and scrollable layout.
+
+### Changed
+
+- **Sponsor Page Experience**: Simplified the empty sponsor state copy and ensured the page remains scrollable with minimal content.
+- **Drawer Navigation**: Integrated the sponsor card into the drawer and routed it cleanly through app navigation.
+
+### Fixed
+
+- **UI Polish**: Removed repetitive GitHub icon clutter and tightened the sponsor card layout for a more modern and minimal appearance.
+
 ## [1.1.1+8] - 2026-03-25
 
 ### Added
