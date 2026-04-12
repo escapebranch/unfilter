@@ -10,6 +10,7 @@ import 'drawer/drawer_section_header.dart';
 import 'drawer/drawer_nav_tile.dart';
 import 'drawer/drawer_theme_switcher.dart';
 import 'drawer/drawer_open_source_card.dart';
+import 'drawer/drawer_sponsor_card.dart';
 
 class AppDrawer extends ConsumerWidget {
   const AppDrawer({super.key});
@@ -62,6 +63,13 @@ class AppDrawer extends ConsumerWidget {
                     const DrawerSectionHeader(title: 'COMMUNITY'),
                     const SizedBox(height: 12),
                     const DrawerOpenSourceCard(),
+                    const SizedBox(height: 12),
+                    DrawerSponsorCard(
+                      onViewSponsors: () {
+                        Navigator.pop(context);
+                        AppRouteFactory.toSponsors(context);
+                      },
+                    ),
                     const SizedBox(height: 12),
                   ],
                 ),
