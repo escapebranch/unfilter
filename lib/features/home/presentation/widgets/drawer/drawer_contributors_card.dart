@@ -128,7 +128,7 @@ class DrawerContributorsCard extends ConsumerWidget {
           color: theme.colorScheme.onSurfaceVariant,
         ),
       ),
-      error: (_, __) => Text(
+      error: (_, _) => Text(
         'View all contributors',
         style: theme.textTheme.bodySmall?.copyWith(
           color: theme.colorScheme.onSurfaceVariant,
@@ -237,7 +237,7 @@ class DrawerContributorsCard extends ConsumerWidget {
           color: theme.colorScheme.primary.withValues(alpha: 0.5),
         ),
       ),
-      error: (_, __) => Icon(
+      error: (_, _) => Icon(
         Icons.people_outline,
         size: 20,
         color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),

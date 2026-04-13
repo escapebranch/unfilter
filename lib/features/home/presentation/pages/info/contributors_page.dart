@@ -95,7 +95,7 @@ class _ContributorsPageState extends ConsumerState<ContributorsPage> {
                     }, childCount: 4),
                   ),
                 ),
-                error: (_, __) => SliverToBoxAdapter(
+                error: (_, _) => SliverToBoxAdapter(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: _buildErrorState(theme),
