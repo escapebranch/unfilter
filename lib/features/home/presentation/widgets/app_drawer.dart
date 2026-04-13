@@ -11,6 +11,7 @@ import 'drawer/drawer_nav_tile.dart';
 import 'drawer/drawer_theme_switcher.dart';
 import 'drawer/drawer_open_source_card.dart';
 import 'drawer/drawer_sponsor_card.dart';
+import 'drawer/drawer_contributors_card.dart';
 
 class AppDrawer extends ConsumerWidget {
   const AppDrawer({super.key});
@@ -68,6 +69,13 @@ class AppDrawer extends ConsumerWidget {
                       onViewSponsors: () {
                         Navigator.pop(context);
                         AppRouteFactory.toSponsors(context);
+                      },
+                    ),
+                    const SizedBox(height: 12),
+                    DrawerContributorsCard(
+                      onViewContributors: () {
+                        Navigator.pop(context);
+                        AppRouteFactory.toContributors(context);
                       },
                     ),
                     const SizedBox(height: 12),

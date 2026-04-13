@@ -11,6 +11,7 @@ import '../../features/home/presentation/pages/info/how_it_works_page.dart';
 import '../../features/home/presentation/pages/info/privacy_page.dart';
 import '../../features/home/presentation/pages/info/deeplink_tester_page.dart';
 import '../../features/home/presentation/pages/info/sponsors_page.dart';
+import '../../features/home/presentation/pages/info/contributors_page.dart';
 import '../../features/apps/presentation/pages/app_details_page.dart';
 import '../../features/apps/presentation/pages/app_details_by_package_page.dart';
 import '../../features/apps/domain/entities/device_app.dart';
@@ -32,6 +33,7 @@ abstract class AppRoutes {
   static const String privacy = '/privacy';
   static const String deeplinkTester = '/deeplink-tester';
   static const String sponsors = '/sponsors';
+  static const String contributors = '/contributors';
   static const String appDetails = '/app-details';
   static const String storageInsights = '/storage-insights';
   static const String updateCheck = '/update-check';
@@ -119,6 +121,13 @@ class AppRouteFactory {
           tapPosition: TapTracker.lastTapPosition,
         );
 
+      case AppRoutes.contributors:
+        return BubbleRevealPageRoute(
+          page: const ContributorsPage(),
+          settings: settings,
+          tapPosition: TapTracker.lastTapPosition,
+        );
+
       case AppRoutes.storageInsights:
         return BubbleRevealPageRoute(
           page: const StorageInsightsPage(),
@@ -202,6 +211,10 @@ class AppRouteFactory {
 
   static Future<void> toSponsors(BuildContext context) {
     return PremiumNavigation.push(context, const SponsorsPage());
+  }
+
+  static Future<void> toContributors(BuildContext context) {
+    return PremiumNavigation.push(context, const ContributorsPage());
   }
 
   static Future<void> toStorageInsights(BuildContext context) {
