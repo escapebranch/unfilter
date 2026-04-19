@@ -1,7 +1,7 @@
 name: unfilter
 description: "On-device app intelligence: fingerprint apps, analyze usage, and inspect your phone's software stack."
 publish_to: "none"
-version: 1.1.1+10
+version: 1.1.2+11
 
 environment:
   sdk: ^3.10.0

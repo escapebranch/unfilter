@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.2+11] - 2026-04-20
+
+### Added
+
+- **NIO Storage Scanning**: Reimplemented Android directory traversal with NIO `Files.walkFileTree` on Supported (Oreo+) devices for dramatically faster scanning and stability.
+- **Task Manager Permissions**: Integrated `UsagePermissionCard` prominently inside the Task Manager to guide users missing required access.
+
+### Changed
+
+- **UI Memory Optimizations**: Capped maximum cache dimensions for avatar resolution and framework logos using `ResizeImage` to vastly cut background memory usage.
+- **Batched Processing Limits**: Capped Dart `Future.wait` batch limits to 2 concurrent tasks matching the native unfilter thread pool, preventing deadlocks when scanning storage for heavy apps.
+
+### Fixed
+
+- **Low-end OOM Crashes**: Handled Out of Memory (OOM) fatal spikes by efficiently clearing image caches on dispose and sizing down GitHub assets—specifically improving stability on 4GB-RAM devices (like MIUI).
+
 ## [1.1.1+10] - 2026-04-13
 
 ### Added
