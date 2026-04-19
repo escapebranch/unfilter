@@ -21,6 +21,8 @@ class _SponsorsPageState extends ConsumerState<SponsorsPage> {
   @override
   void dispose() {
     _scrollController.dispose();
+    PaintingBinding.instance.imageCache.clear();
+    PaintingBinding.instance.imageCache.clearLiveImages();
     super.dispose();
   }
 
@@ -325,7 +327,10 @@ class _SponsorTile extends StatelessWidget {
                 CircleAvatar(
                   radius: 26,
                   backgroundColor: theme.colorScheme.surfaceContainerHighest,
-                  backgroundImage: NetworkImage(sponsor.avatarUrl),
+                  backgroundImage: ResizeImage(
+                    NetworkImage(sponsor.avatarUrl),
+                    width: 144, // Prevent OOM spikes on low-end MIUI devices
+                  ),
                 ),
                 const Spacer(),
                 Text(

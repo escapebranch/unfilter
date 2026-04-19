@@ -105,6 +105,7 @@ class _PosterHeader extends StatelessWidget {
           child: Image.asset(
             'assets/icons/black-unfilter-nobg.png',
             fit: BoxFit.contain,
+            cacheWidth: 200,
           ),
         ),
       ],

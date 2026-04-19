@@ -1,6 +1,12 @@
 package com.escapebranch.unfilter
 
+import android.os.Build
 import java.io.File
+import java.nio.file.FileVisitResult
+import java.nio.file.Files
+import java.nio.file.Path
+import java.nio.file.SimpleFileVisitor
+import java.nio.file.attribute.BasicFileAttributes
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.atomic.AtomicLong
 
@@ -20,7 +26,6 @@ class DirectoryScanner {
         private val DOCUMENT_EXTENSIONS = setOf("pdf", "doc", "docx", "xls", "xlsx", "ppt", "pptx")
     }
     
-    
     data class ScanResult(
         val totalSize: Long = 0L,
         val databasesSize: Long = 0L,
@@ -35,7 +40,6 @@ class DirectoryScanner {
         val filesScanned: Int = 0,
         val limitReached: Boolean = false
     )
-    
     
     fun scanDirectory(
         rootDir: File,
@@ -65,24 +69,44 @@ class DirectoryScanner {
         var limitReached = false
         
         try {
-            limitReached = scanRecursive(
-                dir = rootDir,
-                depth = 0,
-                maxDepth = maxDepth,
-                fileCounter = fileCounter,
-                maxFiles = maxFiles,
-                totalSize = totalSize,
-                databasesSize = databasesSize,
-                logsSize = logsSize,
-                imagesSize = imagesSize,
-                videosSize = videosSize,
-                audioSize = audioSize,
-                documentsSize = documentsSize,
-                residualSize = residualSize,
-                databaseFiles = databaseFiles,
-                checkCancelled = checkCancelled
-            )
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                limitReached = scanNio(
+                    rootDir = rootDir,
+                    maxDepth = maxDepth,
+                    maxFiles = maxFiles,
+                    fileCounter = fileCounter,
+                    totalSize = totalSize,
+                    databasesSize = databasesSize,
+                    logsSize = logsSize,
+                    imagesSize = imagesSize,
+                    videosSize = videosSize,
+                    audioSize = audioSize,
+                    documentsSize = documentsSize,
+                    residualSize = residualSize,
+                    databaseFiles = databaseFiles,
+                    checkCancelled = checkCancelled
+                )
+            } else {
+                limitReached = scanRecursive(
+                    dir = rootDir,
+                    depth = 0,
+                    maxDepth = maxDepth,
+                    fileCounter = fileCounter,
+                    maxFiles = maxFiles,
+                    totalSize = totalSize,
+                    databasesSize = databasesSize,
+                    logsSize = logsSize,
+                    imagesSize = imagesSize,
+                    videosSize = videosSize,
+                    audioSize = audioSize,
+                    documentsSize = documentsSize,
+                    residualSize = residualSize,
+                    databaseFiles = databaseFiles,
+                    checkCancelled = checkCancelled
+                )
+            }
         } catch (e: Exception) {
+            // Ignore traversal exceptions
         }
         
         val mediaSize = imagesSize.get() + videosSize.get() + audioSize.get() + documentsSize.get()
@@ -102,7 +126,97 @@ class DirectoryScanner {
             limitReached = limitReached
         )
     }
+
+    private fun getExtension(name: String): String {
+        val lastDot = name.lastIndexOf('.')
+        if (lastDot == -1) return ""
+        return name.substring(lastDot + 1).lowercase()
+    }
     
+    private fun scanNio(
+        rootDir: File,
+        maxDepth: Int,
+        maxFiles: Int,
+        fileCounter: AtomicInteger,
+        totalSize: AtomicLong,
+        databasesSize: AtomicLong,
+        logsSize: AtomicLong,
+        imagesSize: AtomicLong,
+        videosSize: AtomicLong,
+        audioSize: AtomicLong,
+        documentsSize: AtomicLong,
+        residualSize: AtomicLong,
+        databaseFiles: MutableMap<String, Long>,
+        checkCancelled: () -> Boolean
+    ): Boolean {
+        var limitReached = false
+        try {
+            Files.walkFileTree(rootDir.toPath(), emptySet(), maxDepth, object : SimpleFileVisitor<Path>() {
+                override fun preVisitDirectory(dir: Path, attrs: BasicFileAttributes): FileVisitResult {
+                    if (checkCancelled()) {
+                        limitReached = true
+                        return FileVisitResult.TERMINATE
+                    }
+                    if (fileCounter.get() >= maxFiles) {
+                        limitReached = true
+                        return FileVisitResult.TERMINATE
+                    }
+                    fileCounter.incrementAndGet()
+                    return FileVisitResult.CONTINUE
+                }
+
+                override fun visitFile(file: Path, attrs: BasicFileAttributes): FileVisitResult {
+                    if (checkCancelled()) {
+                        limitReached = true
+                        return FileVisitResult.TERMINATE
+                    }
+                    if (fileCounter.incrementAndGet() >= maxFiles) {
+                        limitReached = true
+                        return FileVisitResult.TERMINATE
+                    }
+
+                    try {
+                        val fileSize = attrs.size()
+                        if (fileSize > MAX_FILE_SIZE_TO_CATEGORIZE) {
+                            totalSize.addAndGet(fileSize)
+                            residualSize.addAndGet(fileSize)
+                            return FileVisitResult.CONTINUE
+                        }
+
+                        totalSize.addAndGet(fileSize)
+                        
+                        val fileName = file.fileName?.toString() ?: return FileVisitResult.CONTINUE
+                        val extension = getExtension(fileName)
+
+                        when {
+                            DATABASE_EXTENSIONS.contains(extension) -> {
+                                databasesSize.addAndGet(fileSize)
+                                synchronized(databaseFiles) {
+                                    databaseFiles[fileName] = fileSize
+                                }
+                            }
+                            LOG_EXTENSIONS.contains(extension) -> logsSize.addAndGet(fileSize)
+                            IMAGE_EXTENSIONS.contains(extension) -> imagesSize.addAndGet(fileSize)
+                            VIDEO_EXTENSIONS.contains(extension) -> videosSize.addAndGet(fileSize)
+                            AUDIO_EXTENSIONS.contains(extension) -> audioSize.addAndGet(fileSize)
+                            DOCUMENT_EXTENSIONS.contains(extension) -> documentsSize.addAndGet(fileSize)
+                            else -> residualSize.addAndGet(fileSize)
+                        }
+                    } catch (e: Exception) {
+                        // ignore
+                    }
+                    return FileVisitResult.CONTINUE
+                }
+                
+                override fun visitFileFailed(file: Path, exc: java.io.IOException?): FileVisitResult {
+                    return FileVisitResult.CONTINUE
+                }
+            })
+        } catch (e: Exception) {
+            // Ignore
+        }
+        return limitReached
+    }
     
     private fun scanRecursive(
         dir: File,
@@ -122,11 +236,8 @@ class DirectoryScanner {
         checkCancelled: () -> Boolean
     ): Boolean {
         if (depth > maxDepth) return true
-        
         if (fileCounter.get() >= maxFiles) return true
-        
         if (checkCancelled()) return true
-        
         if (!dir.canRead()) return false
         
         val files = try {
@@ -184,36 +295,20 @@ class DirectoryScanner {
                                 databaseFiles[fileName] = fileSize
                             }
                         }
-                        LOG_EXTENSIONS.contains(extension) -> {
-                            logsSize.addAndGet(fileSize)
-                        }
-                        IMAGE_EXTENSIONS.contains(extension) -> {
-                            imagesSize.addAndGet(fileSize)
-                        }
-                        VIDEO_EXTENSIONS.contains(extension) -> {
-                            videosSize.addAndGet(fileSize)
-                        }
-                        AUDIO_EXTENSIONS.contains(extension) -> {
-                            audioSize.addAndGet(fileSize)
-                        }
-                        DOCUMENT_EXTENSIONS.contains(extension) -> {
-                            documentsSize.addAndGet(fileSize)
-                        }
-                        else -> {
-                            residualSize.addAndGet(fileSize)
-                        }
+                        LOG_EXTENSIONS.contains(extension) -> logsSize.addAndGet(fileSize)
+                        IMAGE_EXTENSIONS.contains(extension) -> imagesSize.addAndGet(fileSize)
+                        VIDEO_EXTENSIONS.contains(extension) -> videosSize.addAndGet(fileSize)
+                        AUDIO_EXTENSIONS.contains(extension) -> audioSize.addAndGet(fileSize)
+                        DOCUMENT_EXTENSIONS.contains(extension) -> documentsSize.addAndGet(fileSize)
+                        else -> residualSize.addAndGet(fileSize)
                     }
                 }
-            } catch (e: SecurityException) {
-                continue
             } catch (e: Exception) {
                 continue
             }
         }
-        
         return false
     }
-    
     
     fun quickSizeCalculation(
         rootDir: File,
@@ -226,14 +321,26 @@ class DirectoryScanner {
         
         val fileCounter = AtomicInteger(0)
         
-        return quickSizeRecursive(
-            dir = rootDir,
-            depth = 0,
-            maxDepth = maxDepth,
-            fileCounter = fileCounter,
-            maxFiles = maxFiles,
-            checkCancelled = checkCancelled
-        )
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            var total = 0L
+            try {
+                Files.walkFileTree(rootDir.toPath(), emptySet(), maxDepth, object : SimpleFileVisitor<Path>() {
+                    override fun preVisitDirectory(dir: Path, attrs: BasicFileAttributes): FileVisitResult {
+                        if (checkCancelled() || fileCounter.incrementAndGet() >= maxFiles) return FileVisitResult.TERMINATE
+                        return FileVisitResult.CONTINUE
+                    }
+                    override fun visitFile(file: Path, attrs: BasicFileAttributes): FileVisitResult {
+                        if (checkCancelled() || fileCounter.incrementAndGet() >= maxFiles) return FileVisitResult.TERMINATE
+                        total += attrs.size()
+                        return FileVisitResult.CONTINUE
+                    }
+                    override fun visitFileFailed(file: Path, exc: java.io.IOException?) = FileVisitResult.CONTINUE
+                })
+            } catch (e: Exception) {}
+            return total
+        } else {
+            return quickSizeRecursive(rootDir, 0, maxDepth, fileCounter, maxFiles, checkCancelled)
+        }
     }
     
     private fun quickSizeRecursive(
@@ -267,8 +374,7 @@ class DirectoryScanner {
                 } else {
                     file.length()
                 }
-            } catch (e: Exception) {
-            }
+            } catch (e: Exception) {}
         }
         
         return totalSize

@@ -151,6 +151,7 @@ class _HeroSection extends StatelessWidget {
         isDark
             ? 'assets/icons/white-unfilter-nobg.png'
             : 'assets/icons/black-unfilter-nobg.png',
+        cacheWidth: 200,
       ),
     );
   }

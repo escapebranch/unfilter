@@ -105,7 +105,10 @@ class DrawerSponsorCard extends StatelessWidget {
                                   children: [
                                     const CircleAvatar(
                                       radius: 8,
-                                      backgroundImage: NetworkImage('https://github.com/r4khul.png'),
+                                      backgroundImage: ResizeImage(
+                                        NetworkImage('https://github.com/r4khul.png'),
+                                        width: 48, // Optimize cache size
+                                      ),
                                       backgroundColor: Colors.transparent,
                                     ),
                                     const SizedBox(width: 6),

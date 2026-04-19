@@ -83,6 +83,7 @@ class HomeTopAppBar extends StatelessWidget {
             ? 'assets/icons/white-unfilter-nobg.png'
             : 'assets/icons/black-unfilter-nobg.png',
         height: 20,
+        cacheHeight: 60, // Optimize load dimensions 
       ),
     );
   }

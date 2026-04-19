@@ -93,18 +93,28 @@ class StorageBreakdownNotifier extends Notifier<StorageBreakdownState> {
         apps.where((app) => app.size > minSizeMB * 1024 * 1024).toList()
           ..sort((a, b) => b.size.compareTo(a.size));
 
-    final toPrefetch = heaviest.take(count).map((app) => app.packageName);
+    final toPrefetch = heaviest.take(count).map((app) => app.packageName).toList();
 
-    for (final packageName in toPrefetch) {
-      final existing = state.breakdowns[packageName];
-      if (existing != null && existing.isRecent) {
-        continue;
-      }
+    // Strictly identical to Native Android ThreadPool size (2) to prevent timeout starvation
+    const concurrencyLimit = 2;
+    for (var i = 0; i < toPrefetch.length; i += concurrencyLimit) {
+      final chunk = toPrefetch.sublist(
+        i,
+        i + concurrencyLimit > toPrefetch.length
+            ? toPrefetch.length
+            : i + concurrencyLimit,
+      );
 
-      try {
-        await getBreakdown(packageName, detailed: false);
-      } catch (_) {
-      }
+      await Future.wait(
+        chunk.map((packageName) async {
+          final existing = state.breakdowns[packageName];
+          if (existing != null && existing.isRecent) return;
+
+          try {
+            await getBreakdown(packageName, detailed: false);
+          } catch (_) {}
+        }),
+      );
     }
   }
 

@@ -8,6 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:system_info2/system_info2.dart';
 
+import '../../../apps/presentation/providers/apps_provider.dart';
+import '../../../analytics/presentation/widgets/usage_permission_card.dart';
 import '../../../home/presentation/widgets/premium_app_bar.dart';
 import '../../../../core/widgets/top_shadow_gradient.dart';
 import '../../domain/entities/active_app.dart';
@@ -204,6 +206,9 @@ class _TaskManagerPageState extends ConsumerState<TaskManagerPage> {
     var activeApps = data.activeApps;
     final matches = data.matches;
 
+    final permissionAsync = ref.watch(usagePermissionProvider);
+    final hasPermission = permissionAsync.value ?? false;
+
     if (_searchQuery.isNotEmpty) {
       final query = _searchQuery.toLowerCase();
       processesWithHistory = _filterProcesses(processesWithHistory, query);
@@ -244,6 +249,12 @@ class _TaskManagerPageState extends ConsumerState<TaskManagerPage> {
           UserAppItem(app: app, matchingProcess: matches[app.packageName]),
         );
       }
+    }
+
+    if (!hasPermission && _searchQuery.isEmpty) {
+      listItems.add(const SizedBox(height: TaskManagerSpacing.lg));
+      listItems.add(UsagePermissionCard(hasPermission: hasPermission));
+      listItems.add(const SizedBox(height: TaskManagerSpacing.lg));
     }
 
     if (listItems.isEmpty) {

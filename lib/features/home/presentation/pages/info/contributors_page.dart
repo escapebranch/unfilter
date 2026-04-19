@@ -20,6 +20,8 @@ class _ContributorsPageState extends ConsumerState<ContributorsPage> {
   @override
   void dispose() {
     _scrollController.dispose();
+    PaintingBinding.instance.imageCache.clear();
+    PaintingBinding.instance.imageCache.clearLiveImages();
     super.dispose();
   }
 
@@ -225,7 +227,10 @@ class _ContributorsPageState extends ConsumerState<ContributorsPage> {
                 ),
                 child: CircleAvatar(
                   radius: 28,
-                  backgroundImage: NetworkImage(topContributors[i].avatarUrl),
+                  backgroundImage: ResizeImage(
+                    NetworkImage(topContributors[i].avatarUrl),
+                    width: 144, // Optimized for 4GB MIUI to prevent memory spikes
+                  ),
                   backgroundColor: theme.colorScheme.surfaceContainerHighest,
                 ),
               ),
@@ -529,7 +534,10 @@ class _ContributorTile extends StatelessWidget {
                   ),
                   child: CircleAvatar(
                     radius: 36,
-                    backgroundImage: NetworkImage(contributor.avatarUrl),
+                    backgroundImage: ResizeImage(
+                      NetworkImage(contributor.avatarUrl),
+                      width: 144, // Optimized for 4GB MIUI to prevent memory spikes
+                    ),
                     backgroundColor: theme.colorScheme.surfaceContainerHighest,
                   ),
                 ),

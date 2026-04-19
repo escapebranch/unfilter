@@ -74,19 +74,38 @@ class StorageRepository {
     final results = <String, StorageBreakdown>{};
     var current = 0;
 
-    for (final packageName in packageNames) {
-      try {
-        final breakdown = await getStorageBreakdown(
-          packageName,
-          detailed: detailed,
-        );
-        results[packageName] = breakdown;
-      } catch (e) {
-        // Error for one app shouldn't stop the whole batch
-      }
+    // Synchronize concurrency explicitly with Android Native fixed pool (2 threads).
+    // If >2, Flutter futures will time out while queuing on the native side.
+    const concurrencyLimit = 2;
+    for (var i = 0; i < packageNames.length; i += concurrencyLimit) {
+      final chunk = packageNames.sublist(
+        i,
+        i + concurrencyLimit > packageNames.length
+            ? packageNames.length
+            : i + concurrencyLimit,
+      );
 
-      current++;
-      onProgress?.call(current, packageNames.length);
+      final futures = chunk.map((packageName) async {
+        try {
+          final breakdown = await getStorageBreakdown(
+            packageName,
+            detailed: detailed,
+          );
+          return MapEntry(packageName, breakdown);
+        } catch (e) {
+          // Error for one app shouldn't stop the whole batch
+          return null;
+        }
+      });
+
+      final chunkResults = await Future.wait(futures);
+      for (final result in chunkResults) {
+        if (result != null) {
+          results[result.key] = result.value;
+        }
+        current++;
+        onProgress?.call(current, packageNames.length);
+      }
     }
 
     return results;

@@ -217,8 +217,11 @@ class DrawerContributorsCard extends ConsumerWidget {
                     ),
                     child: CircleAvatar(
                       radius: avatarSize / 2,
-                      backgroundImage: NetworkImage(
-                        externalContributors[i].avatarUrl,
+                      backgroundImage: ResizeImage(
+                        NetworkImage(
+                          externalContributors[i].avatarUrl,
+                        ),
+                        width: 96, // Save memory on low-end devices
                       ),
                       backgroundColor:
                           theme.colorScheme.surfaceContainerHighest,
