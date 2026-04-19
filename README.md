@@ -17,6 +17,11 @@
   <img src="https://img.shields.io/badge/License-MIT-orange?style=for-the-badge&logo=opensourceinitiative&logoColor=white" alt="License"/>
 </a>
 
+<br><br>
+<a href="https://play.google.com/store/apps/details?id=com.escapebranch.unfilter">
+  <img alt="Get it on Google Play" src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" height="60"/>
+</a>
+
 </div>
 
 Unfilter is an on-device app intelligence tool for understanding what runs on your phone.
