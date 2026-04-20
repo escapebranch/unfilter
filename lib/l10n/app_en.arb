@@ -1,0 +1,11 @@
+{
+    "@@locale": "en",
+    "appTitle": "Unfilter",
+    "@appTitle": {
+        "description": "Application title"
+    },
+    "homeTitle": "Home",
+    "@homeTitle": {
+        "description": "Homepage title"
+    }
+}

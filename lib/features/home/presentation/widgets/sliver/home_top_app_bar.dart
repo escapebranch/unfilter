@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:unfilter/features/home/presentation/widgets/choose_language_button.dart';
 
 import '../scan_button.dart';
 import '../settings_menu.dart';
@@ -27,6 +28,8 @@ class HomeTopAppBar extends StatelessWidget {
           children: [
             Expanded(child: _buildTitleLogoTransition(theme)),
             const ScanButton(),
+            const SizedBox(width: 4),
+            const ChooseLanguageButton(),
             const SizedBox(width: 4),
             const SettingsMenu(),
           ],

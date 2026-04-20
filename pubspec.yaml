@@ -9,6 +9,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
   cupertino_icons: ^1.0.9
   flutter_riverpod: ^3.3.1
   equatable: ^2.0.8
@@ -54,6 +56,7 @@ flutter_native_splash:
     icon_background_color_dark: "#000000"
 
 flutter:
+  generate: true
   uses-material-design: true
   assets:
     - assets/fonts/

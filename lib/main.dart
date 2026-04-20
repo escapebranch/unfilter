@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:unfilter/l10n/app_localizations.dart';
 import 'core/providers/theme_provider.dart';
 import 'core/theme/app_theme.dart';
 import 'core/widgets/theme_transition_wrapper.dart';
@@ -34,7 +36,7 @@ class UnfilterApp extends ConsumerWidget {
 
     return MaterialApp(
       key: appKey,
-      title: 'UnFilter',
+      onGenerateTitle: (context) => AppLocalizations.of(context).appTitle,
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
@@ -49,6 +51,16 @@ class UnfilterApp extends ConsumerWidget {
       home: const AppEntry(),
       onGenerateRoute: AppRouteFactory.onGenerateRoute,
       navigatorObservers: [AppNavigatorObserver(ref: ref)],
+      localizationsDelegates: const [
+          AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: const [
+        Locale("en"),
+        Locale("ta")
+      ],
     );
   }
 }

@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:unfilter/features/home/presentation/widgets/dialog_header.dart';
 
 import '../../../../core/navigation/navigation.dart';
 import '../../../apps/presentation/providers/apps_provider.dart';
@@ -167,7 +168,12 @@ class _ScanOptionsDialog extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                _buildHeader(theme),
+                DialogHeader(
+                  theme: theme,
+                  icon: Icons.radar_rounded,
+                  title: 'Scan Options',
+                  subtitle: 'Choose how you want to refresh your app intel.',
+                ),
                 const SizedBox(height: 24),
                 _ScanOptionTile(
                   title: 'Full System Scan',
@@ -193,42 +199,6 @@ class _ScanOptionsDialog extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-
-  Widget _buildHeader(ThemeData theme) {
-    return Column(
-      children: [
-        Container(
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            color: theme.colorScheme.primary.withValues(alpha: 0.1),
-            shape: BoxShape.circle,
-          ),
-          child: Icon(
-            Icons.radar_rounded,
-            color: theme.colorScheme.primary,
-            size: 28,
-          ),
-        ),
-        const SizedBox(height: 16),
-        Text(
-          'Scan Options',
-          style: theme.textTheme.headlineSmall?.copyWith(
-            fontWeight: FontWeight.bold,
-            letterSpacing: -0.5,
-          ),
-        ),
-        const SizedBox(height: 8),
-        Text(
-          'Choose how you want to refresh your app intel.',
-          textAlign: TextAlign.center,
-          style: theme.textTheme.bodyMedium?.copyWith(
-            color: theme.colorScheme.onSurfaceVariant,
-            height: 1.4,
-          ),
-        ),
-      ],
     );
   }
 }
