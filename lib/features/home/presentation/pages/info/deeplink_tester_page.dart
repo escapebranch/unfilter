@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:unfilter/l10n/generated/app_localizations.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 // Note: Ensure these paths match your project structure
@@ -26,7 +27,7 @@ class _DeeplinkTesterPageState extends State<DeeplinkTesterPage> {
   Uri? _parsedUri;
   bool? _canLaunch;
   bool? _didLaunch;
-  String _statusMessage = 'Enter a deeplink to test it.';
+  String _statusMessage = '';
 
   @override
   void dispose() {
@@ -38,6 +39,16 @@ class _DeeplinkTesterPageState extends State<DeeplinkTesterPage> {
     _queryController.dispose();
     _fragmentController.dispose();
     super.dispose();
+  }
+
+  AppLocalizations get _l10n => AppLocalizations.of(context)!;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_statusMessage.isEmpty) {
+      _statusMessage = _l10n.deeplinkInitialStatus;
+    }
   }
 
   void _parseFullUrl(String url) {
@@ -64,7 +75,7 @@ class _DeeplinkTesterPageState extends State<DeeplinkTesterPage> {
       _parsedUri = null;
       _canLaunch = null;
       _didLaunch = null;
-      _statusMessage = 'Enter a deeplink to test it.';
+      _statusMessage = _l10n.deeplinkInitialStatus;
     });
   }
 
@@ -109,7 +120,7 @@ class _DeeplinkTesterPageState extends State<DeeplinkTesterPage> {
     final url = _buildFullUrl();
     if (url.isEmpty) {
       setState(() {
-        _statusMessage = 'Please enter at least a scheme.';
+        _statusMessage = _l10n.deeplinkEnterSchemeError;
       });
       return;
     }
@@ -120,7 +131,7 @@ class _DeeplinkTesterPageState extends State<DeeplinkTesterPage> {
         _parsedUri = null;
         _canLaunch = false;
         _didLaunch = false;
-        _statusMessage = 'Invalid deeplink. Include a valid URI scheme.';
+        _statusMessage = _l10n.deeplinkInvalidError;
       });
       return;
     }
@@ -128,20 +139,20 @@ class _DeeplinkTesterPageState extends State<DeeplinkTesterPage> {
     final canLaunch = await canLaunchUrl(uri);
     var didLaunch = false;
     var status = canLaunch
-        ? 'Deep link can be handled on this device.'
-        : 'No app can handle this deep link right now.';
+        ? _l10n.deeplinkCanHandle
+        : _l10n.deeplinkNoHandler;
 
     if (canLaunch) {
       try {
         didLaunch = await launchUrl(uri, mode: LaunchMode.externalApplication);
         if (didLaunch) {
-          status = 'Deep link launched successfully.';
+          status = _l10n.deeplinkLaunchedSuccess;
         } else {
-          status = 'Deep link was recognized but failed to launch.';
+          status = _l10n.deeplinkLaunchFailedRecognized;
         }
       } catch (_) {
         didLaunch = false;
-        status = 'Failed to launch deep link.';
+        status = _l10n.deeplinkLaunchFailed;
       }
     }
 
@@ -164,6 +175,7 @@ class _DeeplinkTesterPageState extends State<DeeplinkTesterPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
@@ -202,7 +214,7 @@ class _DeeplinkTesterPageState extends State<DeeplinkTesterPage> {
           ),
           const TopShadowGradient(),
           PremiumAppBar(
-            title: 'Deep Link Tester',
+            title: l10n.deeplinkTesterTitle,
             scrollController: _scrollController,
           ),
         ],
@@ -213,6 +225,7 @@ class _DeeplinkTesterPageState extends State<DeeplinkTesterPage> {
   Widget _buildInputCard(ThemeData theme) {
     final isDark = theme.brightness == Brightness.dark;
     final fullUrl = _buildFullUrl();
+    final l10n = AppLocalizations.of(context)!;
 
     return Container(
       padding: const EdgeInsets.all(16),
@@ -229,7 +242,7 @@ class _DeeplinkTesterPageState extends State<DeeplinkTesterPage> {
           Row(
             children: [
               Text(
-                'Deep Link Components',
+                l10n.deeplinkComponentsTitle,
                 style: theme.textTheme.titleSmall?.copyWith(
                   fontWeight: FontWeight.w700,
                 ),
@@ -259,7 +272,7 @@ class _DeeplinkTesterPageState extends State<DeeplinkTesterPage> {
                         ),
                         const SizedBox(width: 4),
                         Text(
-                          'Clear',
+                          l10n.commonClearLabel,
                           style: theme.textTheme.labelSmall?.copyWith(
                             color: theme.colorScheme.error,
                             fontWeight: FontWeight.w600,
@@ -288,7 +301,7 @@ class _DeeplinkTesterPageState extends State<DeeplinkTesterPage> {
                 fontFamily: 'monospace',
               ),
               decoration: InputDecoration(
-                hintText: 'Paste full URL here (e.g., myapp://host/path)',
+                hintText: l10n.deeplinkPasteFullUrlHint,
                 hintStyle: theme.textTheme.bodyMedium?.copyWith(
                   color: theme.colorScheme.onSurfaceVariant.withValues(
                     alpha: 0.5,
@@ -334,7 +347,7 @@ class _DeeplinkTesterPageState extends State<DeeplinkTesterPage> {
           ),
           const SizedBox(height: 8),
           Text(
-            'Paste full URL above to auto-fill fields',
+            l10n.deeplinkAutofillHint,
             style: theme.textTheme.bodySmall?.copyWith(
               color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
             ),
@@ -343,40 +356,41 @@ class _DeeplinkTesterPageState extends State<DeeplinkTesterPage> {
           _buildTableField(
             theme: theme,
             label: 'Scheme',
+            // ignore: unnecessary_string_escapes
             controller: _schemeController,
-            hint: 'e.g. mailto, https',
+            hint: l10n.deeplinkHintScheme,
             icon: Icons.link_rounded,
           ),
           const SizedBox(height: 12),
           _buildTableField(
             theme: theme,
-            label: 'Host',
+            label: l10n.deeplinkLabelHost,
             controller: _hostController,
-            hint: 'e.g. example.com',
+            hint: l10n.deeplinkHintHost,
             icon: Icons.dns_rounded,
           ),
           const SizedBox(height: 12),
           _buildTableField(
             theme: theme,
-            label: 'Path',
+            label: l10n.deeplinkLabelPath,
             controller: _pathController,
-            hint: 'e.g. /profile',
+            hint: l10n.deeplinkHintPath,
             icon: Icons.folder_rounded,
           ),
           const SizedBox(height: 12),
           _buildTableField(
             theme: theme,
-            label: 'Query',
+            label: l10n.deeplinkLabelQuery,
             controller: _queryController,
-            hint: 'e.g. id=123',
+            hint: l10n.deeplinkHintQuery,
             icon: Icons.help_outline_rounded,
           ),
           const SizedBox(height: 12),
           _buildTableField(
             theme: theme,
-            label: 'Fragment',
+            label: l10n.deeplinkLabelFragment,
             controller: _fragmentController,
-            hint: 'e.g. section1',
+            hint: l10n.deeplinkHintFragment,
             icon: Icons.tag_rounded,
           ),
           if (fullUrl.isNotEmpty) ...[
@@ -395,7 +409,7 @@ class _DeeplinkTesterPageState extends State<DeeplinkTesterPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Preview',
+                    l10n.commonPreviewLabel,
                     style: theme.textTheme.labelSmall?.copyWith(
                       color: theme.colorScheme.primary,
                       fontWeight: FontWeight.w600,
@@ -439,7 +453,7 @@ class _DeeplinkTesterPageState extends State<DeeplinkTesterPage> {
                   ),
                   const SizedBox(width: 8),
                   Text(
-                    'Test Deeplink',
+                    l10n.deeplinkTestButton,
                     style: theme.textTheme.labelLarge?.copyWith(
                       fontWeight: FontWeight.w600,
                       color: theme.colorScheme.primary,
@@ -473,7 +487,7 @@ class _DeeplinkTesterPageState extends State<DeeplinkTesterPage> {
                   ),
                   const SizedBox(width: 8),
                   Text(
-                    'Try Examples',
+                    l10n.deeplinkTryExamplesButton,
                     style: theme.textTheme.labelLarge?.copyWith(
                       fontWeight: FontWeight.w600,
                       color: theme.colorScheme.onSurfaceVariant,
@@ -509,7 +523,7 @@ class _DeeplinkTesterPageState extends State<DeeplinkTesterPage> {
             child: Column(
               children: [
                 PremiumModalHeader(
-                  title: "Deep Link Examples",
+                  title: _l10n.deeplinkExamplesTitle,
                   icon: Icons.code_rounded,
                   onClose: () => Navigator.pop(context),
                 ),
@@ -523,7 +537,7 @@ class _DeeplinkTesterPageState extends State<DeeplinkTesterPage> {
                     children: [
                       _buildDeepLinkCard(
                         context,
-                        title: "Compose Email",
+                        title: _l10n.deeplinkExampleComposeEmail,
                         link: "mailto:user@example.com?subject=Hello",
                         icon: Icons.email_rounded,
                         cardColor: Colors.blueAccent,
@@ -532,7 +546,7 @@ class _DeeplinkTesterPageState extends State<DeeplinkTesterPage> {
                       const SizedBox(height: 12),
                       _buildDeepLinkCard(
                         context,
-                        title: "Phone Call",
+                        title: _l10n.deeplinkExamplePhoneCall,
                         link: "tel:+1234567890",
                         icon: Icons.phone_rounded,
                         cardColor: Colors.green,
@@ -541,7 +555,7 @@ class _DeeplinkTesterPageState extends State<DeeplinkTesterPage> {
                       const SizedBox(height: 12),
                       _buildDeepLinkCard(
                         context,
-                        title: "Send SMS",
+                        title: _l10n.deeplinkExampleSendSms,
                         link: "sms:+1234567890?body=Hi",
                         icon: Icons.message_rounded,
                         cardColor: Colors.orange,
@@ -550,7 +564,7 @@ class _DeeplinkTesterPageState extends State<DeeplinkTesterPage> {
                       const SizedBox(height: 32),
                       Center(
                         child: Text(
-                          'More configurations coming soon!',
+                          _l10n.deeplinkMoreConfigsSoon,
                           style: theme.textTheme.bodySmall,
                         ),
                       ),
@@ -717,6 +731,7 @@ class _DeeplinkTesterPageState extends State<DeeplinkTesterPage> {
   }
 
   Widget _buildParsedDetailsCard(ThemeData theme) {
+    final l10n = AppLocalizations.of(context)!;
     if (_parsedUri == null) {
       return Container(
         width: double.infinity,
@@ -729,7 +744,7 @@ class _DeeplinkTesterPageState extends State<DeeplinkTesterPage> {
           ),
         ),
         child: Text(
-          'URI breakdown will appear here after testing.',
+          l10n.deeplinkParsedEmpty,
           style: theme.textTheme.bodyMedium,
         ),
       );
@@ -750,19 +765,19 @@ class _DeeplinkTesterPageState extends State<DeeplinkTesterPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Parsed URI Details',
+            l10n.deeplinkParsedDetailsTitle,
             style: theme.textTheme.titleSmall?.copyWith(
               fontWeight: FontWeight.w700,
             ),
           ),
           const SizedBox(height: 12),
-          _buildDetailRow(theme, 'Scheme', uri.scheme),
-          _buildDetailRow(theme, 'Host', uri.host.isEmpty ? '-' : uri.host),
-          _buildDetailRow(theme, 'Path', uri.path.isEmpty ? '/' : uri.path),
-          if (uri.query.isNotEmpty) _buildDetailRow(theme, 'Query', uri.query),
+          _buildDetailRow(theme, l10n.deeplinkLabelScheme, uri.scheme),
+          _buildDetailRow(theme, l10n.deeplinkLabelHost, uri.host.isEmpty ? '-' : uri.host),
+          _buildDetailRow(theme, l10n.deeplinkLabelPath, uri.path.isEmpty ? '/' : uri.path),
+          if (uri.query.isNotEmpty) _buildDetailRow(theme, l10n.deeplinkLabelQuery, uri.query),
           _buildDetailRow(
             theme,
-            'Fragment',
+            l10n.deeplinkLabelFragment,
             uri.fragment.isEmpty ? '-' : uri.fragment,
           ),
         ],

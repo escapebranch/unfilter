@@ -1,0 +1,91 @@
+{
+  "@@locale": "en",
+  "appTitle": "UnFilter",
+  "@appTitle": {
+    "description": "Application title"
+  },
+  "homeTitle": "Home",
+  "@homeTitle": {
+    "description": "Homepage title"
+  },
+  "chooseLanguageDialogTitle": "Choose Language",
+  "@chooseLanguageDialogTitle": {
+    "description": "Title shown in language selection dialog"
+  },
+  "chooseLanguageDialogSubtitle": "Choose how you want to navigate through application",
+  "@chooseLanguageDialogSubtitle": {
+    "description": "Subtitle shown in language selection dialog"
+  },
+  "languageEnglish": "English",
+  "@languageEnglish": {
+    "description": "English language name shown in selector"
+  },
+  "languageTamil": "Tamil",
+  "@languageTamil": {
+    "description": "Tamil language name shown in selector"
+  },
+  "confirmButtonLabel": "Confirm",
+  "@confirmButtonLabel": {
+    "description": "Generic confirm action label"
+  },
+  "premiumAppBarResyncApp": "Resync App",
+  "premiumAppBarShare": "Share",
+  "premiumAppBarMenuTooltip": "Menu",
+  "commonOpenLabel": "Open",
+  "commonViewLabel": "View",
+  "commonClearLabel": "Clear",
+  "commonPreviewLabel": "Preview",
+  "privacyPolicyTitle": "Privacy Policy",
+  "privacyTermsAndConditionsTitle": "Terms & Conditions",
+  "privacyHeader": "Your Data,\nYour Device",
+  "privacyIntro": "Privacy is part of the product, not an afterthought. UnFilter runs offline so it can stay useful without ever becoming nosy about you.",
+  "privacySectionLocalProcessingTitle": "Local Processing",
+  "privacySectionLocalProcessingContent": "Every scan, every match, every bit of analysis runs right on your phone. We couldn't peek at your apps even if we wanted to - we built it that way.",
+  "privacySectionMinimalPermissionsTitle": "Minimal Permissions",
+  "privacySectionMinimalPermissionsContent": "We ask for exactly two things: permission to see what apps you have installed, and storage access for looking through native libraries. That's it.",
+  "privacySectionNoTrackingTitle": "No Tracking",
+  "privacySectionNoTrackingContent": "No analytics. No ad SDKs. No crash reporters phoning home. What you do inside the app stays between you and your phone.",
+  "privacySectionLimitedNetworkingTitle": "Limited Networking",
+  "privacySectionLimitedNetworkingContent": "The only time we hit the internet is to check for updates and grab the GitHub star count. That's it - nothing about you leaves this app.",
+  "howItWorksTitle": "How it works",
+  "howItWorksHeader": "App\nClues",
+  "howItWorksIntro": "No decompiling. No uploads. Just smart local analysis that reads what's already there and tells you what an app is made of.",
+  "howItWorksOpenSourceLabel": "Open Source",
+  "howItWorksStep1Title": "Collect Clues",
+  "howItWorksStep1Description": "We look at each app's package info and native libraries already sitting on your phone. No uploads, no account, no drama.",
+  "howItWorksStep2Title": "Match Signals",
+  "howItWorksStep2Description": "We compare those clues against local framework fingerprints to spot Flutter, React Native, Unity, and the rest of the usual suspects.",
+  "howItWorksStep3Title": "Stay Local",
+  "howItWorksStep3Description": "Every scan happens on-device. The fun stays private and your app data never leaves your phone.",
+  "deeplinkTesterTitle": "Deep Link Tester",
+  "deeplinkInitialStatus": "Enter a deeplink to test it.",
+  "deeplinkEnterSchemeError": "Please enter at least a scheme.",
+  "deeplinkInvalidError": "Invalid deeplink. Include a valid URI scheme.",
+  "deeplinkCanHandle": "Deep link can be handled on this device.",
+  "deeplinkNoHandler": "No app can handle this deep link right now.",
+  "deeplinkLaunchedSuccess": "Deep link launched successfully.",
+  "deeplinkLaunchFailedRecognized": "Deep link was recognized but failed to launch.",
+  "deeplinkLaunchFailed": "Failed to launch deep link.",
+  "deeplinkComponentsTitle": "Deep Link Components",
+  "deeplinkPasteFullUrlHint": "Paste full URL here (e.g., myapp://host/path)",
+  "deeplinkAutofillHint": "Paste full URL above to auto-fill fields",
+  "deeplinkLabelScheme": "Scheme",
+  "deeplinkLabelHost": "Host",
+  "deeplinkLabelPath": "Path",
+  "deeplinkLabelQuery": "Query",
+  "deeplinkLabelFragment": "Fragment",
+  "deeplinkHintScheme": "e.g. mailto, https",
+  "deeplinkHintHost": "e.g. example.com",
+  "deeplinkHintPath": "e.g. /profile",
+  "deeplinkHintQuery": "e.g. id=123",
+  "deeplinkHintFragment": "e.g. section1",
+  "deeplinkTestButton": "Test Deeplink",
+  "deeplinkTryExamplesButton": "Try Examples",
+  "deeplinkExamplesTitle": "Deep Link Examples",
+  "deeplinkExampleComposeEmail": "Compose Email",
+  "deeplinkExamplePhoneCall": "Phone Call",
+  "deeplinkExampleSendSms": "Send SMS",
+  "deeplinkMoreConfigsSoon": "More configurations coming soon!",
+  "deeplinkParsedEmpty": "URI breakdown will appear here after testing.",
+  "deeplinkParsedDetailsTitle": "Parsed URI Details"
+}

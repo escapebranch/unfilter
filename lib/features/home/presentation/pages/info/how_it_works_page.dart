@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:unfilter/l10n/generated/app_localizations.dart';
 
 import '../../widgets/external_link_tile.dart';
 import '../../widgets/premium_app_bar.dart';
@@ -23,6 +24,7 @@ class _HowItWorksPageState extends State<HowItWorksPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
@@ -50,36 +52,28 @@ class _HowItWorksPageState extends State<HowItWorksPage> {
                       const SizedBox(height: 16),
                       _buildIntroText(theme),
                       const SizedBox(height: 20),
-                      const ExternalLinkTile(
-                        label: 'Open Source',
-                        value: 'View',
+                      ExternalLinkTile(
+                        label: l10n.howItWorksOpenSourceLabel,
+                        value: l10n.commonViewLabel,
                         url: 'https://github.com/r4khul/unfilter',
                       ),
                       const SizedBox(height: 30),
-                      const _StepCard(
+                      _StepCard(
                         step: '01',
-                        title: 'Collect Clues',
-                        description:
-                            "We look at each app's package info and native "
-                            "libraries already sitting on your phone. No uploads, "
-                            "no account, no drama.",
+                        title: l10n.howItWorksStep1Title,
+                        description: l10n.howItWorksStep1Description,
                         icon: Icons.radar_rounded,
                       ),
-                      const _StepCard(
+                      _StepCard(
                         step: '02',
-                        title: 'Match Signals',
-                        description:
-                            'We compare those clues against local framework '
-                            'fingerprints to spot Flutter, React Native, Unity, '
-                            'and the rest of the usual suspects.',
+                        title: l10n.howItWorksStep2Title,
+                        description: l10n.howItWorksStep2Description,
                         icon: Icons.fingerprint_rounded,
                       ),
-                      const _StepCard(
+                      _StepCard(
                         step: '03',
-                        title: 'Stay Local',
-                        description:
-                            'Every scan happens on-device. The fun stays private '
-                            'and your app data never leaves your phone.',
+                        title: l10n.howItWorksStep3Title,
+                        description: l10n.howItWorksStep3Description,
                         icon: Icons.cloud_off_rounded,
                         isLast: true,
                       ),
@@ -92,7 +86,7 @@ class _HowItWorksPageState extends State<HowItWorksPage> {
           ),
           const TopShadowGradient(),
           PremiumAppBar(
-            title: 'How it works',
+            title: l10n.howItWorksTitle,
             scrollController: _scrollController,
           ),
         ],
@@ -101,8 +95,9 @@ class _HowItWorksPageState extends State<HowItWorksPage> {
   }
 
   Widget _buildHeader(ThemeData theme) {
+    final l10n = AppLocalizations.of(context)!;
     return Text(
-      'App\nClues',
+      l10n.howItWorksHeader,
       style: theme.textTheme.headlineMedium?.copyWith(
         fontWeight: FontWeight.w800,
         height: 1.1,
@@ -112,9 +107,9 @@ class _HowItWorksPageState extends State<HowItWorksPage> {
   }
 
   Widget _buildIntroText(ThemeData theme) {
+    final l10n = AppLocalizations.of(context)!;
     return Text(
-      'No decompiling. No uploads. Just smart local analysis that reads '
-      "what's already there and tells you what an app is made of.",
+      l10n.howItWorksIntro,
       style: theme.textTheme.bodyLarge?.copyWith(
         color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
         height: 1.5,

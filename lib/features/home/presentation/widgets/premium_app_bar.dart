@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:unfilter/l10n/generated/app_localizations.dart';
 
 class PremiumAppBar extends StatefulWidget {
   final String title;
@@ -132,6 +133,7 @@ class _PremiumAppBarState extends State<PremiumAppBar> {
     List<PremiumAppBarMenuAction> customActions,
     bool hasCustomActions,
   ) {
+    final l10n = AppLocalizations.of(context)!;
     final menuWidth = hasCustomActions ? 180.0 : 160.0;
 
     return Stack(
@@ -199,7 +201,7 @@ class _PremiumAppBarState extends State<PremiumAppBar> {
                           if (hasResync)
                             _OverlayMenuItem(
                               icon: Icons.sync,
-                              label: 'Resync App',
+                              label: l10n.premiumAppBarResyncApp,
                               onTap: () {
                                 widget.onResync?.call();
                                 _removeOverlay();
@@ -216,7 +218,7 @@ class _PremiumAppBarState extends State<PremiumAppBar> {
                           if (hasShare)
                             _OverlayMenuItem(
                               icon: Icons.ios_share_rounded,
-                              label: 'Share',
+                              label: l10n.premiumAppBarShare,
                               onTap: () {
                                 widget.onShare?.call();
                                 _removeOverlay();
@@ -363,6 +365,7 @@ class _PremiumAppBarState extends State<PremiumAppBar> {
   }
 
   Widget _buildMenuButton(ThemeData theme) {
+    final l10n = AppLocalizations.of(context)!;
     return CompositedTransformTarget(
       link: _layerLink,
       child: SizedBox(
@@ -376,7 +379,7 @@ class _PremiumAppBarState extends State<PremiumAppBar> {
             size: 22,
           ),
           onPressed: _toggleMenu,
-          tooltip: 'Menu',
+          tooltip: l10n.premiumAppBarMenuTooltip,
         ),
       ),
     );

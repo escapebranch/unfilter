@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:unfilter/l10n/generated/app_localizations.dart';
 
 import '../../widgets/external_link_tile.dart';
 import '../../widgets/github_cta_card.dart';
@@ -24,6 +25,7 @@ class _PrivacyPageState extends State<PrivacyPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
@@ -51,47 +53,35 @@ class _PrivacyPageState extends State<PrivacyPage> {
                       const SizedBox(height: 16),
                       _buildIntroText(theme),
                       const SizedBox(height: 24),
-                      const ExternalLinkTile(
-                        label: 'Privacy Policy',
-                        value: 'Open',
+                      ExternalLinkTile(
+                        label: l10n.privacyPolicyTitle,
+                        value: l10n.commonOpenLabel,
                         url: 'https://unfilter-web.vercel.app/privacy',
                       ),
-                      const ExternalLinkTile(
-                        label: 'Terms & Conditions',
-                        value: 'Open',
+                      ExternalLinkTile(
+                        label: l10n.privacyTermsAndConditionsTitle,
+                        value: l10n.commonOpenLabel,
                         url: 'https://unfilter-web.vercel.app/terms',
                       ),
                       const SizedBox(height: 48),
-                      const _PolicySection(
-                        title: 'Local Processing',
-                        content:
-                            'Every scan, every match, every bit of analysis runs '
-                            "right on your phone. We couldn't peek at your apps "
-                            'even if we wanted to—we built it that way.',
+                      _PolicySection(
+                        title: l10n.privacySectionLocalProcessingTitle,
+                        content: l10n.privacySectionLocalProcessingContent,
                         icon: Icons.phonelink_lock_rounded,
                       ),
-                      const _PolicySection(
-                        title: 'Minimal Permissions',
-                        content:
-                            'We ask for exactly two things: permission to see what '
-                            'apps you have installed, and storage access for '
-                            "looking through native libraries. That's it.",
+                      _PolicySection(
+                        title: l10n.privacySectionMinimalPermissionsTitle,
+                        content: l10n.privacySectionMinimalPermissionsContent,
                         icon: Icons.verified_user_rounded,
                       ),
-                      const _PolicySection(
-                        title: 'No Tracking',
-                        content:
-                            'No analytics. No ad SDKs. No crash reporters phoning '
-                            'home. What you do inside the app stays between you '
-                            'and your phone.',
+                      _PolicySection(
+                        title: l10n.privacySectionNoTrackingTitle,
+                        content: l10n.privacySectionNoTrackingContent,
                         icon: Icons.do_not_disturb_on_rounded,
                       ),
-                      const _PolicySection(
-                        title: 'Limited Networking',
-                        content:
-                            'The only time we hit the internet is to check for '
-                            "updates and grab the GitHub star count. That's it - "
-                            'nothing about you leaves this app.',
+                      _PolicySection(
+                        title: l10n.privacySectionLimitedNetworkingTitle,
+                        content: l10n.privacySectionLimitedNetworkingContent,
                         icon: Icons.wifi_rounded,
                       ),
                       const SizedBox(height: 20),
@@ -105,7 +95,7 @@ class _PrivacyPageState extends State<PrivacyPage> {
           ),
           const TopShadowGradient(),
           PremiumAppBar(
-            title: 'Privacy Policy',
+            title: l10n.privacyPolicyTitle,
             scrollController: _scrollController,
           ),
         ],
@@ -114,8 +104,9 @@ class _PrivacyPageState extends State<PrivacyPage> {
   }
 
   Widget _buildHeader(ThemeData theme) {
+    final l10n = AppLocalizations.of(context)!;
     return Text(
-      'Your Data,\nYour Device',
+      l10n.privacyHeader,
       style: theme.textTheme.headlineMedium?.copyWith(
         fontWeight: FontWeight.w800,
         height: 1.1,
@@ -125,9 +116,9 @@ class _PrivacyPageState extends State<PrivacyPage> {
   }
 
   Widget _buildIntroText(ThemeData theme) {
+    final l10n = AppLocalizations.of(context)!;
     return Text(
-      'Privacy is part of the product, not an afterthought. UnFilter runs '
-      'offline so it can stay useful without ever becoming nosy about you.',
+      l10n.privacyIntro,
       style: theme.textTheme.bodyLarge?.copyWith(
         color: theme.colorScheme.onSurface.withValues(alpha: 0.8),
         height: 1.6,

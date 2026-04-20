@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:unfilter/core/providers/locale_provider.dart';
 import 'package:unfilter/features/home/presentation/widgets/dialog_header.dart';
+import 'package:unfilter/l10n/generated/app_localizations.dart';
 
 class ChooseLanguageButton extends ConsumerStatefulWidget {
   const ChooseLanguageButton({super.key});
@@ -12,10 +13,11 @@ class ChooseLanguageButton extends ConsumerStatefulWidget {
 
 class _ChooseLanguageButtonState extends ConsumerState<ChooseLanguageButton> {
   void _showChooseLanguageDialog() {
+    final l10n = AppLocalizations.of(context);
     showGeneralDialog(
       context: context,
       barrierDismissible: true,
-      barrierLabel: "Choose Language",
+      barrierLabel: l10n.chooseLanguageDialogTitle,
       barrierColor: Colors.black.withValues(alpha: .5),
       transitionDuration: const Duration(milliseconds: 200),
       pageBuilder: (context, anim1, anim2) {
@@ -167,14 +169,15 @@ class _ChooseLanguageDialogState extends ConsumerState<_ChooseLanguageDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final dropdownMenuEntries = <DropdownMenuEntry<String>>[
-      const DropdownMenuEntry<String>(
+      DropdownMenuEntry<String>(
         value: 'en',
-        label: 'English',
+        label: l10n.languageEnglish,
       ),
-      const DropdownMenuEntry<String>(
+      DropdownMenuEntry<String>(
         value: 'ta',
-        label: 'Tamil',
+        label: l10n.languageTamil,
       ),
     ];
 
@@ -208,8 +211,8 @@ class _ChooseLanguageDialogState extends ConsumerState<_ChooseLanguageDialog> {
                 DialogHeader(
                   theme: theme,
                   icon: Icons.translate_rounded,
-                  title: "Choose Language",
-                  subtitle: "Choose how you want to navigate through application"
+                  title: l10n.chooseLanguageDialogTitle,
+                  subtitle: l10n.chooseLanguageDialogSubtitle,
                 ),
                 const SizedBox(height: 24),
                 _buildLanguageDropdown(theme, isDark, dropdownMenuEntries),
@@ -240,7 +243,7 @@ class _ChooseLanguageDialogState extends ConsumerState<_ChooseLanguageDialog> {
                         ),
                       ),
                       child: Text(
-                        "Confirm",
+                        l10n.confirmButtonLabel,
                         style: theme.textTheme.labelLarge?.copyWith(
                           color: theme.colorScheme.onPrimary,
                           fontWeight:FontWeight.w600,

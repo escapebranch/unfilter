@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:unfilter/core/providers/locale_provider.dart';
-import 'package:unfilter/l10n/app_localizations.dart';
+import 'package:unfilter/l10n/generated/app_localizations.dart';
 import 'core/providers/theme_provider.dart';
 import 'core/theme/app_theme.dart';
 import 'core/widgets/theme_transition_wrapper.dart';
