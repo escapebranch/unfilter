@@ -17,8 +17,7 @@
   ],
   "fixes": [
     "Fixed Out of Memory (OOM) crashes on low-end devices by resizing network images on the fly.",
-    "Fixed Storage scan timeouts due to platform thread pool starvation."
-
+    "Fixed Storage scan timeouts due to platform thread pool starvation.",
     "Removed unused onboarding state tied to install permission",
     "Fixed wildcard callback lint in analytics page"
   ]
