@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:unfilter/core/providers/locale_provider.dart';
@@ -22,7 +24,24 @@ class _ChooseLanguageButtonState extends ConsumerState<ChooseLanguageButton> {
       transitionDuration: const Duration(milliseconds: 200),
       pageBuilder: (context, anim1, anim2) {
         return _ChooseLanguageDialog();
-      }
+      },
+      transitionBuilder: (context, anim1, anim2, child) {
+        return BackdropFilter(
+          filter: ImageFilter.blur(
+            sigmaX: 5 * anim1.value,
+            sigmaY: 5 * anim1.value,
+          ),
+          child: FadeTransition(
+            opacity: anim1,
+            child: ScaleTransition(
+              scale: Tween<double>(begin: 0.95, end: 1.0).animate(
+                CurvedAnimation(parent: anim1, curve: Curves.easeOutCubic),
+              ),
+              child: child,
+            ),
+          ),
+        );
+      },
     );
   }
   @override
