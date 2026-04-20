@@ -9,6 +9,9 @@ class AppLocalizationsTa extends AppLocalizations {
   AppLocalizationsTa([String locale = 'ta']) : super(locale);
 
   @override
+  String get apps => 'செயலிகள்';
+
+  @override
   String get appTitle => 'அன்ஃபில்டர்';
 
   @override
@@ -226,4 +229,12 @@ class AppLocalizationsTa extends AppLocalizations {
 
   @override
   String get deeplinkParsedDetailsTitle => 'Parsed URI விவரங்கள்';
+
+  @override
+  String get homeStatsTitle => 'உங்கள் சாதனத்தில்';
+
+  @override
+  String homeStatsCountText(String count) {
+    return '$count செயலிகள் உள்ளது';
+  }
 }

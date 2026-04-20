@@ -98,6 +98,12 @@ abstract class AppLocalizations {
     Locale('ta'),
   ];
 
+  /// No description provided for @apps.
+  ///
+  /// In en, this message translates to:
+  /// **'Apps'**
+  String get apps;
+
   /// Application title
   ///
   /// In en, this message translates to:
@@ -499,6 +505,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Parsed URI Details'**
   String get deeplinkParsedDetailsTitle;
+
+  /// No description provided for @homeStatsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Device has'**
+  String get homeStatsTitle;
+
+  /// No description provided for @homeStatsCountText.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} Installed Apps'**
+  String homeStatsCountText(String count);
 }
 
 class _AppLocalizationsDelegate

@@ -1,5 +1,6 @@
 {
   "@@locale": "en",
+  "apps": "Apps",
   "appTitle": "UnFilter",
   "@appTitle": {
     "description": "Application title"
@@ -87,5 +88,14 @@
   "deeplinkExampleSendSms": "Send SMS",
   "deeplinkMoreConfigsSoon": "More configurations coming soon!",
   "deeplinkParsedEmpty": "URI breakdown will appear here after testing.",
-  "deeplinkParsedDetailsTitle": "Parsed URI Details"
+  "deeplinkParsedDetailsTitle": "Parsed URI Details",
+  "homeStatsTitle": "Your Device has",
+  "homeStatsCountText": "{count} Installed Apps",
+  "@homeStatsCountText": {
+    "placeholders": {
+      "count":{
+        "type": "String"
+      }
+    }
+  }
 }

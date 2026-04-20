@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:unfilter/l10n/generated/app_localizations.dart';
 
 class AppCountOverlay extends StatefulWidget {
   final Widget child;
@@ -155,6 +156,7 @@ class _VerticalBadgeContent extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
+    final l10 = AppLocalizations.of(context);
 
     return Container(
       margin: const EdgeInsets.only(left: 0),
@@ -237,7 +239,7 @@ class _VerticalBadgeContent extends StatelessWidget {
                         ),
                         const SizedBox(width: 6),
                         Text(
-                          "Apps",
+                          l10.apps,
                           style: theme.textTheme.labelMedium?.copyWith(
                             fontWeight: FontWeight.w500,
                             fontSize: 12,

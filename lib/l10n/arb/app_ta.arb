@@ -1,5 +1,6 @@
 {
   "@@locale": "ta",
+  "apps": "செயலிகள்",
   "appTitle": "அன்ஃபில்டர்",
   "homeTitle": "முகப்பு",
   "chooseLanguageDialogTitle": "மொழியைத் தேர்ந்தெடுக்கவும்",
@@ -66,5 +67,7 @@
   "deeplinkExampleSendSms": "SMS அனுப்பு",
   "deeplinkMoreConfigsSoon": "மேலும் அமைப்புகள் விரைவில் வருகிறது!",
   "deeplinkParsedEmpty": "சோதித்த பிறகு URI பகுப்பாய்வு இங்கே காட்டப்படும்.",
-  "deeplinkParsedDetailsTitle": "Parsed URI விவரங்கள்"
+  "deeplinkParsedDetailsTitle": "Parsed URI விவரங்கள்",
+  "homeStatsTitle": "உங்கள் சாதனத்தில்",
+  "homeStatsCountText": "{count} செயலிகள் உள்ளது"
 }

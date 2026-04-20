@@ -9,6 +9,9 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
+  String get apps => 'Apps';
+
+  @override
   String get appTitle => 'UnFilter';
 
   @override
@@ -222,4 +225,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get deeplinkParsedDetailsTitle => 'Parsed URI Details';
+
+  @override
+  String get homeStatsTitle => 'Your Device has';
+
+  @override
+  String homeStatsCountText(String count) {
+    return '$count Installed Apps';
+  }
 }
