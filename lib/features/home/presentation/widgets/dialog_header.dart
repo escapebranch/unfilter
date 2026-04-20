@@ -31,6 +31,7 @@ class DialogHeader extends StatelessWidget{
             fontWeight: FontWeight.bold,
             letterSpacing: -0.5,
           ),
+          textAlign: TextAlign.center,
         ),
         const SizedBox(height: 8),
         Text(

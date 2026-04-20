@@ -12,6 +12,7 @@ import 'drawer/drawer_theme_switcher.dart';
 import 'drawer/drawer_open_source_card.dart';
 import 'drawer/drawer_sponsor_card.dart';
 import 'drawer/drawer_contributors_card.dart';
+import 'choose_language_button.dart';
 
 class AppDrawer extends ConsumerWidget {
   const AppDrawer({super.key});
@@ -54,8 +55,10 @@ class AppDrawer extends ConsumerWidget {
                     const DrawerSectionHeader(title: 'APPEARANCE'),
                     const SizedBox(height: 8),
                     const DrawerThemeSwitcher(),
+                    const SizedBox(height: 12),
+                    const ChooseLanguageButton(),
                     const SizedBox(height: 32),
-                    _buildInsightsSection(context),
+                    _buildInsightsSection(context), 
                     const SizedBox(height: 24),
                     _buildToolsSection(context),
                     const SizedBox(height: 24),

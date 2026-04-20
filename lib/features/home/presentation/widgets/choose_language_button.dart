@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:unfilter/core/providers/locale_provider.dart';
 import 'package:unfilter/features/home/presentation/widgets/dialog_header.dart';
 import 'package:unfilter/l10n/generated/app_localizations.dart';
+import 'drawer/drawer_nav_tile.dart';
 
 class ChooseLanguageButton extends ConsumerStatefulWidget {
   const ChooseLanguageButton({super.key});
@@ -46,41 +47,12 @@ class _ChooseLanguageButtonState extends ConsumerState<ChooseLanguageButton> {
   }
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
 
-    return GestureDetector(
+    return DrawerNavTile(
+      title: 'Language',
+      subtitle: "Localization settings",
+      icon: Icons.translate_rounded,
       onTap: () => _showChooseLanguageDialog(),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        decoration: BoxDecoration(
-          color: isDark
-              ? Colors.grey[800]!.withValues(alpha: 0.8)
-              : Colors.grey[200]!.withValues(alpha: 0.8),
-          borderRadius: BorderRadius.circular(30),
-          border: Border.all(
-            color: theme.colorScheme.primary.withValues(alpha: 0.3),
-            width: 1,
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: theme.colorScheme.primary.withValues(alpha: 0.1),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              Icons.translate_rounded,
-              size: 18,
-              color: theme.colorScheme.primary,
-            )
-          ],
-        ),
-      ),
     );
   }
 }
