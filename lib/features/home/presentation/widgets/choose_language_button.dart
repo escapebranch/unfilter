@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:unfilter/core/providers/locale_provider.dart';
 import 'package:unfilter/features/home/presentation/widgets/dialog_header.dart';
 
 class ChooseLanguageButton extends ConsumerStatefulWidget {
@@ -63,15 +64,22 @@ class _ChooseLanguageButtonState extends ConsumerState<ChooseLanguageButton> {
   }
 }
 
-class _ChooseLanguageDialog extends StatefulWidget {
+class _ChooseLanguageDialog extends ConsumerStatefulWidget {
   const _ChooseLanguageDialog();
 
   @override
-  State<_ChooseLanguageDialog> createState() => _ChooseLanguageDialogState();
+  ConsumerState<_ChooseLanguageDialog> createState() => _ChooseLanguageDialogState();
 }
 
-class _ChooseLanguageDialogState extends State<_ChooseLanguageDialog> {
-  String _selectedLanguageCode = 'en';
+class _ChooseLanguageDialogState extends ConsumerState<_ChooseLanguageDialog> {
+  late String _selectedLanguageCode;
+
+  @override
+  void initState() {
+    super.initState();
+    final currentLocale = ref.read(localeProvider);
+    _selectedLanguageCode = currentLocale?.languageCode ?? 'en';
+  }
 
   Widget _buildLanguageDropdown(
     ThemeData theme,
@@ -172,7 +180,6 @@ class _ChooseLanguageDialogState extends State<_ChooseLanguageDialog> {
 
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-
     return Center(
       child: Material(
         color: Colors.transparent,
@@ -210,7 +217,11 @@ class _ChooseLanguageDialogState extends State<_ChooseLanguageDialog> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                   child: InkWell(
-                    onTap: () {
+                    onTap: () async{
+                      await ref.read(localeProvider.notifier).setLocale(_selectedLanguageCode);
+                      if (context.mounted) {
+                        Navigator.of(context).pop();
+                      }
                     },
                     borderRadius: BorderRadius.circular(12),
                     child: AnimatedContainer(
