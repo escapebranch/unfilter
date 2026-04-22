@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:unfilter/l10n/generated/app_localizations.dart';
 import '../../../../core/navigation/app_routes.dart';
 import '../../domain/entities/scan_progress.dart';
 import '../widgets/scan_progress_widget.dart';
@@ -63,7 +64,7 @@ class _ScanPageState extends ConsumerState<ScanPage>
       await showGeneralDialog(
         context: context,
         barrierDismissible: false,
-        barrierLabel: "Permission",
+        barrierLabel: AppLocalizations.of(context).permissionRequiredTitle,
         transitionDuration: const Duration(milliseconds: 300),
         pageBuilder: (_, _, _) => const SizedBox(),
         transitionBuilder: (context, anim1, anim2, child) {
@@ -132,14 +133,14 @@ class _ScanPageState extends ConsumerState<ScanPage>
 
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
-                    content: const Text(
-                      'Scan failed to retrieve apps. Please try again.',
+                    content: Text(
+                      AppLocalizations.of(context).scanFailedRetry,
                     ),
                     backgroundColor: Theme.of(context).colorScheme.error,
                     behavior: SnackBarBehavior.floating,
                     duration: const Duration(seconds: 5),
                     action: SnackBarAction(
-                      label: 'Retry',
+                      label: AppLocalizations.of(context).retryLabel,
                       textColor: Colors.white,
                       onPressed: _startScan,
                     ),
@@ -187,12 +188,12 @@ class _ScanPageState extends ConsumerState<ScanPage>
             } else {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text('Scan error: ${error.toString()}'),
+                  content: Text(AppLocalizations.of(context).scanError(error.toString())),
                   backgroundColor: Theme.of(context).colorScheme.error,
                   behavior: SnackBarBehavior.floating,
                   duration: const Duration(seconds: 5),
                   action: SnackBarAction(
-                    label: 'Retry',
+                    label: AppLocalizations.of(context).retryLabel,
                     textColor: Colors.white,
                     onPressed: _startScan,
                   ),
@@ -214,7 +215,7 @@ class _ScanPageState extends ConsumerState<ScanPage>
       body: StreamBuilder<ScanProgress>(
         stream: scanStream,
         initialData: ScanProgress(
-          status: "Initializing...",
+          status: AppLocalizations.of(context).scanInitializing,
           percent: 0,
           processedCount: 0,
           totalCount: 1,

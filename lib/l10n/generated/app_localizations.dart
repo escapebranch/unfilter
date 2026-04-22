@@ -517,6 +517,654 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{count} Installed Apps'**
   String homeStatsCountText(String count);
+
+  /// No description provided for @permission.
+  ///
+  /// In en, this message translates to:
+  /// **'Permission'**
+  String get permission;
+
+  /// No description provided for @permissionDescription1.
+  ///
+  /// In en, this message translates to:
+  /// **'UnFilter needs secure access to your usage stats so it can help you '**
+  String get permissionDescription1;
+
+  /// No description provided for @permissionDescription2.
+  ///
+  /// In en, this message translates to:
+  /// **'spot what apps are made of and power the analytics view.\n\n'**
+  String get permissionDescription2;
+
+  /// No description provided for @permissionDescription3.
+  ///
+  /// In en, this message translates to:
+  /// **'Your data never leaves your device.'**
+  String get permissionDescription3;
+
+  /// No description provided for @grantAccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Grant Access'**
+  String get grantAccess;
+
+  /// No description provided for @maybeLater.
+  ///
+  /// In en, this message translates to:
+  /// **'Maybe Later'**
+  String get maybeLater;
+
+  /// No description provided for @noAppsFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No apps found matching criteria'**
+  String get noAppsFound;
+
+  /// No description provided for @somethingWentWrongScanning.
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong while scanning.\n'**
+  String get somethingWentWrongScanning;
+
+  /// No description provided for @taskManagerTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Task Manager'**
+  String get taskManagerTitle;
+
+  /// No description provided for @failedToLoadProcesses.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load processes'**
+  String get failedToLoadProcesses;
+
+  /// No description provided for @retryLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get retryLabel;
+
+  /// No description provided for @kernelSystemSection.
+  ///
+  /// In en, this message translates to:
+  /// **'KERNEL / SYSTEM'**
+  String get kernelSystemSection;
+
+  /// No description provided for @noProcessesMatchSearch.
+  ///
+  /// In en, this message translates to:
+  /// **'No processes match your search'**
+  String get noProcessesMatchSearch;
+
+  /// No description provided for @noProcessDataAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'No process data available'**
+  String get noProcessDataAvailable;
+
+  /// No description provided for @processDataIncompleteError.
+  ///
+  /// In en, this message translates to:
+  /// **'Process data may be incomplete: {error}'**
+  String processDataIncompleteError(String error);
+
+  /// No description provided for @scanFailedRetry.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan failed to retrieve apps. Please try again.'**
+  String get scanFailedRetry;
+
+  /// No description provided for @scanError.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan error: {error}'**
+  String scanError(String error);
+
+  /// No description provided for @scanInitializing.
+  ///
+  /// In en, this message translates to:
+  /// **'Initializing...'**
+  String get scanInitializing;
+
+  /// No description provided for @scanFailedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan Failed'**
+  String get scanFailedTitle;
+
+  /// No description provided for @scanErrorInstruction.
+  ///
+  /// In en, this message translates to:
+  /// **'Please screenshot this error report and send it to the developer:'**
+  String get scanErrorInstruction;
+
+  /// No description provided for @errorReportCopied.
+  ///
+  /// In en, this message translates to:
+  /// **'Error report copied to clipboard'**
+  String get errorReportCopied;
+
+  /// No description provided for @copyErrorReport.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy Error Report'**
+  String get copyErrorReport;
+
+  /// No description provided for @closeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get closeLabel;
+
+  /// No description provided for @customizeAndShare.
+  ///
+  /// In en, this message translates to:
+  /// **'Customize & Share'**
+  String get customizeAndShare;
+
+  /// No description provided for @shareFailedError.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to share: {error}'**
+  String shareFailedError(String error);
+
+  /// No description provided for @shareTextExposed.
+  ///
+  /// In en, this message translates to:
+  /// **'{appName} just got exposed 🔍'**
+  String shareTextExposed(String appName);
+
+  /// No description provided for @shareTextBuiltWith.
+  ///
+  /// In en, this message translates to:
+  /// **'Built with: {stack}'**
+  String shareTextBuiltWith(String stack);
+
+  /// No description provided for @shareTextVersion.
+  ///
+  /// In en, this message translates to:
+  /// **'Version: {version}'**
+  String shareTextVersion(String version);
+
+  /// No description provided for @shareTextSize.
+  ///
+  /// In en, this message translates to:
+  /// **'Size: {size}'**
+  String shareTextSize(String size);
+
+  /// No description provided for @shareTextMarketing1.
+  ///
+  /// In en, this message translates to:
+  /// **'See what your apps are really made of.'**
+  String get shareTextMarketing1;
+
+  /// No description provided for @shareTextMarketing2.
+  ///
+  /// In en, this message translates to:
+  /// **'github.com/r4khul/unfilter/releases/latest'**
+  String get shareTextMarketing2;
+
+  /// No description provided for @shareTextMarketing3.
+  ///
+  /// In en, this message translates to:
+  /// **'Don\'t forget to give a star!'**
+  String get shareTextMarketing3;
+
+  /// No description provided for @shareImage.
+  ///
+  /// In en, this message translates to:
+  /// **'Share Image'**
+  String get shareImage;
+
+  /// No description provided for @themeDark.
+  ///
+  /// In en, this message translates to:
+  /// **'Dark'**
+  String get themeDark;
+
+  /// No description provided for @themeLight.
+  ///
+  /// In en, this message translates to:
+  /// **'Light'**
+  String get themeLight;
+
+  /// No description provided for @optionVersion.
+  ///
+  /// In en, this message translates to:
+  /// **'Version'**
+  String get optionVersion;
+
+  /// No description provided for @optionSdk.
+  ///
+  /// In en, this message translates to:
+  /// **'SDK'**
+  String get optionSdk;
+
+  /// No description provided for @optionUsage.
+  ///
+  /// In en, this message translates to:
+  /// **'Usage'**
+  String get optionUsage;
+
+  /// No description provided for @optionInstallDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Install Date'**
+  String get optionInstallDate;
+
+  /// No description provided for @optionSize.
+  ///
+  /// In en, this message translates to:
+  /// **'Size'**
+  String get optionSize;
+
+  /// No description provided for @optionSource.
+  ///
+  /// In en, this message translates to:
+  /// **'Source'**
+  String get optionSource;
+
+  /// No description provided for @optionTech.
+  ///
+  /// In en, this message translates to:
+  /// **'Tech'**
+  String get optionTech;
+
+  /// No description provided for @optionComponents.
+  ///
+  /// In en, this message translates to:
+  /// **'Components'**
+  String get optionComponents;
+
+  /// No description provided for @optionSplits.
+  ///
+  /// In en, this message translates to:
+  /// **'Splits'**
+  String get optionSplits;
+
+  /// No description provided for @giveAStarOnGithub.
+  ///
+  /// In en, this message translates to:
+  /// **'Give a Star on Github'**
+  String get giveAStarOnGithub;
+
+  /// No description provided for @commonLoadingLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading...'**
+  String get commonLoadingLabel;
+
+  /// No description provided for @appNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'App not found'**
+  String get appNotFound;
+
+  /// No description provided for @failedToLoadAppDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load app details'**
+  String get failedToLoadAppDetails;
+
+  /// No description provided for @commonErrorLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Error'**
+  String get commonErrorLabel;
+
+  /// No description provided for @commonGoBackLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Go Back'**
+  String get commonGoBackLabel;
+
+  /// No description provided for @contributorsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Contributors'**
+  String get contributorsTitle;
+
+  /// No description provided for @contributorsHeader.
+  ///
+  /// In en, this message translates to:
+  /// **'Community\nBuilders'**
+  String get contributorsHeader;
+
+  /// No description provided for @contributorsIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'The people who shaped this project with code, ideas, and energy.'**
+  String get contributorsIntro;
+
+  /// No description provided for @contributorsCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} contributor(s)'**
+  String contributorsCount(int count);
+
+  /// No description provided for @contributeBeFirst.
+  ///
+  /// In en, this message translates to:
+  /// **'Be the first contributor'**
+  String get contributeBeFirst;
+
+  /// No description provided for @contributeBeFirstExternal.
+  ///
+  /// In en, this message translates to:
+  /// **'Become the 1st external contributor'**
+  String get contributeBeFirstExternal;
+
+  /// No description provided for @contributeNth.
+  ///
+  /// In en, this message translates to:
+  /// **'You can be the {count}th contributor'**
+  String contributeNth(int count);
+
+  /// No description provided for @contributeNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Contribute Now'**
+  String get contributeNow;
+
+  /// No description provided for @contributeSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Get your name in the app'**
+  String get contributeSubtitle;
+
+  /// No description provided for @contributorsEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No contributors yet'**
+  String get contributorsEmptyTitle;
+
+  /// No description provided for @contributorsEmptySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Be the first to contribute and get featured here!'**
+  String get contributorsEmptySubtitle;
+
+  /// No description provided for @contributorsErrorTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load contributors'**
+  String get contributorsErrorTitle;
+
+  /// No description provided for @contributorsErrorSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Please try again later or visit the GitHub repository.'**
+  String get contributorsErrorSubtitle;
+
+  /// No description provided for @viewOnGithub.
+  ///
+  /// In en, this message translates to:
+  /// **'View on GitHub'**
+  String get viewOnGithub;
+
+  /// No description provided for @sponsorsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Sponsors'**
+  String get sponsorsTitle;
+
+  /// No description provided for @sponsorsHeader.
+  ///
+  /// In en, this message translates to:
+  /// **'Community\nBackers'**
+  String get sponsorsHeader;
+
+  /// No description provided for @sponsorsIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'The people helping keep this project open and moving forward.'**
+  String get sponsorsIntro;
+
+  /// No description provided for @sponsorsCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} public sponsor(s)'**
+  String sponsorsCount(int count);
+
+  /// No description provided for @sponsorsBecome.
+  ///
+  /// In en, this message translates to:
+  /// **'Become a sponsor on GitHub'**
+  String get sponsorsBecome;
+
+  /// No description provided for @sponsorsEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No public sponsors yet'**
+  String get sponsorsEmptyTitle;
+
+  /// No description provided for @sponsorsErrorTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load sponsors right now'**
+  String get sponsorsErrorTitle;
+
+  /// No description provided for @sponsorsErrorSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Please try again in a bit or open the GitHub Sponsors page.'**
+  String get sponsorsErrorSubtitle;
+
+  /// No description provided for @sponsorsOpenGitHub.
+  ///
+  /// In en, this message translates to:
+  /// **'Open GitHub Sponsors'**
+  String get sponsorsOpenGitHub;
+
+  /// No description provided for @commonViewProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'View profile'**
+  String get commonViewProfile;
+
+  /// No description provided for @noDataForPeriod.
+  ///
+  /// In en, this message translates to:
+  /// **'No data for period'**
+  String get noDataForPeriod;
+
+  /// No description provided for @usageOnThisDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Usage on this day'**
+  String get usageOnThisDay;
+
+  /// No description provided for @dailyAverage.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily Average'**
+  String get dailyAverage;
+
+  /// No description provided for @avgUsageWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'Avg Usage (Week)'**
+  String get avgUsageWeek;
+
+  /// No description provided for @pastRange.
+  ///
+  /// In en, this message translates to:
+  /// **'Past {range}'**
+  String pastRange(String range);
+
+  /// No description provided for @permissionRequiredTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Permission Required'**
+  String get permissionRequiredTitle;
+
+  /// No description provided for @topCountFilter.
+  ///
+  /// In en, this message translates to:
+  /// **'Top {count} Apps'**
+  String topCountFilter(int count);
+
+  /// No description provided for @topCount.
+  ///
+  /// In en, this message translates to:
+  /// **'Top {count}'**
+  String topCount(int count);
+
+  /// No description provided for @commonErrorWithDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Error: {error}'**
+  String commonErrorWithDetails(String error);
+
+  /// No description provided for @usageStatisticsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Usage Statistics'**
+  String get usageStatisticsTitle;
+
+  /// No description provided for @noDataAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'No Data Available'**
+  String get noDataAvailable;
+
+  /// No description provided for @tryDifferentDateRange.
+  ///
+  /// In en, this message translates to:
+  /// **'Try selecting a different date range'**
+  String get tryDifferentDateRange;
+
+  /// No description provided for @searchUsageStatsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search usage stats...'**
+  String get searchUsageStatsHint;
+
+  /// No description provided for @searchEmptyState.
+  ///
+  /// In en, this message translates to:
+  /// **'No apps match your search'**
+  String get searchEmptyState;
+
+  /// No description provided for @trackingForPeriod.
+  ///
+  /// In en, this message translates to:
+  /// **'Tracking for {periodText}'**
+  String trackingForPeriod(String periodText);
+
+  /// No description provided for @daysStoredLocally.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} days stored locally'**
+  String daysStoredLocally(int count);
+
+  /// No description provided for @historicalDataCleared.
+  ///
+  /// In en, this message translates to:
+  /// **'Some historical data was cleared by your device'**
+  String get historicalDataCleared;
+
+  /// No description provided for @topContributorsSection.
+  ///
+  /// In en, this message translates to:
+  /// **'TOP CONTRIBUTORS'**
+  String get topContributorsSection;
+
+  /// No description provided for @searchResultsSection.
+  ///
+  /// In en, this message translates to:
+  /// **'SEARCH RESULTS'**
+  String get searchResultsSection;
+
+  /// No description provided for @shareLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Share'**
+  String get shareLabel;
+
+  /// No description provided for @shareAnalyticsViralText.
+  ///
+  /// In en, this message translates to:
+  /// **'Unfilter exposed my screen addiction 💀\n\nSee what apps are really made of. Real usage stats. No sugar coating.\n\n100% open source. No trackers. No BS.\n\nGet it: github.com/r4khul/unfilter/releases/latest\n\nDon\'t forget to give a star!\n'**
+  String get shareAnalyticsViralText;
+
+  /// No description provided for @noStorageInfoAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'No storage info available'**
+  String get noStorageInfoAvailable;
+
+  /// No description provided for @storageInsightsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Storage Insights'**
+  String get storageInsightsTitle;
+
+  /// No description provided for @searchStorageHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search storage...'**
+  String get searchStorageHint;
+
+  /// No description provided for @heaviestAppsSection.
+  ///
+  /// In en, this message translates to:
+  /// **'HEAVIEST APPS'**
+  String get heaviestAppsSection;
+
+  /// No description provided for @criticalUpdateRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Critical Update Required'**
+  String get criticalUpdateRequired;
+
+  /// No description provided for @criticalUpdateMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'A critical native update is available. You must update the app to continue using it securely.'**
+  String get criticalUpdateMessage;
+
+  /// No description provided for @currentVersionLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Current Version'**
+  String get currentVersionLabel;
+
+  /// No description provided for @requiredVersionLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Required Version'**
+  String get requiredVersionLabel;
+
+  /// No description provided for @downloadUpdateAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Download Update'**
+  String get downloadUpdateAction;
+
+  /// No description provided for @commonUnknownLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown'**
+  String get commonUnknownLabel;
+
+  /// No description provided for @newUpdateAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'New Update Available'**
+  String get newUpdateAvailable;
+
+  /// No description provided for @newNativeVersionAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'A new native version ({version}) is available with performance improvements.'**
+  String newNativeVersionAvailable(String version);
+
+  /// No description provided for @updateNowAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Update Now'**
+  String get updateNowAction;
 }
 
 class _AppLocalizationsDelegate

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:unfilter/l10n/generated/app_localizations.dart';
 import 'version_models.dart';
 import 'version_provider.dart';
 import 'update_service.dart';
@@ -49,6 +50,8 @@ class ForceUpdateScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    
     return Scaffold(
       backgroundColor: Colors.black,
       body: SafeArea(
@@ -63,19 +66,8 @@ class ForceUpdateScreen extends StatelessWidget {
                 color: Colors.white,
               ),
               const SizedBox(height: 32),
-              const Text(
-                'Critical Update Required',
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                  letterSpacing: -0.5,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 16),
               Text(
-                'A critical native update is available. You must update the app to continue using it securely.',
+                l10n.criticalUpdateMessage,
                 style: TextStyle(
                   fontSize: 16,
                   color: Colors.grey[400],
@@ -85,15 +77,15 @@ class ForceUpdateScreen extends StatelessWidget {
               ),
               const SizedBox(height: 48),
               _buildVersionInfo(
-                'Current Version',
+                l10n.currentVersionLabel,
                 state.currentVersion.displayString,
                 Colors.grey,
               ),
               const SizedBox(height: 16),
               _buildVersionInfo(
-                'Required Version',
+                l10n.requiredVersionLabel,
                 state.config?.minSupportedNativeVersion.nativeVersion ??
-                    'Unknown',
+                    l10n.commonUnknownLabel,
                 Colors.redAccent,
               ),
               const Spacer(),
@@ -116,9 +108,9 @@ class ForceUpdateScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(16),
                     ),
                   ),
-                  child: const Text(
-                    'Download Update',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  child: Text(
+                    l10n.downloadUpdateAction,
+                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                 ),
               ),
@@ -163,6 +155,8 @@ class SoftUpdateBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+
     return Material(
       color: Colors.transparent,
       child: Container(
@@ -192,9 +186,9 @@ class SoftUpdateBanner extends StatelessWidget {
                   size: 20,
                 ),
                 const SizedBox(width: 12),
-                const Text(
-                  'New Update Available',
-                  style: TextStyle(
+                Text(
+                  l10n.newUpdateAvailable,
+                  style: const TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
                     fontSize: 16,
@@ -210,7 +204,7 @@ class SoftUpdateBanner extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             Text(
-              'A new native version (${state.config?.latestNativeVersion.nativeVersion}) is available with performance improvements.',
+              l10n.newNativeVersionAvailable(state.config?.latestNativeVersion.nativeVersion ?? 'Unknown'),
               style: TextStyle(color: Colors.grey[400], fontSize: 13),
             ),
             const SizedBox(height: 16),
@@ -232,7 +226,7 @@ class SoftUpdateBanner extends StatelessWidget {
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
-                child: const Text('Update Now'),
+                child: Text(l10n.updateNowAction),
               ),
             ),
           ],

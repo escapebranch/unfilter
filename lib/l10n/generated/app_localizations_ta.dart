@@ -237,4 +237,378 @@ class AppLocalizationsTa extends AppLocalizations {
   String homeStatsCountText(String count) {
     return '$count செயலிகள் உள்ளது';
   }
+
+  @override
+  String get permission => 'அனுமதி';
+
+  @override
+  String get permissionDescription1 =>
+      'UnFilter உங்கள் பயன்பாட்டு புள்ளிவிவரங்களை அணுக வேண்டும், இதனால் ';
+
+  @override
+  String get permissionDescription2 =>
+      'app-கள் எதில் உருவானது என்பதை கண்டறிந்து analytics காட்ட முடியும்.\n\n';
+
+  @override
+  String get permissionDescription3 =>
+      'உங்கள் தரவு ஒருபோதும் சாதனத்தை விட்டு வெளியே போகாது.';
+
+  @override
+  String get grantAccess => 'அணுகல் வழங்கு';
+
+  @override
+  String get maybeLater => 'பிறகு பார்க்கலாம்';
+
+  @override
+  String get noAppsFound => 'பொருந்தும் செயலிகள் எதுவும் இல்லை';
+
+  @override
+  String get somethingWentWrongScanning =>
+      'ஸ்கேன் செய்யும்போது பிழை ஏற்பட்டது.\n';
+
+  @override
+  String get taskManagerTitle => 'பணி மேலாளர்';
+
+  @override
+  String get failedToLoadProcesses => 'செயல்முறைகளை ஏற்ற முடியவில்லை';
+
+  @override
+  String get retryLabel => 'மீண்டும் முயற்சி';
+
+  @override
+  String get kernelSystemSection => 'KERNEL / SYSTEM';
+
+  @override
+  String get noProcessesMatchSearch =>
+      'தேடலுக்கு பொருந்தும் செயல்முறைகள் இல்லை';
+
+  @override
+  String get noProcessDataAvailable => 'செயல்முறை தரவு எதுவும் இல்லை';
+
+  @override
+  String processDataIncompleteError(String error) {
+    return 'செயல்முறை தரவு முழுமையற்றதாக இருக்கலாம்: $error';
+  }
+
+  @override
+  String get scanFailedRetry =>
+      'ஸ்கேன் செய்ய முடியவில்லை. மீண்டும் முயற்சிக்கவும்.';
+
+  @override
+  String scanError(String error) {
+    return 'ஸ்கேன் பிழை: $error';
+  }
+
+  @override
+  String get scanInitializing => 'தொடங்குகிறது...';
+
+  @override
+  String get scanFailedTitle => 'ஸ்கேன் தோல்வி';
+
+  @override
+  String get scanErrorInstruction =>
+      'இந்த பிழை அறிக்கையின் screenshot எடுத்து டெவலப்பருக்கு அனுப்பவும்:';
+
+  @override
+  String get errorReportCopied => 'பிழை அறிக்கை clipboard-ல் நகலெடுக்கப்பட்டது';
+
+  @override
+  String get copyErrorReport => 'பிழை அறிக்கையை நகலெடு';
+
+  @override
+  String get closeLabel => 'மூடு';
+
+  @override
+  String get customizeAndShare => 'தனிப்படுத்தி பகிர்';
+
+  @override
+  String shareFailedError(String error) {
+    return 'பகிர முடியவில்லை: $error';
+  }
+
+  @override
+  String shareTextExposed(String appName) {
+    return '$appName just got exposed 🔍';
+  }
+
+  @override
+  String shareTextBuiltWith(String stack) {
+    return 'Built with: $stack';
+  }
+
+  @override
+  String shareTextVersion(String version) {
+    return 'Version: $version';
+  }
+
+  @override
+  String shareTextSize(String size) {
+    return 'Size: $size';
+  }
+
+  @override
+  String get shareTextMarketing1 => 'See what your apps are really made of.';
+
+  @override
+  String get shareTextMarketing2 =>
+      'github.com/r4khul/unfilter/releases/latest';
+
+  @override
+  String get shareTextMarketing3 => 'Don\'t forget to give a star!';
+
+  @override
+  String get shareImage => 'படத்தை பகிர்';
+
+  @override
+  String get themeDark => 'இருண்ட';
+
+  @override
+  String get themeLight => 'வெளிர்';
+
+  @override
+  String get optionVersion => 'பதிப்பு';
+
+  @override
+  String get optionSdk => 'SDK';
+
+  @override
+  String get optionUsage => 'பயன்பாடு';
+
+  @override
+  String get optionInstallDate => 'நிறுவிய தேதி';
+
+  @override
+  String get optionSize => 'அளவு';
+
+  @override
+  String get optionSource => 'மூலம்';
+
+  @override
+  String get optionTech => 'தொழில்நுட்பம்';
+
+  @override
+  String get optionComponents => 'கூறுகள்';
+
+  @override
+  String get optionSplits => 'பிரிவுகள்';
+
+  @override
+  String get giveAStarOnGithub => 'Github-ல் நட்சத்திரம் கொடு';
+
+  @override
+  String get commonLoadingLabel => 'ஏற்றுகிறது...';
+
+  @override
+  String get appNotFound => 'செயலி கிடைக்கவில்லை';
+
+  @override
+  String get failedToLoadAppDetails => 'செயலி விவரங்களை ஏற்ற முடியவில்லை';
+
+  @override
+  String get commonErrorLabel => 'பிழை';
+
+  @override
+  String get commonGoBackLabel => 'திரும்பு';
+
+  @override
+  String get contributorsTitle => 'பங்களிப்பாளர்கள்';
+
+  @override
+  String get contributorsHeader => 'சமூக\nஆர்வலர்கள்';
+
+  @override
+  String get contributorsIntro =>
+      'குறியீடு, யோசனைகள், ஆர்வத்தால் இந்த திட்டத்தை வடிவமைத்தவர்கள்.';
+
+  @override
+  String contributorsCount(int count) {
+    return '$count பங்களிப்பாளர்(கள்)';
+  }
+
+  @override
+  String get contributeBeFirst => 'முதல் பங்களிப்பாளராக இருங்கள்';
+
+  @override
+  String get contributeBeFirstExternal => 'முதல் வெளி பங்களிப்பாளராக ஆங்கள்';
+
+  @override
+  String contributeNth(int count) {
+    return 'நீங்கள் $countவது பங்களிப்பாளராக இருக்கலாம்';
+  }
+
+  @override
+  String get contributeNow => 'இப்போதே பங்களி';
+
+  @override
+  String get contributeSubtitle => 'app-ல் உங்கள் பெயரை இடம்பெறுங்கள்';
+
+  @override
+  String get contributorsEmptyTitle => 'இன்னும் பங்களிப்பாளர்கள் இல்லை';
+
+  @override
+  String get contributorsEmptySubtitle =>
+      'முதலில் பங்களித்து இங்கே இடம்பெறுங்கள்!';
+
+  @override
+  String get contributorsErrorTitle => 'பங்களிப்பாளர்களை ஏற்ற முடியவில்லை';
+
+  @override
+  String get contributorsErrorSubtitle =>
+      'பிறகு முயற்சிக்கவும் அல்லது GitHub repository-ஐ பார்க்கவும்.';
+
+  @override
+  String get viewOnGithub => 'GitHub-ல் பார்';
+
+  @override
+  String get sponsorsTitle => 'நிதியளிப்பாளர்கள்';
+
+  @override
+  String get sponsorsHeader => 'சமூக\nஆதரவாளர்கள்';
+
+  @override
+  String get sponsorsIntro =>
+      'இந்த திட்டத்தை திறந்தும் முன்னோக்கியும் நகர்த்த உதவுபவர்கள்.';
+
+  @override
+  String sponsorsCount(int count) {
+    return '$count பொது நிதியளிப்பாளர்(கள்)';
+  }
+
+  @override
+  String get sponsorsBecome => 'GitHub-ல் நிதியளிப்பாளராக ஆங்கள்';
+
+  @override
+  String get sponsorsEmptyTitle => 'இன்னும் பொது நிதியளிப்பாளர்கள் இல்லை';
+
+  @override
+  String get sponsorsErrorTitle => 'இப்போது நிதியளிப்பாளர்களை ஏற்ற முடியவில்லை';
+
+  @override
+  String get sponsorsErrorSubtitle =>
+      'சற்று நேரம் கழித்து முயற்சிக்கவும் அல்லது GitHub Sponsors பக்கத்தை திறக்கவும்.';
+
+  @override
+  String get sponsorsOpenGitHub => 'GitHub Sponsors திற';
+
+  @override
+  String get commonViewProfile => 'சுயவிவரம் பார்';
+
+  @override
+  String get noDataForPeriod => 'இந்த காலகட்டத்தில் தரவு இல்லை';
+
+  @override
+  String get usageOnThisDay => 'இந்த நாளில் பயன்பாடு';
+
+  @override
+  String get dailyAverage => 'தினசரி சராசரி';
+
+  @override
+  String get avgUsageWeek => 'சராசரி பயன்பாடு (வாரம்)';
+
+  @override
+  String pastRange(String range) {
+    return 'கடந்த $range';
+  }
+
+  @override
+  String get permissionRequiredTitle => 'அனுமதி தேவை';
+
+  @override
+  String topCountFilter(int count) {
+    return 'முதல் $count செயலிகள்';
+  }
+
+  @override
+  String topCount(int count) {
+    return 'முதல் $count';
+  }
+
+  @override
+  String commonErrorWithDetails(String error) {
+    return 'பிழை: $error';
+  }
+
+  @override
+  String get usageStatisticsTitle => 'பயன்பாட்டு புள்ளிவிவரங்கள்';
+
+  @override
+  String get noDataAvailable => 'தரவு எதுவும் இல்லை';
+
+  @override
+  String get tryDifferentDateRange => 'வேறு தேதி வரம்பை தேர்ந்தெடுக்கவும்';
+
+  @override
+  String get searchUsageStatsHint => 'பயன்பாட்டு புள்ளிவிவரங்கள் தேடு...';
+
+  @override
+  String get searchEmptyState => 'தேடலுக்கு பொருந்தும் செயலிகள் இல்லை';
+
+  @override
+  String trackingForPeriod(String periodText) {
+    return '$periodText க்கான கண்காணிப்பு';
+  }
+
+  @override
+  String daysStoredLocally(int count) {
+    return '$count நாட்கள் உள்ளூரில் சேமிக்கப்பட்டது';
+  }
+
+  @override
+  String get historicalDataCleared =>
+      'சில பழைய தரவுகள் உங்கள் சாதனத்தால் அழிக்கப்பட்டன';
+
+  @override
+  String get topContributorsSection => 'முதன்மை பங்களிப்பாளர்கள்';
+
+  @override
+  String get searchResultsSection => 'தேடல் முடிவுகள்';
+
+  @override
+  String get shareLabel => 'பகிர்';
+
+  @override
+  String get shareAnalyticsViralText =>
+      'Unfilter exposed my screen addiction 💀\n\nSee what apps are really made of. Real usage stats. No sugar coating.\n\n100% open source. No trackers. No BS.\n\nGet it: github.com/r4khul/unfilter/releases/latest\n\nDon\'t forget to give a star!\n';
+
+  @override
+  String get noStorageInfoAvailable => 'சேமிப்பக தகவல் இல்லை';
+
+  @override
+  String get storageInsightsTitle => 'சேமிப்பக நுண்ணறிவு';
+
+  @override
+  String get searchStorageHint => 'சேமிப்பகம் தேடு...';
+
+  @override
+  String get heaviestAppsSection => 'அதிக இடம் எடுக்கும் செயலிகள்';
+
+  @override
+  String get criticalUpdateRequired => 'அவசர புதுப்பிப்பு தேவை';
+
+  @override
+  String get criticalUpdateMessage =>
+      'ஒரு முக்கியமான native புதுப்பிப்பு உள்ளது. பாதுகாப்பாக தொடர்ந்து பயன்படுத்த app-ஐ புதுப்பிக்க வேண்டும்.';
+
+  @override
+  String get currentVersionLabel => 'தற்போதைய பதிப்பு';
+
+  @override
+  String get requiredVersionLabel => 'தேவையான பதிப்பு';
+
+  @override
+  String get downloadUpdateAction => 'புதுப்பிப்பை பதிவிறக்கு';
+
+  @override
+  String get commonUnknownLabel => 'தெரியவில்லை';
+
+  @override
+  String get newUpdateAvailable => 'புதிய புதுப்பிப்பு கிடைக்கிறது';
+
+  @override
+  String newNativeVersionAvailable(String version) {
+    return 'செயல்திறன் மேம்பாடுகளுடன் புதிய native பதிப்பு ($version) கிடைக்கிறது.';
+  }
+
+  @override
+  String get updateNowAction => 'இப்போதே புதுப்பி';
 }

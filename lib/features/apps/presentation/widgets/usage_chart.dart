@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'dart:math';
+import 'package:unfilter/l10n/generated/app_localizations.dart';
 import '../../domain/entities/app_usage_point.dart';
 
 class UsageChart extends StatefulWidget {
@@ -127,7 +128,7 @@ class _UsageChartState extends State<UsageChart> {
   @override
   Widget build(BuildContext context) {
     if (_chartPoints.isEmpty) {
-      return const Center(child: Text("No data for period"));
+      return Center(child: Text(AppLocalizations.of(context).noDataForPeriod));
     }
 
     AppUsagePoint focusedPoint;
@@ -152,7 +153,7 @@ class _UsageChartState extends State<UsageChart> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        _buildHeader(focusedPoint, _touchedIndex != null),
+        _buildHeader(context, focusedPoint, _touchedIndex != null),
         const SizedBox(height: 24),
         Expanded(child: _buildChart()),
         const SizedBox(height: 16),
@@ -161,9 +162,10 @@ class _UsageChartState extends State<UsageChart> {
     );
   }
 
-  Widget _buildHeader(AppUsagePoint point, bool isHovering) {
+  Widget _buildHeader(BuildContext context, AppUsagePoint point, bool isHovering) {
     final theme = widget.theme;
     final mins = point.usage.inMinutes;
+    final l10n = AppLocalizations.of(context);
 
     String timeStr;
     if (mins >= 60) {
@@ -172,14 +174,14 @@ class _UsageChartState extends State<UsageChart> {
       timeStr = "${mins}m";
     }
 
-    String label = isHovering ? "Usage on this day" : "Daily Average";
+    String label = isHovering ? l10n.usageOnThisDay : l10n.dailyAverage;
     if (_selectedRange == '6M' || _selectedRange == '1Y') {
-      if (isHovering) label = "Avg Usage (Week)";
+      if (isHovering) label = l10n.avgUsageWeek;
     }
 
     String dateStr = isHovering
         ? DateFormat('MMM d').format(point.date)
-        : "Past $_selectedRange";
+        : l10n.pastRange(_selectedRange);
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.end,

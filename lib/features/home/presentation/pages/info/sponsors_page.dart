@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:unfilter/l10n/generated/app_localizations.dart';
 
 import '../../providers/sponsors_provider.dart';
 import '../../widgets/premium_app_bar.dart';
@@ -109,7 +110,7 @@ class _SponsorsPageState extends ConsumerState<SponsorsPage> {
             ],
           ),
           const TopShadowGradient(),
-          PremiumAppBar(title: 'Sponsors', scrollController: _scrollController),
+          PremiumAppBar(title: AppLocalizations.of(context).sponsorsTitle, scrollController: _scrollController),
         ],
       ),
     );
@@ -127,11 +128,13 @@ class _SponsorsPageState extends ConsumerState<SponsorsPage> {
   }
 
   Widget _buildHeader(ThemeData theme, int sponsorCount) {
+    final l10n = AppLocalizations.of(context);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Community\nBackers',
+          l10n.sponsorsHeader,
           style: theme.textTheme.headlineMedium?.copyWith(
             fontWeight: FontWeight.w800,
             height: 1.1,
@@ -140,7 +143,7 @@ class _SponsorsPageState extends ConsumerState<SponsorsPage> {
         ),
         const SizedBox(height: 8),
         Text(
-          'The people helping keep this project open and moving forward.',
+          l10n.sponsorsIntro,
           style: theme.textTheme.bodyLarge?.copyWith(
             color: theme.colorScheme.onSurface.withValues(alpha: 0.72),
             height: 1.45,
@@ -156,7 +159,7 @@ class _SponsorsPageState extends ConsumerState<SponsorsPage> {
             borderRadius: BorderRadius.circular(999),
           ),
           child: Text(
-            '$sponsorCount public sponsor${sponsorCount == 1 ? '' : 's'}',
+            l10n.sponsorsCount(sponsorCount),
             style: theme.textTheme.labelMedium?.copyWith(
               fontWeight: FontWeight.w700,
             ),
@@ -201,7 +204,7 @@ class _SponsorsPageState extends ConsumerState<SponsorsPage> {
                 const SizedBox(width: 12),
                 Expanded(
                   child: Text(
-                    'Become a sponsor on GitHub',
+                    AppLocalizations.of(context).sponsorsBecome,
                     style: theme.textTheme.titleSmall?.copyWith(
                       color: Colors.white,
                       fontWeight: FontWeight.w700,
@@ -235,7 +238,7 @@ class _SponsorsPageState extends ConsumerState<SponsorsPage> {
       padding: const EdgeInsets.symmetric(vertical: 40),
       child: Center(
         child: Text(
-          'No public sponsors yet',
+          AppLocalizations.of(context).sponsorsEmptyTitle,
           style: theme.textTheme.bodyMedium?.copyWith(
             color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
             letterSpacing: 0.2,
@@ -246,6 +249,8 @@ class _SponsorsPageState extends ConsumerState<SponsorsPage> {
   }
 
   Widget _buildErrorState(ThemeData theme) {
+    final l10n = AppLocalizations.of(context);
+
     return Container(
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
@@ -259,14 +264,14 @@ class _SponsorsPageState extends ConsumerState<SponsorsPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Could not load sponsors right now',
+            l10n.sponsorsErrorTitle,
             style: theme.textTheme.titleMedium?.copyWith(
               fontWeight: FontWeight.w700,
             ),
           ),
           const SizedBox(height: 8),
           Text(
-            'Please try again in a bit or open the GitHub Sponsors page.',
+            l10n.sponsorsErrorSubtitle,
             style: theme.textTheme.bodyMedium?.copyWith(
               color: theme.colorScheme.onSurfaceVariant,
             ),
@@ -275,7 +280,7 @@ class _SponsorsPageState extends ConsumerState<SponsorsPage> {
           OutlinedButton.icon(
             onPressed: () => _launchUrl(_sponsorUrl),
             icon: const Icon(Icons.open_in_new_rounded),
-            label: const Text('Open GitHub Sponsors'),
+            label: Text(l10n.sponsorsOpenGitHub),
           ),
         ],
       ),
@@ -356,7 +361,7 @@ class _SponsorTile extends StatelessWidget {
                     const Icon(Icons.open_in_new_rounded, size: 16),
                     const SizedBox(width: 6),
                     Text(
-                      'View profile',
+                      AppLocalizations.of(context).commonViewProfile,
                       style: theme.textTheme.labelMedium?.copyWith(
                         fontWeight: FontWeight.w600,
                       ),

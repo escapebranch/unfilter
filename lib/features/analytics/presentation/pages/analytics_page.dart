@@ -13,6 +13,9 @@ import '../../../apps/presentation/providers/apps_provider.dart';
 import '../providers/usage_stats_providers.dart';
 
 import '../../../home/presentation/widgets/premium_app_bar.dart';
+import 'package:unfilter/l10n/generated/app_localizations.dart';
+
+import '../../../home/presentation/widgets/premium_app_bar.dart';
 import '../../../../core/widgets/top_shadow_gradient.dart';
 import '../../../home/presentation/widgets/usage_stats_share_poster.dart';
 import '../widgets/analytics_empty_state.dart';
@@ -71,7 +74,7 @@ class _AnalyticsPageState extends ConsumerState<AnalyticsPage>
       body: appsAsync.when(
         data: (apps) => _buildDataState(apps, theme),
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (err, _) => Center(child: Text('Error: $err')),
+        error: (err, _) => Center(child: Text(AppLocalizations.of(context).commonErrorWithDetails(err.toString()))),
       ),
     );
   }
@@ -158,7 +161,7 @@ class _AnalyticsPageState extends ConsumerState<AnalyticsPage>
         const Center(child: CircularProgressIndicator()),
         const TopShadowGradient(),
         PremiumAppBar(
-          title: 'Usage Statistics',
+          title: AppLocalizations.of(context).usageStatisticsTitle,
           scrollController: _scrollController,
           menuActions: _buildUsageRangeMenuActions(selectedRange),
         ),
@@ -167,6 +170,8 @@ class _AnalyticsPageState extends ConsumerState<AnalyticsPage>
   }
 
   Widget _buildEmptyState(bool hasPermission, UsageTimeRange selectedRange) {
+    final l10n = AppLocalizations.of(context);
+
     return Stack(
       children: [
         CustomScrollView(
@@ -190,13 +195,13 @@ class _AnalyticsPageState extends ConsumerState<AnalyticsPage>
                           ),
                           const SizedBox(height: 16),
                           Text(
-                            'No Data Available',
+                            l10n.noDataAvailable,
                             style: Theme.of(context).textTheme.titleLarge
                                 ?.copyWith(fontWeight: FontWeight.bold),
                           ),
                           const SizedBox(height: 8),
                           Text(
-                            'Try selecting a different date range',
+                            l10n.tryDifferentDateRange,
                             style: Theme.of(context).textTheme.bodyMedium
                                 ?.copyWith(
                                   color: Theme.of(
@@ -213,7 +218,7 @@ class _AnalyticsPageState extends ConsumerState<AnalyticsPage>
         ),
         const TopShadowGradient(),
         PremiumAppBar(
-          title: 'Usage Statistics',
+          title: l10n.usageStatisticsTitle,
           scrollController: _scrollController,
           menuActions: _buildUsageRangeMenuActions(selectedRange),
         ),
@@ -222,6 +227,9 @@ class _AnalyticsPageState extends ConsumerState<AnalyticsPage>
   }
 
   Widget _buildSearchEmptyState(ThemeData theme, UsageTimeRange selectedRange) {
+    final l10n = AppLocalizations.of(context);
+    String emptyStateMessage = l10n.searchEmptyState;
+
     return Stack(
       children: [
         CustomScrollView(
@@ -238,7 +246,7 @@ class _AnalyticsPageState extends ConsumerState<AnalyticsPage>
                 child: AnalyticsSearchBar(
                   controller: _searchController,
                   searchQuery: _searchQuery,
-                  hintText: 'Search usage stats...',
+                  hintText: l10n.searchUsageStatsHint,
                   onChanged: (val) => setState(() => _searchQuery = val),
                   onClear: () {
                     _searchController.clear();
@@ -247,14 +255,14 @@ class _AnalyticsPageState extends ConsumerState<AnalyticsPage>
                 ),
               ),
             ),
-            const SliverFillRemaining(
-              child: AnalyticsEmptyState(message: 'No apps match your search'),
+            SliverFillRemaining(
+              child: AnalyticsEmptyState(message: emptyStateMessage),
             ),
           ],
         ),
         const TopShadowGradient(),
         PremiumAppBar(
-          title: 'Usage Statistics',
+          title: AppLocalizations.of(context).usageStatisticsTitle,
           scrollController: _scrollController,
           menuActions: _buildUsageRangeMenuActions(selectedRange),
         ),
@@ -311,7 +319,7 @@ class _AnalyticsPageState extends ConsumerState<AnalyticsPage>
         ),
         const TopShadowGradient(),
         PremiumAppBar(
-          title: 'Usage Statistics',
+          title: AppLocalizations.of(context).usageStatisticsTitle,
           scrollController: _scrollController,
           menuActions: _buildUsageRangeMenuActions(selectedRange),
         ),
@@ -382,7 +390,7 @@ class _AnalyticsPageState extends ConsumerState<AnalyticsPage>
         child: AnalyticsSearchBar(
           controller: _searchController,
           searchQuery: _searchQuery,
-          hintText: 'Search usage stats...',
+          hintText: AppLocalizations.of(context).searchUsageStatsHint,
           onChanged: (val) => setState(() => _searchQuery = val),
           onClear: () {
             _searchController.clear();
@@ -401,6 +409,7 @@ class _AnalyticsPageState extends ConsumerState<AnalyticsPage>
     final periodText = aggregationService.formatTrackedPeriod(
       persistentStats.trackedPeriod,
     );
+    final l10n = AppLocalizations.of(context);
 
     return SliverToBoxAdapter(
       child: Padding(
@@ -428,14 +437,14 @@ class _AnalyticsPageState extends ConsumerState<AnalyticsPage>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Tracking for $periodText',
+                      l10n.trackingForPeriod(periodText),
                       style: theme.textTheme.bodyMedium?.copyWith(
                         fontWeight: FontWeight.w600,
                       ),
                     ),
                     if (persistentStats.storedSnapshotCount > 0)
                       Text(
-                        '${persistentStats.storedSnapshotCount} days stored locally',
+                        l10n.daysStoredLocally(persistentStats.storedSnapshotCount),
                         style: theme.textTheme.bodySmall?.copyWith(
                           color: theme.colorScheme.onSurfaceVariant,
                         ),
@@ -445,7 +454,7 @@ class _AnalyticsPageState extends ConsumerState<AnalyticsPage>
               ),
               if (persistentStats.hasDataGap)
                 Tooltip(
-                  message: 'Some historical data was cleared by your device',
+                  message: l10n.historicalDataCleared,
                   child: Icon(
                     Icons.info_outline,
                     size: 18,
@@ -522,7 +531,7 @@ class _AnalyticsPageState extends ConsumerState<AnalyticsPage>
             return Padding(
               padding: const EdgeInsets.only(bottom: 16),
               child: Text(
-                _searchQuery.isEmpty ? 'TOP CONTRIBUTORS' : 'SEARCH RESULTS',
+                _searchQuery.isEmpty ? AppLocalizations.of(context).topContributorsSection : AppLocalizations.of(context).searchResultsSection,
                 style: theme.textTheme.labelSmall?.copyWith(
                   fontWeight: FontWeight.bold,
                   letterSpacing: 2.0,
@@ -618,7 +627,7 @@ class _AnalyticsPageState extends ConsumerState<AnalyticsPage>
                   ),
                   const SizedBox(width: 8),
                   Text(
-                    'Share',
+                    AppLocalizations.of(context).shareLabel,
                     style: theme.textTheme.labelMedium?.copyWith(
                       fontWeight: FontWeight.bold,
                       color: theme.colorScheme.primary,
@@ -679,16 +688,7 @@ class _AnalyticsPageState extends ConsumerState<AnalyticsPage>
       await SharePlus.instance.share(
         ShareParams(
           files: [XFile(file.path)],
-          text: '''Unfilter exposed my screen addiction 💀
-
-See what apps are really made of. Real usage stats. No sugar coating.
-
-100% open source. No trackers. No BS.
-
-Get it: github.com/r4khul/unfilter/releases/latest
-
-Don't forget to give a star!
-''',
+          text: AppLocalizations.of(context).shareAnalyticsViralText,
         ),
       );
     } catch (e) {
@@ -696,7 +696,7 @@ Don't forget to give a star!
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to share: ${e.toString()}'),
+            content: Text(AppLocalizations.of(context).shareFailedError(e.toString())),
             backgroundColor: Theme.of(context).colorScheme.error,
           ),
         );

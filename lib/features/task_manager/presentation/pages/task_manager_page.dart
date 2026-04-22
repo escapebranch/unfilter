@@ -8,6 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:system_info2/system_info2.dart';
 
+import 'package:unfilter/l10n/generated/app_localizations.dart';
+
 import '../../../apps/presentation/providers/apps_provider.dart';
 import '../../../analytics/presentation/widgets/usage_permission_card.dart';
 import '../../../home/presentation/widgets/premium_app_bar.dart';
@@ -139,7 +141,7 @@ class _TaskManagerPageState extends ConsumerState<TaskManagerPage> {
           ),
           const TopShadowGradient(),
           PremiumAppBar(
-            title: "Task Manager",
+            title: AppLocalizations.of(context).taskManagerTitle,
             scrollController: _scrollController,
           ),
         ],
@@ -159,6 +161,8 @@ class _TaskManagerPageState extends ConsumerState<TaskManagerPage> {
   }
 
   Widget _buildErrorState(ThemeData theme, String error) {
+    final l10n = AppLocalizations.of(context);
+
     return SliverFillRemaining(
       child: Center(
         child: Padding(
@@ -173,7 +177,7 @@ class _TaskManagerPageState extends ConsumerState<TaskManagerPage> {
               ),
               const SizedBox(height: 16),
               Text(
-                "Failed to load processes",
+                l10n.failedToLoadProcesses,
                 style: theme.textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
@@ -192,7 +196,7 @@ class _TaskManagerPageState extends ConsumerState<TaskManagerPage> {
                   ref.invalidate(taskManagerViewModelProvider);
                 },
                 icon: const Icon(Icons.refresh),
-                label: const Text("Retry"),
+                label: Text(l10n.retryLabel),
               ),
             ],
           ),
@@ -202,6 +206,8 @@ class _TaskManagerPageState extends ConsumerState<TaskManagerPage> {
   }
 
   Widget _buildProcessListContent(TaskManagerData data, ThemeData theme) {
+    final l10n = AppLocalizations.of(context);
+
     var processesWithHistory = data.processesWithHistory;
     var activeApps = data.activeApps;
     final matches = data.matches;
@@ -220,14 +226,14 @@ class _TaskManagerPageState extends ConsumerState<TaskManagerPage> {
     if (data.hasProcessError && processesWithHistory.isEmpty) {
       listItems.add(
         _ProcessErrorBanner(
-          error: data.processError!.message,
+          error: l10n.processDataIncompleteError(data.processError!.message),
           onRetry: () => ref.invalidate(taskManagerViewModelProvider),
         ),
       );
     }
 
     if (processesWithHistory.isNotEmpty) {
-      listItems.add(const ProcessSectionHeader(title: "KERNEL / SYSTEM"));
+      listItems.add(ProcessSectionHeader(title: l10n.kernelSystemSection));
       for (var proc in processesWithHistory) {
         listItems.add(
           EnhancedProcessItem(
@@ -288,9 +294,10 @@ class _TaskManagerPageState extends ConsumerState<TaskManagerPage> {
   }
 
   Widget _buildEmptyState(ThemeData theme) {
+    final l10n = AppLocalizations.of(context);
     final message = _searchQuery.isNotEmpty
-        ? "No processes match your search"
-        : "No process data available";
+        ? l10n.noProcessesMatchSearch
+        : l10n.noProcessDataAvailable;
 
     return SliverFillRemaining(
       child: Center(
@@ -348,13 +355,13 @@ class _ProcessErrorBanner extends StatelessWidget {
             const SizedBox(width: 12),
             Expanded(
               child: Text(
-                "Process data may be incomplete: $error",
+                error,
                 style: theme.textTheme.bodySmall?.copyWith(
                   color: theme.colorScheme.onErrorContainer,
                 ),
               ),
             ),
-            TextButton(onPressed: onRetry, child: const Text("Retry")),
+            TextButton(onPressed: onRetry, child: Text(AppLocalizations.of(context).retryLabel)),
           ],
         ),
       ),
