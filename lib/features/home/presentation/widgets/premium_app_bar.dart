@@ -133,7 +133,7 @@ class _PremiumAppBarState extends State<PremiumAppBar> {
     List<PremiumAppBarMenuAction> customActions,
     bool hasCustomActions,
   ) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     final menuWidth = hasCustomActions ? 180.0 : 160.0;
 
     return Stack(
@@ -365,7 +365,7 @@ class _PremiumAppBarState extends State<PremiumAppBar> {
   }
 
   Widget _buildMenuButton(ThemeData theme) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     return CompositedTransformTarget(
       link: _layerLink,
       child: SizedBox(

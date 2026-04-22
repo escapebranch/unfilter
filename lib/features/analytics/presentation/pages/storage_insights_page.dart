@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../apps/domain/entities/device_app.dart';
 import 'package:unfilter/l10n/generated/app_localizations.dart';
 
 import '../../../apps/domain/entities/device_app.dart';

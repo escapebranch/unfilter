@@ -41,7 +41,7 @@ class _DeeplinkTesterPageState extends State<DeeplinkTesterPage> {
     super.dispose();
   }
 
-  AppLocalizations get _l10n => AppLocalizations.of(context)!;
+  AppLocalizations get _l10n => AppLocalizations.of(context);
 
   @override
   void didChangeDependencies() {
@@ -175,7 +175,7 @@ class _DeeplinkTesterPageState extends State<DeeplinkTesterPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
 
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
@@ -225,7 +225,7 @@ class _DeeplinkTesterPageState extends State<DeeplinkTesterPage> {
   Widget _buildInputCard(ThemeData theme) {
     final isDark = theme.brightness == Brightness.dark;
     final fullUrl = _buildFullUrl();
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
 
     return Container(
       padding: const EdgeInsets.all(16),
@@ -731,7 +731,7 @@ class _DeeplinkTesterPageState extends State<DeeplinkTesterPage> {
   }
 
   Widget _buildParsedDetailsCard(ThemeData theme) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     if (_parsedUri == null) {
       return Container(
         width: double.infinity,

@@ -11,8 +11,7 @@ import 'package:share_plus/share_plus.dart';
 import '../../../apps/domain/entities/device_app.dart';
 import '../../../apps/presentation/providers/apps_provider.dart';
 import '../providers/usage_stats_providers.dart';
-
-import '../../../home/presentation/widgets/premium_app_bar.dart';
+ 
 import 'package:unfilter/l10n/generated/app_localizations.dart';
 
 import '../../../home/presentation/widgets/premium_app_bar.dart';
@@ -643,6 +642,10 @@ class _AnalyticsPageState extends ConsumerState<AnalyticsPage>
     if (_isSharing) return;
     setState(() => _isSharing = true);
 
+    final l10n = AppLocalizations.of(context);
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+    final errorColor = Theme.of(context).colorScheme.error;
+
     try {
       for (int i = 0; i < 3; i++) {
         await WidgetsBinding.instance.endOfFrame;
@@ -688,16 +691,16 @@ class _AnalyticsPageState extends ConsumerState<AnalyticsPage>
       await SharePlus.instance.share(
         ShareParams(
           files: [XFile(file.path)],
-          text: AppLocalizations.of(context).shareAnalyticsViralText,
+          text: l10n.shareAnalyticsViralText,
         ),
       );
     } catch (e) {
       debugPrint('Share error: $e');
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
+        scaffoldMessenger.showSnackBar(
           SnackBar(
-            content: Text(AppLocalizations.of(context).shareFailedError(e.toString())),
-            backgroundColor: Theme.of(context).colorScheme.error,
+            content: Text(l10n.shareFailedError(e.toString())),
+            backgroundColor: errorColor,
           ),
         );
       }

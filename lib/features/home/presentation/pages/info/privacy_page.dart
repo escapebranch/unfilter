@@ -25,7 +25,7 @@ class _PrivacyPageState extends State<PrivacyPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
 
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
@@ -104,7 +104,7 @@ class _PrivacyPageState extends State<PrivacyPage> {
   }
 
   Widget _buildHeader(ThemeData theme) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     return Text(
       l10n.privacyHeader,
       style: theme.textTheme.headlineMedium?.copyWith(
@@ -116,7 +116,7 @@ class _PrivacyPageState extends State<PrivacyPage> {
   }
 
   Widget _buildIntroText(ThemeData theme) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     return Text(
       l10n.privacyIntro,
       style: theme.textTheme.bodyLarge?.copyWith(

@@ -83,6 +83,7 @@ class _SharePreviewDialogState extends State<SharePreviewDialog>
     final navigator = Navigator.of(context);
     final scaffoldMessenger = ScaffoldMessenger.of(context);
     final errorColor = Theme.of(context).colorScheme.error;
+    final l10n = AppLocalizations.of(context);
 
     try {
       await Future.delayed(const Duration(milliseconds: 100));
@@ -119,7 +120,7 @@ class _SharePreviewDialogState extends State<SharePreviewDialog>
       await SharePlus.instance.share(
         ShareParams(
           files: [XFile(file.path)],
-          text: _buildShareText(_configNotifier.value, AppLocalizations.of(context)),
+          text: _buildShareText(_configNotifier.value, l10n),
         ),
       );
     } catch (e) {
@@ -127,7 +128,7 @@ class _SharePreviewDialogState extends State<SharePreviewDialog>
       if (mounted) {
         scaffoldMessenger.showSnackBar(
           SnackBar(
-            content: Text(AppLocalizations.of(context).shareFailedError(e.toString())),
+            content: Text(l10n.shareFailedError(e.toString())),
             backgroundColor: errorColor,
           ),
         );
