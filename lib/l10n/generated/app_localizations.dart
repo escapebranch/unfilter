@@ -1165,6 +1165,138 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Update Now'**
   String get updateNowAction;
+
+  /// No description provided for @drawerMenu.
+  ///
+  /// In en, this message translates to:
+  /// **'Menu'**
+  String get drawerMenu;
+
+  /// No description provided for @drawerSettingsInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings & Info'**
+  String get drawerSettingsInfo;
+
+  /// No description provided for @drawerAppearance.
+  ///
+  /// In en, this message translates to:
+  /// **'APPEARANCE'**
+  String get drawerAppearance;
+
+  /// No description provided for @drawerInsights.
+  ///
+  /// In en, this message translates to:
+  /// **'INSIGHTS'**
+  String get drawerInsights;
+
+  /// No description provided for @usageStatisticsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'View your digital wellbeing'**
+  String get usageStatisticsSubtitle;
+
+  /// No description provided for @storageInsightsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Unfiltered space breakdown'**
+  String get storageInsightsSubtitle;
+
+  /// No description provided for @taskManagerSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Monitor system resources'**
+  String get taskManagerSubtitle;
+
+  /// No description provided for @drawerTools.
+  ///
+  /// In en, this message translates to:
+  /// **'TOOLS'**
+  String get drawerTools;
+
+  /// No description provided for @deeplinkTesterSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Test and inspect URI behavior'**
+  String get deeplinkTesterSubtitle;
+
+  /// No description provided for @drawerInformation.
+  ///
+  /// In en, this message translates to:
+  /// **'INFORMATION'**
+  String get drawerInformation;
+
+  /// No description provided for @privacySecurityTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy & Security'**
+  String get privacySecurityTitle;
+
+  /// No description provided for @privacySecuritySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Offline and secure'**
+  String get privacySecuritySubtitle;
+
+  /// No description provided for @drawerAbout.
+  ///
+  /// In en, this message translates to:
+  /// **'About'**
+  String get drawerAbout;
+
+  /// No description provided for @checkingVersion.
+  ///
+  /// In en, this message translates to:
+  /// **'Checking version...'**
+  String get checkingVersion;
+
+  /// No description provided for @versionUnknown.
+  ///
+  /// In en, this message translates to:
+  /// **'Version Unknown'**
+  String get versionUnknown;
+
+  /// No description provided for @updateAvailableBadge.
+  ///
+  /// In en, this message translates to:
+  /// **' • Update'**
+  String get updateAvailableBadge;
+
+  /// No description provided for @reportIssue.
+  ///
+  /// In en, this message translates to:
+  /// **'Report Issue'**
+  String get reportIssue;
+
+  /// No description provided for @drawerCommunity.
+  ///
+  /// In en, this message translates to:
+  /// **'COMMUNITY'**
+  String get drawerCommunity;
+
+  /// No description provided for @themeAuto.
+  ///
+  /// In en, this message translates to:
+  /// **'Auto'**
+  String get themeAuto;
+
+  /// No description provided for @supportProject.
+  ///
+  /// In en, this message translates to:
+  /// **'Support the project'**
+  String get supportProject;
+
+  /// No description provided for @madeBy.
+  ///
+  /// In en, this message translates to:
+  /// **'Made by '**
+  String get madeBy;
+
+  /// No description provided for @viewAllContributors.
+  ///
+  /// In en, this message translates to:
+  /// **'View all contributors'**
+  String get viewAllContributors;
 }
 
 class _AppLocalizationsDelegate

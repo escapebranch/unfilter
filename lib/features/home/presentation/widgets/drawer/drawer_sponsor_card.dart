@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:unfilter/l10n/generated/app_localizations.dart';
 
 class DrawerSponsorCard extends StatelessWidget {
   const DrawerSponsorCard({super.key, required this.onViewSponsors});
@@ -12,6 +13,7 @@ class DrawerSponsorCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
+    final l10n = AppLocalizations.of(context);
 
     return Container(
       decoration: BoxDecoration(
@@ -75,7 +77,7 @@ class DrawerSponsorCard extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        'Support the project',
+                        l10n.supportProject,
                         style: theme.textTheme.titleSmall?.copyWith(
                           fontWeight: FontWeight.w700,
                         ),
@@ -84,7 +86,7 @@ class DrawerSponsorCard extends StatelessWidget {
                       Row(
                         children: [
                           Text(
-                            'Made by ',
+                            l10n.madeBy,
                             style: theme.textTheme.bodySmall?.copyWith(
                               color: theme.colorScheme.onSurfaceVariant,
                             ),

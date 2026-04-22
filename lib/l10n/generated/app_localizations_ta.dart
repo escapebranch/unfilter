@@ -611,4 +611,70 @@ class AppLocalizationsTa extends AppLocalizations {
 
   @override
   String get updateNowAction => 'இப்போதே புதுப்பி';
+
+  @override
+  String get drawerMenu => 'மெனு';
+
+  @override
+  String get drawerSettingsInfo => 'அமைப்புகள் & தகவல்';
+
+  @override
+  String get drawerAppearance => 'தோற்றம்';
+
+  @override
+  String get drawerInsights => 'நுண்ணறிவுகள்';
+
+  @override
+  String get usageStatisticsSubtitle => 'உங்கள் டிஜிட்டல் நலப் பயன்பாடு காண்க';
+
+  @override
+  String get storageInsightsSubtitle => 'சேமிப்பகத்தின் விவரங்கள்';
+
+  @override
+  String get taskManagerSubtitle => 'கணினி வளங்களை கண்காணிக்கவும்';
+
+  @override
+  String get drawerTools => 'கருவிகள்';
+
+  @override
+  String get deeplinkTesterSubtitle => 'URI நடத்தை சோதிக்கவும்';
+
+  @override
+  String get drawerInformation => 'தகவல்';
+
+  @override
+  String get privacySecurityTitle => 'தனியுரிமை மற்றும் பாதுகாப்பு';
+
+  @override
+  String get privacySecuritySubtitle => 'ஆஃப்லைன் மற்றும் பாதுகாப்பானது';
+
+  @override
+  String get drawerAbout => 'பற்றி';
+
+  @override
+  String get checkingVersion => 'பதிப்பை சரிபார்க்கிறது...';
+
+  @override
+  String get versionUnknown => 'தெரியாத பதிப்பு';
+
+  @override
+  String get updateAvailableBadge => ' • புதுப்பிப்பு';
+
+  @override
+  String get reportIssue => 'பிழையை தெரிவி';
+
+  @override
+  String get drawerCommunity => 'சமூகம்';
+
+  @override
+  String get themeAuto => 'தானியங்கி';
+
+  @override
+  String get supportProject => 'திட்டத்தை ஆதரிக்கவும்';
+
+  @override
+  String get madeBy => 'உருவாக்கியவர் ';
+
+  @override
+  String get viewAllContributors => 'அனைத்து பங்களிப்பாளர்களையும் காணுங்கள்';
 }

@@ -605,4 +605,70 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get updateNowAction => 'Update Now';
+
+  @override
+  String get drawerMenu => 'Menu';
+
+  @override
+  String get drawerSettingsInfo => 'Settings & Info';
+
+  @override
+  String get drawerAppearance => 'APPEARANCE';
+
+  @override
+  String get drawerInsights => 'INSIGHTS';
+
+  @override
+  String get usageStatisticsSubtitle => 'View your digital wellbeing';
+
+  @override
+  String get storageInsightsSubtitle => 'Unfiltered space breakdown';
+
+  @override
+  String get taskManagerSubtitle => 'Monitor system resources';
+
+  @override
+  String get drawerTools => 'TOOLS';
+
+  @override
+  String get deeplinkTesterSubtitle => 'Test and inspect URI behavior';
+
+  @override
+  String get drawerInformation => 'INFORMATION';
+
+  @override
+  String get privacySecurityTitle => 'Privacy & Security';
+
+  @override
+  String get privacySecuritySubtitle => 'Offline and secure';
+
+  @override
+  String get drawerAbout => 'About';
+
+  @override
+  String get checkingVersion => 'Checking version...';
+
+  @override
+  String get versionUnknown => 'Version Unknown';
+
+  @override
+  String get updateAvailableBadge => ' • Update';
+
+  @override
+  String get reportIssue => 'Report Issue';
+
+  @override
+  String get drawerCommunity => 'COMMUNITY';
+
+  @override
+  String get themeAuto => 'Auto';
+
+  @override
+  String get supportProject => 'Support the project';
+
+  @override
+  String get madeBy => 'Made by ';
+
+  @override
+  String get viewAllContributors => 'View all contributors';
 }
