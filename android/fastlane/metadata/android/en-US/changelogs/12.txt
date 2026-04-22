@@ -1,0 +1,3 @@
+Localization support for English & Tamil. 
+Automated Play Store deployments via Fastlane.
+Minor fixes.
