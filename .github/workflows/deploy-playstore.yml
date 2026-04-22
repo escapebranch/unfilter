@@ -63,7 +63,7 @@ jobs:
 
       - name: Run Fastlane Deployment
         env:
-          PLAY_STORE_CONFIG_JSON_PATH: "../play_store_config.json"
+          PLAY_STORE_CONFIG_JSON_PATH: "play_store_config.json"
         working-directory: android
         run: bundle install && bundle exec fastlane deploy
 
