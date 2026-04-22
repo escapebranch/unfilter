@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:unfilter/l10n/generated/app_localizations.dart';
 
 import '../../providers/contributors_provider.dart';
 
@@ -20,6 +21,7 @@ class DrawerContributorsCard extends ConsumerWidget {
     final theme = Theme.of(context);
     final contributorsAsync = ref.watch(contributorsProvider);
     final isDark = theme.brightness == Brightness.dark;
+    final l10n = AppLocalizations.of(context);
 
     return Container(
       decoration: BoxDecoration(
@@ -59,13 +61,13 @@ class DrawerContributorsCard extends ConsumerWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        'Contributors',
+                        l10n.contributorsTitle,
                         style: theme.textTheme.titleSmall?.copyWith(
                           fontWeight: FontWeight.w700,
                         ),
                       ),
                       const SizedBox(height: 4),
-                      _buildSubtitle(contributorsAsync, theme),
+                      _buildSubtitle(contributorsAsync, theme, l10n),
                     ],
                   ),
                 ),
@@ -107,12 +109,13 @@ class DrawerContributorsCard extends ConsumerWidget {
   Widget _buildSubtitle(
     AsyncValue<List<dynamic>> contributorsAsync,
     ThemeData theme,
+    AppLocalizations l10n,
   ) {
     return contributorsAsync.when(
       data: (contributors) {
         final externalCount = _countExternalContributors(contributors);
         final text = externalCount == 0
-            ? 'Be the first external contributor'
+            ? l10n.contributeBeFirstExternal
             : '$externalCount external contributor${externalCount == 1 ? '' : 's'}';
 
         return Text(
@@ -123,13 +126,13 @@ class DrawerContributorsCard extends ConsumerWidget {
         );
       },
       loading: () => Text(
-        'Loading...',
+        l10n.commonLoadingLabel,
         style: theme.textTheme.bodySmall?.copyWith(
           color: theme.colorScheme.onSurfaceVariant,
         ),
       ),
       error: (_, _) => Text(
-        'View all contributors',
+        l10n.viewAllContributors,
         style: theme.textTheme.bodySmall?.copyWith(
           color: theme.colorScheme.onSurfaceVariant,
         ),

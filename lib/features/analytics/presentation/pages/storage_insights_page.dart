@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:unfilter/l10n/generated/app_localizations.dart';
+
 import '../../../apps/domain/entities/device_app.dart';
 import '../../../apps/presentation/providers/apps_provider.dart';
 import '../../../home/presentation/widgets/premium_app_bar.dart';
@@ -44,12 +46,14 @@ class _StorageInsightsPageState extends ConsumerState<StorageInsightsPage> {
       body: appsAsync.when(
         data: (apps) => _buildDataState(apps, theme),
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (err, _) => Center(child: Text('Error: $err')),
+        error: (err, _) => Center(child: Text(AppLocalizations.of(context).commonErrorWithDetails(err.toString()))),
       ),
     );
   }
 
   Widget _buildDataState(List<DeviceApp> apps, ThemeData theme) {
+    final l10n = AppLocalizations.of(context);
+
     final filteredApps = apps.where((app) {
       final query = _searchQuery.toLowerCase();
       return app.appName.toLowerCase().contains(query) ||
@@ -60,17 +64,19 @@ class _StorageInsightsPageState extends ConsumerState<StorageInsightsPage> {
       ..sort((a, b) => b.size.compareTo(a.size));
 
     if (validApps.isEmpty && _searchQuery.isEmpty) {
-      return _buildEmptyState(theme, 'No storage info available');
+      return _buildEmptyState(theme, l10n.noStorageInfoAvailable);
     }
 
     if (validApps.isEmpty) {
-      return _buildEmptyState(theme, 'No apps match your search');
+      return _buildEmptyState(theme, l10n.searchEmptyState);
     }
 
     return _buildStorageContent(validApps, theme);
   }
 
   Widget _buildEmptyState(ThemeData theme, String message) {
+    final l10n = AppLocalizations.of(context);
+
     return Stack(
       children: [
         CustomScrollView(
@@ -87,7 +93,7 @@ class _StorageInsightsPageState extends ConsumerState<StorageInsightsPage> {
                 child: AnalyticsSearchBar(
                   controller: _searchController,
                   searchQuery: _searchQuery,
-                  hintText: 'Search storage...',
+                  hintText: l10n.searchStorageHint,
                   onChanged: (val) => setState(() => _searchQuery = val),
                   onClear: () {
                     _searchController.clear();
@@ -101,7 +107,7 @@ class _StorageInsightsPageState extends ConsumerState<StorageInsightsPage> {
         ),
         const TopShadowGradient(),
         PremiumAppBar(
-          title: 'Storage Insights',
+          title: l10n.storageInsightsTitle,
           scrollController: _scrollController,
         ),
       ],
@@ -146,7 +152,7 @@ class _StorageInsightsPageState extends ConsumerState<StorageInsightsPage> {
         ),
         const TopShadowGradient(),
         PremiumAppBar(
-          title: 'Storage Insights',
+          title: AppLocalizations.of(context).storageInsightsTitle,
           scrollController: _scrollController,
         ),
       ],
@@ -160,7 +166,7 @@ class _StorageInsightsPageState extends ConsumerState<StorageInsightsPage> {
         child: AnalyticsSearchBar(
           controller: _searchController,
           searchQuery: _searchQuery,
-          hintText: 'Search storage...',
+          hintText: AppLocalizations.of(context).searchStorageHint,
           onChanged: (val) => setState(() => _searchQuery = val),
           onClear: () {
             _searchController.clear();
@@ -238,7 +244,7 @@ class _StorageInsightsPageState extends ConsumerState<StorageInsightsPage> {
             return Padding(
               padding: const EdgeInsets.only(bottom: 16),
               child: Text(
-                _searchQuery.isEmpty ? 'HEAVIEST APPS' : 'SEARCH RESULTS',
+                _searchQuery.isEmpty ? AppLocalizations.of(context).heaviestAppsSection : AppLocalizations.of(context).searchResultsSection,
                 style: theme.textTheme.labelSmall?.copyWith(
                   fontWeight: FontWeight.bold,
                   letterSpacing: 2.0,

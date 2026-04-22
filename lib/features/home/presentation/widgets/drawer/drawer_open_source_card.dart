@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:unfilter/l10n/generated/app_localizations.dart';
 
 import '../../providers/github_stars_provider.dart';
 
@@ -45,7 +46,7 @@ class DrawerOpenSourceCard extends ConsumerWidget {
               children: [
                 _buildGitHubIcon(theme),
                 const SizedBox(width: 16),
-                Expanded(child: _buildTextContent(theme)),
+                Expanded(child: _buildTextContent(theme, context)),
                 _buildStarsBadge(theme, starsAsync),
               ],
             ),
@@ -74,19 +75,21 @@ class DrawerOpenSourceCard extends ConsumerWidget {
     );
   }
 
-  Widget _buildTextContent(ThemeData theme) {
+  Widget _buildTextContent(ThemeData theme, BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Open Source',
+          l10n.howItWorksOpenSourceLabel,
           style: theme.textTheme.titleSmall?.copyWith(
             fontWeight: FontWeight.w700,
             fontSize: 14,
           ),
         ),
         Text(
-          'Give a Star on Github',
+          l10n.giveAStarOnGithub,
           style: theme.textTheme.bodySmall?.copyWith(
             color: theme.colorScheme.onSurfaceVariant,
             fontSize: 11,

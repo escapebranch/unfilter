@@ -6,6 +6,8 @@ import 'package:flutter/rendering.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
+import 'package:unfilter/l10n/generated/app_localizations.dart';
+
 import '../../domain/entities/device_app.dart';
 import 'customizable_share_poster.dart';
 import 'share_options_config.dart';
@@ -81,6 +83,7 @@ class _SharePreviewDialogState extends State<SharePreviewDialog>
     final navigator = Navigator.of(context);
     final scaffoldMessenger = ScaffoldMessenger.of(context);
     final errorColor = Theme.of(context).colorScheme.error;
+    final l10n = AppLocalizations.of(context);
 
     try {
       await Future.delayed(const Duration(milliseconds: 100));
@@ -117,7 +120,7 @@ class _SharePreviewDialogState extends State<SharePreviewDialog>
       await SharePlus.instance.share(
         ShareParams(
           files: [XFile(file.path)],
-          text: _buildShareText(_configNotifier.value),
+          text: _buildShareText(_configNotifier.value, l10n),
         ),
       );
     } catch (e) {
@@ -125,7 +128,7 @@ class _SharePreviewDialogState extends State<SharePreviewDialog>
       if (mounted) {
         scaffoldMessenger.showSnackBar(
           SnackBar(
-            content: Text("Failed to share: ${e.toString()}"),
+            content: Text(l10n.shareFailedError(e.toString())),
             backgroundColor: errorColor,
           ),
         );
@@ -139,24 +142,24 @@ class _SharePreviewDialogState extends State<SharePreviewDialog>
     await WidgetsBinding.instance.endOfFrame;
   }
 
-  String _buildShareText(ShareOptionsConfig config) {
+  String _buildShareText(ShareOptionsConfig config, AppLocalizations l10n) {
     final buffer = StringBuffer();
-    buffer.writeln("${widget.app.appName} just got exposed 🔍");
+    buffer.writeln(l10n.shareTextExposed(widget.app.appName));
     buffer.writeln();
-    buffer.writeln("Built with: ${widget.app.stack}");
+    buffer.writeln(l10n.shareTextBuiltWith(widget.app.stack));
 
     if (config.showVersion) {
-      buffer.writeln("Version: ${widget.app.version}");
+      buffer.writeln(l10n.shareTextVersion(widget.app.version));
     }
     if (config.showSize) {
-      buffer.writeln("Size: ${_formatBytes(widget.app.size)}");
+      buffer.writeln(l10n.shareTextSize(_formatBytes(widget.app.size)));
     }
 
     buffer.writeln();
-    buffer.writeln("See what your apps are really made of.");
-    buffer.writeln("github.com/r4khul/unfilter/releases/latest");
+    buffer.writeln(l10n.shareTextMarketing1);
+    buffer.writeln(l10n.shareTextMarketing2);
     buffer.writeln();
-    buffer.writeln("Don't forget to give a star!");
+    buffer.writeln(l10n.shareTextMarketing3);
 
     return buffer.toString();
   }
@@ -284,7 +287,7 @@ class _DialogHeader extends StatelessWidget {
                 const SizedBox(width: 12),
                 Expanded(
                   child: Text(
-                    "Customize & Share",
+                    AppLocalizations.of(context).customizeAndShare,
                     style: theme.textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.bold,
                       letterSpacing: -0.3,
@@ -353,7 +356,7 @@ class _ThemeToggle extends StatelessWidget {
                   ),
                   const SizedBox(width: 6),
                   Text(
-                    config.posterDarkMode ? "Dark" : "Light",
+                    config.posterDarkMode ? AppLocalizations.of(context).themeDark : AppLocalizations.of(context).themeLight,
                     style: TextStyle(
                       color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
                       fontSize: 12,
@@ -381,60 +384,61 @@ class _OptionsRow extends StatelessWidget {
     return ValueListenableBuilder<ShareOptionsConfig>(
       valueListenable: configNotifier,
       builder: (context, config, _) {
+        final l10n = AppLocalizations.of(context);
         final options = <_OptionData>[
           _OptionData(
-            "Version",
+            l10n.optionVersion,
             Icons.info_outline_rounded,
             config.showVersion,
             configNotifier.toggleVersion,
           ),
           _OptionData(
-            "SDK",
+            l10n.optionSdk,
             Icons.developer_mode_rounded,
             config.showSdk,
             configNotifier.toggleSdk,
           ),
           _OptionData(
-            "Usage",
+            l10n.optionUsage,
             Icons.access_time_rounded,
             config.showUsage,
             configNotifier.toggleUsage,
           ),
           _OptionData(
-            "Install Date",
+            l10n.optionInstallDate,
             Icons.calendar_today_rounded,
             config.showInstallDate,
             configNotifier.toggleInstallDate,
           ),
           _OptionData(
-            "Size",
+            l10n.optionSize,
             Icons.storage_rounded,
             config.showSize,
             configNotifier.toggleSize,
           ),
           if (app.installerStore != 'Unknown')
             _OptionData(
-              "Source",
+              l10n.optionSource,
               Icons.store_rounded,
               config.showSource,
               configNotifier.toggleSource,
             ),
           if (app.techVersions.isNotEmpty)
             _OptionData(
-              "Tech",
+              l10n.optionTech,
               Icons.code_rounded,
               config.showTechVersions,
               configNotifier.toggleTechVersions,
             ),
           _OptionData(
-            "Components",
+            l10n.optionComponents,
             Icons.widgets_rounded,
             config.showComponents,
             configNotifier.toggleComponents,
           ),
           if (app.splitApks.isNotEmpty)
             _OptionData(
-              "Splits",
+              l10n.optionSplits,
               Icons.extension_rounded,
               config.showSplitApks,
               configNotifier.toggleSplitApks,
@@ -658,7 +662,7 @@ class _ShareButton extends StatelessWidget {
                           ),
                           const SizedBox(width: 10),
                           Text(
-                            "Share Image",
+                            AppLocalizations.of(context).shareImage,
                             style: TextStyle(
                               color: isDark ? Colors.black : Colors.white,
                               fontSize: 16,

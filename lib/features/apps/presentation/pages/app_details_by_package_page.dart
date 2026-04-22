@@ -3,6 +3,8 @@ library;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:unfilter/l10n/generated/app_localizations.dart';
+
 import '../../data/repositories/device_apps_repository.dart';
 import '../../domain/entities/device_app.dart';
 import 'app_details_page.dart';
@@ -36,6 +38,8 @@ class _AppDetailsByPackagePageState
   }
 
   Future<void> _loadAppDetails() async {
+    final l10n = AppLocalizations.of(context);
+
     try {
       final apps = await _repository.getAppsDetails([widget.packageName]);
       if (apps.isNotEmpty && mounted) {
@@ -45,14 +49,14 @@ class _AppDetailsByPackagePageState
         });
       } else if (mounted) {
         setState(() {
-          _error = 'App not found';
+          _error = l10n.appNotFound;
           _isLoading = false;
         });
       }
     } catch (e) {
       if (mounted) {
         setState(() {
-          _error = 'Failed to load app details';
+          _error = l10n.failedToLoadAppDetails;
           _isLoading = false;
         });
       }
@@ -62,12 +66,13 @@ class _AppDetailsByPackagePageState
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
 
     if (_isLoading) {
       return Scaffold(
         backgroundColor: theme.scaffoldBackgroundColor,
         appBar: AppBar(
-          title: Text(widget.appName ?? 'Loading...'),
+          title: Text(widget.appName ?? l10n.commonLoadingLabel),
           backgroundColor: Colors.transparent,
           elevation: 0,
         ),
@@ -79,7 +84,7 @@ class _AppDetailsByPackagePageState
       return Scaffold(
         backgroundColor: theme.scaffoldBackgroundColor,
         appBar: AppBar(
-          title: Text(widget.appName ?? 'Error'),
+          title: Text(widget.appName ?? l10n.commonErrorLabel),
           backgroundColor: Colors.transparent,
           elevation: 0,
         ),
@@ -94,7 +99,7 @@ class _AppDetailsByPackagePageState
               ),
               const SizedBox(height: 16),
               Text(
-                _error ?? 'App not found',
+                _error ?? l10n.appNotFound,
                 style: theme.textTheme.titleMedium,
               ),
               const SizedBox(height: 8),
@@ -109,7 +114,7 @@ class _AppDetailsByPackagePageState
               FilledButton.icon(
                 onPressed: () => Navigator.of(context).pop(),
                 icon: const Icon(Icons.arrow_back),
-                label: const Text('Go Back'),
+                label: Text(l10n.commonGoBackLabel),
               ),
             ],
           ),

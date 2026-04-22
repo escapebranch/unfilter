@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:unfilter/l10n/generated/app_localizations.dart';
 
 import '../scan_button.dart';
 import '../settings_menu.dart';
@@ -25,7 +26,7 @@ class HomeTopAppBar extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: Row(
           children: [
-            Expanded(child: _buildTitleLogoTransition(theme)),
+            Expanded(child: _buildTitleLogoTransition(context, theme)),
             const ScanButton(),
             const SizedBox(width: 4),
             const SettingsMenu(),
@@ -35,9 +36,9 @@ class HomeTopAppBar extends StatelessWidget {
     );
   }
 
-  Widget _buildTitleLogoTransition(ThemeData theme) {
+  Widget _buildTitleLogoTransition(BuildContext context, ThemeData theme) {
     final isDark = theme.brightness == Brightness.dark;
-
+    final l10n = AppLocalizations.of(context);
     return Stack(
       alignment: Alignment.centerLeft,
       children: [
@@ -46,7 +47,7 @@ class HomeTopAppBar extends StatelessWidget {
           child: Opacity(
             opacity: (1 - transitionProgress).clamp(0.0, 1.0),
             child: Text(
-              'UnFilter',
+              l10n.appTitle,
               style: theme.textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.bold,
               ),

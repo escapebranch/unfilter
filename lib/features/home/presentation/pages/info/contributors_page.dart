@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:unfilter/l10n/generated/app_localizations.dart';
 
 import '../../providers/contributors_provider.dart';
 import '../../widgets/premium_app_bar.dart';
@@ -108,7 +109,7 @@ class _ContributorsPageState extends ConsumerState<ContributorsPage> {
           ),
           const TopShadowGradient(),
           PremiumAppBar(
-            title: 'Contributors',
+            title: AppLocalizations.of(context).contributorsTitle,
             scrollController: _scrollController,
           ),
         ],
@@ -128,6 +129,7 @@ class _ContributorsPageState extends ConsumerState<ContributorsPage> {
     AsyncValue<List<dynamic>> contributorsAsync,
   ) {
     final count = contributorsAsync.asData?.value.length ?? 0;
+    final l10n = AppLocalizations.of(context);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -136,7 +138,7 @@ class _ContributorsPageState extends ConsumerState<ContributorsPage> {
           children: [
             Expanded(
               child: Text(
-                'Community\nBuilders',
+                l10n.contributorsHeader,
                 style: theme.textTheme.headlineMedium?.copyWith(
                   fontWeight: FontWeight.w800,
                   height: 1.1,
@@ -149,7 +151,7 @@ class _ContributorsPageState extends ConsumerState<ContributorsPage> {
         ),
         const SizedBox(height: 12),
         Text(
-          'The people who shaped this project with code, ideas, and energy.',
+          l10n.contributorsIntro,
           style: theme.textTheme.bodyLarge?.copyWith(
             color: theme.colorScheme.onSurface.withValues(alpha: 0.72),
             height: 1.45,
@@ -174,7 +176,7 @@ class _ContributorsPageState extends ConsumerState<ContributorsPage> {
               ),
               const SizedBox(width: 8),
               Text(
-                '$count contributor${count == 1 ? '' : 's'}',
+                l10n.contributorsCount(count),
                 style: theme.textTheme.labelMedium?.copyWith(
                   fontWeight: FontWeight.w700,
                 ),
@@ -245,15 +247,15 @@ class _ContributorsPageState extends ConsumerState<ContributorsPage> {
     AsyncValue<List<dynamic>> contributorsAsync,
   ) {
     final count = contributorsAsync.asData?.value.length ?? 0;
-
+    final l10n = AppLocalizations.of(context);
     // Determine the message based on contributor count
     String message;
     if (count == 0) {
-      message = 'Be the first contributor';
+      message = l10n.contributeBeFirst;
     } else if (count == 1) {
-      message = 'Become the 1st external contributor';
+      message = l10n.contributeBeFirstExternal;
     } else {
-      message = 'You can be the ${count + 1}th contributor';
+      message = l10n.contributeNth(count + 1);
     }
 
     return DecoratedBox(
@@ -314,7 +316,7 @@ class _ContributorsPageState extends ConsumerState<ContributorsPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Contribute Now',
+                            l10n.contributeNow,
                             style: theme.textTheme.titleSmall?.copyWith(
                               color: Colors.white,
                               fontWeight: FontWeight.w800,
@@ -323,7 +325,7 @@ class _ContributorsPageState extends ConsumerState<ContributorsPage> {
                           ),
                           const SizedBox(height: 2),
                           Text(
-                            'Get your name in the app',
+                            l10n.contributeSubtitle,
                             style: theme.textTheme.bodySmall?.copyWith(
                               color: Colors.white.withValues(alpha: 0.85),
                               fontWeight: FontWeight.w500,
@@ -403,6 +405,8 @@ class _ContributorsPageState extends ConsumerState<ContributorsPage> {
   }
 
   Widget _buildEmptyState(ThemeData theme) {
+    final l10n = AppLocalizations.of(context);
+
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
@@ -421,14 +425,14 @@ class _ContributorsPageState extends ConsumerState<ContributorsPage> {
           ),
           const SizedBox(height: 16),
           Text(
-            'No contributors yet',
+            l10n.contributorsEmptyTitle,
             style: theme.textTheme.titleMedium?.copyWith(
               fontWeight: FontWeight.w700,
             ),
           ),
           const SizedBox(height: 8),
           Text(
-            'Be the first to contribute and get featured here!',
+            l10n.contributorsEmptySubtitle,
             textAlign: TextAlign.center,
             style: theme.textTheme.bodyMedium?.copyWith(
               color: theme.colorScheme.onSurfaceVariant,
@@ -440,6 +444,8 @@ class _ContributorsPageState extends ConsumerState<ContributorsPage> {
   }
 
   Widget _buildErrorState(ThemeData theme) {
+    final l10n = AppLocalizations.of(context);
+
     return Container(
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
@@ -453,14 +459,14 @@ class _ContributorsPageState extends ConsumerState<ContributorsPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Could not load contributors',
+            l10n.contributorsErrorTitle,
             style: theme.textTheme.titleMedium?.copyWith(
               fontWeight: FontWeight.w700,
             ),
           ),
           const SizedBox(height: 8),
           Text(
-            'Please try again later or visit the GitHub repository.',
+            l10n.contributorsErrorSubtitle,
             style: theme.textTheme.bodyMedium?.copyWith(
               color: theme.colorScheme.onSurfaceVariant,
             ),
@@ -469,7 +475,7 @@ class _ContributorsPageState extends ConsumerState<ContributorsPage> {
           OutlinedButton.icon(
             onPressed: () => _launchUrl(_repoUrl),
             icon: const Icon(Icons.open_in_new_rounded),
-            label: const Text('View on GitHub'),
+            label: Text(l10n.viewOnGithub),
           ),
         ],
       ),

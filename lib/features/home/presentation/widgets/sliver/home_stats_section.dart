@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:skeletonizer/skeletonizer.dart';
+import 'package:unfilter/l10n/generated/app_localizations.dart';
 
 import '../constants.dart';
 
@@ -18,7 +19,8 @@ class HomeStatsSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-
+    final l10n = AppLocalizations.of(context);
+    
     return Skeletonizer(
       enabled: isLoading,
       effect: ShimmerEffect(
@@ -36,14 +38,14 @@ class HomeStatsSection extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Your Device has',
+            l10n.homeStatsTitle,
             style: theme.textTheme.labelLarge?.copyWith(
               color: theme.colorScheme.primary.withValues(alpha: 0.6),
             ),
           ),
           const SizedBox(height: 4),
           Text(
-            isLoading ? '000 Installed Apps' : '$appCount Installed Apps',
+            isLoading ? l10n.homeStatsCountText("000") : l10n.homeStatsCountText(appCount.toString()),
             style: theme.textTheme.headlineMedium?.copyWith(
               fontWeight: FontWeight.bold,
             ),

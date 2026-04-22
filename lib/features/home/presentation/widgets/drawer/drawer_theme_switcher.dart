@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:unfilter/l10n/generated/app_localizations.dart';
 
 import '../../../../../core/providers/theme_provider.dart';
 import '../../../../../core/widgets/theme_transition_wrapper.dart';
@@ -12,6 +13,7 @@ class DrawerThemeSwitcher extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final currentTheme = ref.watch(themeProvider);
+    final l10n = AppLocalizations.of(context);
 
     final alignmentX = switch (currentTheme) {
       ThemeMode.light => -1.0,
@@ -58,19 +60,19 @@ class DrawerThemeSwitcher extends ConsumerWidget {
               _ThemeOption(
                 mode: ThemeMode.light,
                 icon: Icons.wb_sunny_rounded,
-                label: 'Light',
+                label: l10n.themeLight,
                 isSelected: currentTheme == ThemeMode.light,
               ),
               _ThemeOption(
                 mode: ThemeMode.system,
                 icon: Icons.hdr_auto_rounded,
-                label: 'Auto',
+                label: l10n.themeAuto,
                 isSelected: currentTheme == ThemeMode.system,
               ),
               _ThemeOption(
                 mode: ThemeMode.dark,
                 icon: Icons.nightlight_round,
-                label: 'Dark',
+                label: l10n.themeDark,
                 isSelected: currentTheme == ThemeMode.dark,
               ),
             ],

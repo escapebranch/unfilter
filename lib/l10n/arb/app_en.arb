@@ -1,0 +1,281 @@
+{
+  "@@locale": "en",
+  "apps": "Apps",
+  "appTitle": "UnFilter",
+  "@appTitle": {
+    "description": "Application title"
+  },
+  "homeTitle": "Home",
+  "@homeTitle": {
+    "description": "Homepage title"
+  },
+  "chooseLanguageDialogTitle": "Choose Language",
+  "@chooseLanguageDialogTitle": {
+    "description": "Title shown in language selection dialog"
+  },
+  "chooseLanguageDialogSubtitle": "Choose how you want to navigate through application",
+  "@chooseLanguageDialogSubtitle": {
+    "description": "Subtitle shown in language selection dialog"
+  },
+  "languageEnglish": "English",
+  "@languageEnglish": {
+    "description": "English language name shown in selector"
+  },
+  "languageTamil": "Tamil",
+  "@languageTamil": {
+    "description": "Tamil language name shown in selector"
+  },
+  "confirmButtonLabel": "Confirm",
+  "@confirmButtonLabel": {
+    "description": "Generic confirm action label"
+  },
+  "premiumAppBarResyncApp": "Resync App",
+  "premiumAppBarShare": "Share",
+  "premiumAppBarMenuTooltip": "Menu",
+  "commonOpenLabel": "Open",
+  "commonViewLabel": "View",
+  "commonClearLabel": "Clear",
+  "commonPreviewLabel": "Preview",
+  "privacyPolicyTitle": "Privacy Policy",
+  "privacyTermsAndConditionsTitle": "Terms & Conditions",
+  "privacyHeader": "Your Data,\nYour Device",
+  "privacyIntro": "Privacy is part of the product, not an afterthought. UnFilter runs offline so it can stay useful without ever becoming nosy about you.",
+  "privacySectionLocalProcessingTitle": "Local Processing",
+  "privacySectionLocalProcessingContent": "Every scan, every match, every bit of analysis runs right on your phone. We couldn't peek at your apps even if we wanted to - we built it that way.",
+  "privacySectionMinimalPermissionsTitle": "Minimal Permissions",
+  "privacySectionMinimalPermissionsContent": "We ask for exactly two things: permission to see what apps you have installed, and storage access for looking through native libraries. That's it.",
+  "privacySectionNoTrackingTitle": "No Tracking",
+  "privacySectionNoTrackingContent": "No analytics. No ad SDKs. No crash reporters phoning home. What you do inside the app stays between you and your phone.",
+  "privacySectionLimitedNetworkingTitle": "Limited Networking",
+  "privacySectionLimitedNetworkingContent": "The only time we hit the internet is to check for updates and grab the GitHub star count. That's it - nothing about you leaves this app.",
+  "howItWorksTitle": "How it works",
+  "howItWorksHeader": "App\nClues",
+  "howItWorksIntro": "No decompiling. No uploads. Just smart local analysis that reads what's already there and tells you what an app is made of.",
+  "howItWorksOpenSourceLabel": "Open Source",
+  "howItWorksStep1Title": "Collect Clues",
+  "howItWorksStep1Description": "We look at each app's package info and native libraries already sitting on your phone. No uploads, no account, no drama.",
+  "howItWorksStep2Title": "Match Signals",
+  "howItWorksStep2Description": "We compare those clues against local framework fingerprints to spot Flutter, React Native, Unity, and the rest of the usual suspects.",
+  "howItWorksStep3Title": "Stay Local",
+  "howItWorksStep3Description": "Every scan happens on-device. The fun stays private and your app data never leaves your phone.",
+  "deeplinkTesterTitle": "Deep Link Tester",
+  "deeplinkInitialStatus": "Enter a deeplink to test it.",
+  "deeplinkEnterSchemeError": "Please enter at least a scheme.",
+  "deeplinkInvalidError": "Invalid deeplink. Include a valid URI scheme.",
+  "deeplinkCanHandle": "Deep link can be handled on this device.",
+  "deeplinkNoHandler": "No app can handle this deep link right now.",
+  "deeplinkLaunchedSuccess": "Deep link launched successfully.",
+  "deeplinkLaunchFailedRecognized": "Deep link was recognized but failed to launch.",
+  "deeplinkLaunchFailed": "Failed to launch deep link.",
+  "deeplinkComponentsTitle": "Deep Link Components",
+  "deeplinkPasteFullUrlHint": "Paste full URL here (e.g., myapp://host/path)",
+  "deeplinkAutofillHint": "Paste full URL above to auto-fill fields",
+  "deeplinkLabelScheme": "Scheme",
+  "deeplinkLabelHost": "Host",
+  "deeplinkLabelPath": "Path",
+  "deeplinkLabelQuery": "Query",
+  "deeplinkLabelFragment": "Fragment",
+  "deeplinkHintScheme": "e.g. mailto, https",
+  "deeplinkHintHost": "e.g. example.com",
+  "deeplinkHintPath": "e.g. /profile",
+  "deeplinkHintQuery": "e.g. id=123",
+  "deeplinkHintFragment": "e.g. section1",
+  "deeplinkTestButton": "Test Deeplink",
+  "deeplinkTryExamplesButton": "Try Examples",
+  "deeplinkExamplesTitle": "Deep Link Examples",
+  "deeplinkExampleComposeEmail": "Compose Email",
+  "deeplinkExamplePhoneCall": "Phone Call",
+  "deeplinkExampleSendSms": "Send SMS",
+  "deeplinkMoreConfigsSoon": "More configurations coming soon!",
+  "deeplinkParsedEmpty": "URI breakdown will appear here after testing.",
+  "deeplinkParsedDetailsTitle": "Parsed URI Details",
+  "homeStatsTitle": "Your Device has",
+  "homeStatsCountText": "{count} Installed Apps",
+  "@homeStatsCountText": {
+    "placeholders": {
+      "count":{
+        "type": "String"
+      }
+    }
+  },
+  "permission": "Permission",
+  "permissionDescription1": "UnFilter needs secure access to your usage stats so it can help you ",
+  "permissionDescription2": "spot what apps are made of and power the analytics view.\n\n",
+  "permissionDescription3": "Your data never leaves your device.",
+  "grantAccess": "Grant Access",
+  "maybeLater": "Maybe Later",
+  "noAppsFound": "No apps found matching criteria",
+  "somethingWentWrongScanning": "Something went wrong while scanning.\n"
+,
+  "taskManagerTitle": "Task Manager",
+  "failedToLoadProcesses": "Failed to load processes",
+  "retryLabel": "Retry",
+  "kernelSystemSection": "KERNEL / SYSTEM",
+  "noProcessesMatchSearch": "No processes match your search",
+  "noProcessDataAvailable": "No process data available",
+  "processDataIncompleteError": "Process data may be incomplete: {error}",
+  "@processDataIncompleteError": {
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+  "scanFailedRetry": "Scan failed to retrieve apps. Please try again.",
+  "scanError": "Scan error: {error}",
+  "@scanError": {
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+  "scanInitializing": "Initializing...",
+  "scanFailedTitle": "Scan Failed",
+  "scanErrorInstruction": "Please screenshot this error report and send it to the developer:",
+  "errorReportCopied": "Error report copied to clipboard",
+  "copyErrorReport": "Copy Error Report",
+  "closeLabel": "Close",
+  "customizeAndShare": "Customize & Share",
+  "shareFailedError": "Failed to share: {error}",
+  "@shareFailedError": {
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+  "shareTextExposed": "{appName} just got exposed 🔍",
+  "@shareTextExposed": {
+    "placeholders": {
+      "appName": { "type": "String" }
+    }
+  },
+  "shareTextBuiltWith": "Built with: {stack}",
+  "@shareTextBuiltWith": {
+    "placeholders": {
+      "stack": { "type": "String" }
+    }
+  },
+  "shareTextVersion": "Version: {version}",
+  "@shareTextVersion": {
+    "placeholders": {
+      "version": { "type": "String" }
+    }
+  },
+  "shareTextSize": "Size: {size}",
+  "@shareTextSize": {
+    "placeholders": {
+      "size": { "type": "String" }
+    }
+  },
+  "shareTextMarketing1": "See what your apps are really made of.",
+  "shareTextMarketing2": "github.com/r4khul/unfilter/releases/latest",
+  "shareTextMarketing3": "Don't forget to give a star!",
+  "shareImage": "Share Image",
+  "themeDark": "Dark",
+  "themeLight": "Light",
+  "optionVersion": "Version",
+  "optionSdk": "SDK",
+  "optionUsage": "Usage",
+  "optionInstallDate": "Install Date",
+  "optionSize": "Size",
+  "optionSource": "Source",
+  "optionTech": "Tech",
+  "optionComponents": "Components",
+  "optionSplits": "Splits",
+  "giveAStarOnGithub": "Give a Star on Github",
+  "commonLoadingLabel": "Loading...",
+  "appNotFound": "App not found",
+  "failedToLoadAppDetails": "Failed to load app details",
+  "commonErrorLabel": "Error",
+  "commonGoBackLabel": "Go Back",
+  "contributorsTitle": "Contributors",
+  "contributorsHeader": "Community\nBuilders",
+  "contributorsIntro": "The people who shaped this project with code, ideas, and energy.",
+  "contributorsCount": "{count} contributor(s)",
+  "@contributorsCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "contributeBeFirst": "Be the first contributor",
+  "contributeBeFirstExternal": "Become the 1st external contributor",
+  "contributeNth": "You can be the {count}th contributor",
+  "@contributeNth": { "placeholders": { "count": { "type": "int" } } },
+  "contributeNow": "Contribute Now",
+  "contributeSubtitle": "Get your name in the app",
+  "contributorsEmptyTitle": "No contributors yet",
+  "contributorsEmptySubtitle": "Be the first to contribute and get featured here!",
+  "contributorsErrorTitle": "Could not load contributors",
+  "contributorsErrorSubtitle": "Please try again later or visit the GitHub repository.",
+  "viewOnGithub": "View on GitHub",
+  "sponsorsTitle": "Sponsors",
+  "sponsorsHeader": "Community\nBackers",
+  "sponsorsIntro": "The people helping keep this project open and moving forward.",
+  "sponsorsCount": "{count} public sponsor(s)",
+  "@sponsorsCount": { "placeholders": { "count": { "type": "int" } } },
+  "sponsorsBecome": "Become a sponsor on GitHub",
+  "sponsorsEmptyTitle": "No public sponsors yet",
+  "sponsorsErrorTitle": "Could not load sponsors right now",
+  "sponsorsErrorSubtitle": "Please try again in a bit or open the GitHub Sponsors page.",
+  "sponsorsOpenGitHub": "Open GitHub Sponsors",
+  "commonViewProfile": "View profile",
+  "noDataForPeriod": "No data for period",
+  "usageOnThisDay": "Usage on this day",
+  "dailyAverage": "Daily Average",
+  "avgUsageWeek": "Avg Usage (Week)",
+  "pastRange": "Past {range}",
+  "@pastRange": { "placeholders": { "range": { "type": "String" } } },
+  "permissionRequiredTitle": "Permission Required",
+  "topCountFilter": "Top {count} Apps",
+  "@topCountFilter": { "placeholders": { "count": { "type": "int" } } },
+  "topCount": "Top {count}",
+  "@topCount": { "placeholders": { "count": { "type": "int" } } },
+  "commonErrorWithDetails": "Error: {error}",
+  "@commonErrorWithDetails": { "placeholders": { "error": { "type": "String" } } },
+  "usageStatisticsTitle": "Usage Statistics",
+  "noDataAvailable": "No Data Available",
+  "tryDifferentDateRange": "Try selecting a different date range",
+  "searchUsageStatsHint": "Search usage stats...",
+  "searchEmptyState": "No apps match your search",
+  "trackingForPeriod": "Tracking for {periodText}",
+  "@trackingForPeriod": { "placeholders": { "periodText": { "type": "String" } } },
+  "daysStoredLocally": "{count} days stored locally",
+  "@daysStoredLocally": { "placeholders": { "count": { "type": "int" } } },
+  "historicalDataCleared": "Some historical data was cleared by your device",
+  "topContributorsSection": "TOP CONTRIBUTORS",
+  "searchResultsSection": "SEARCH RESULTS",
+  "shareLabel": "Share",
+  "shareAnalyticsViralText": "Unfilter exposed my screen addiction 💀\n\nSee what apps are really made of. Real usage stats. No sugar coating.\n\n100% open source. No trackers. No BS.\n\nGet it: github.com/r4khul/unfilter/releases/latest\n\nDon't forget to give a star!\n",
+  "noStorageInfoAvailable": "No storage info available",
+  "storageInsightsTitle": "Storage Insights",
+  "searchStorageHint": "Search storage...",
+  "heaviestAppsSection": "HEAVIEST APPS",
+  "criticalUpdateRequired": "Critical Update Required",
+  "criticalUpdateMessage": "A critical native update is available. You must update the app to continue using it securely.",
+  "currentVersionLabel": "Current Version",
+  "requiredVersionLabel": "Required Version",
+  "downloadUpdateAction": "Download Update",
+  "commonUnknownLabel": "Unknown",
+  "newUpdateAvailable": "New Update Available",
+  "newNativeVersionAvailable": "A new native version ({version}) is available with performance improvements.",
+  "@newNativeVersionAvailable": { "placeholders": { "version": { "type": "String" } } },
+  "updateNowAction": "Update Now",
+  "drawerMenu": "Menu",
+  "drawerSettingsInfo": "Settings & Info",
+  "drawerAppearance": "APPEARANCE",
+  "drawerInsights": "INSIGHTS",
+  "usageStatisticsSubtitle": "View your digital wellbeing",
+  "storageInsightsSubtitle": "Unfiltered space breakdown",
+  "taskManagerSubtitle": "Monitor system resources",
+  "drawerTools": "TOOLS",
+  "deeplinkTesterSubtitle": "Test and inspect URI behavior",
+  "drawerInformation": "INFORMATION",
+  "privacySecurityTitle": "Privacy & Security",
+  "privacySecuritySubtitle": "Offline and secure",
+  "drawerAbout": "About",
+  "checkingVersion": "Checking version...",
+  "versionUnknown": "Version Unknown",
+  "updateAvailableBadge": " • Update",
+  "reportIssue": "Report Issue",
+  "drawerCommunity": "COMMUNITY",
+  "themeAuto": "Auto",
+  "supportProject": "Support the project",
+  "madeBy": "Made by ",
+  "viewAllContributors": "View all contributors"
+}

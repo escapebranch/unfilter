@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:unfilter/l10n/generated/app_localizations.dart';
 
 class AppDrawerHeader extends StatelessWidget {
   const AppDrawerHeader({super.key});
@@ -6,6 +7,7 @@ class AppDrawerHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(24, 16, 24, 12),
@@ -16,7 +18,7 @@ class AppDrawerHeader extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Menu',
+                l10n.drawerMenu,
                 style: theme.textTheme.headlineSmall?.copyWith(
                   fontWeight: FontWeight.w800,
                   fontSize: 24,
@@ -25,7 +27,7 @@ class AppDrawerHeader extends StatelessWidget {
               ),
               const SizedBox(height: 4),
               Text(
-                'Settings & Info',
+                l10n.drawerSettingsInfo,
                 style: theme.textTheme.bodySmall?.copyWith(
                   color: theme.colorScheme.onSurfaceVariant,
                   fontWeight: FontWeight.w500,

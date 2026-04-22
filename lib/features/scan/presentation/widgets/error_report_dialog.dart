@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:unfilter/l10n/generated/app_localizations.dart';
 
 class ErrorReportDialog extends StatelessWidget {
   final String errorReport;
@@ -14,6 +15,7 @@ class ErrorReportDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
 
     return Dialog(
       backgroundColor: theme.scaffoldBackgroundColor,
@@ -44,7 +46,7 @@ class ErrorReportDialog extends StatelessWidget {
                   const SizedBox(width: 12),
                   Expanded(
                     child: Text(
-                      'Scan Failed',
+                      l10n.scanFailedTitle,
                       style: theme.textTheme.titleLarge?.copyWith(
                         color: theme.colorScheme.onErrorContainer,
                         fontWeight: FontWeight.bold,
@@ -61,7 +63,7 @@ class ErrorReportDialog extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Please screenshot this error report and send it to the developer:',
+                      l10n.scanErrorInstruction,
                       style: theme.textTheme.bodyMedium?.copyWith(
                         fontWeight: FontWeight.w600,
                       ),
@@ -100,7 +102,7 @@ class ErrorReportDialog extends StatelessWidget {
                         Clipboard.setData(ClipboardData(text: errorReport));
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
-                            content: const Text('Error report copied to clipboard'),
+                            content: Text(l10n.errorReportCopied),
                             backgroundColor: theme.colorScheme.primary,
                             behavior: SnackBarBehavior.floating,
                             duration: const Duration(seconds: 2),
@@ -108,7 +110,7 @@ class ErrorReportDialog extends StatelessWidget {
                         );
                       },
                       icon: const Icon(Icons.copy),
-                      label: const Text('Copy Error Report'),
+                      label: Text(l10n.copyErrorReport),
                       style: FilledButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 16),
                       ),
@@ -122,7 +124,7 @@ class ErrorReportDialog extends StatelessWidget {
                       style: OutlinedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 16),
                       ),
-                      child: const Text('Close'),
+                      child: Text(l10n.closeLabel),
                     ),
                   ),
                 ],

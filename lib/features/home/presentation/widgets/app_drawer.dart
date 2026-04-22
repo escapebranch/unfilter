@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:unfilter/l10n/generated/app_localizations.dart';
 
 import '../../../../core/navigation/navigation.dart';
 import '../../../update/presentation/providers/update_provider.dart';
@@ -12,6 +13,7 @@ import 'drawer/drawer_theme_switcher.dart';
 import 'drawer/drawer_open_source_card.dart';
 import 'drawer/drawer_sponsor_card.dart';
 import 'drawer/drawer_contributors_card.dart';
+import 'choose_language_button.dart';
 
 class AppDrawer extends ConsumerWidget {
   const AppDrawer({super.key});
@@ -23,6 +25,7 @@ class AppDrawer extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
     final screenWidth = MediaQuery.of(context).size.width;
     final drawerWidth = screenWidth > _maxWidth
         ? _maxWidth
@@ -51,17 +54,19 @@ class AppDrawer extends ConsumerWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const DrawerSectionHeader(title: 'APPEARANCE'),
+                    DrawerSectionHeader(title: l10n.drawerAppearance),
                     const SizedBox(height: 8),
                     const DrawerThemeSwitcher(),
+                    const SizedBox(height: 12),
+                    const ChooseLanguageButton(),
                     const SizedBox(height: 32),
-                    _buildInsightsSection(context),
+                    _buildInsightsSection(context, l10n), 
                     const SizedBox(height: 24),
-                    _buildToolsSection(context),
+                    _buildToolsSection(context, l10n),
                     const SizedBox(height: 24),
-                    _buildInformationSection(context, ref),
+                    _buildInformationSection(context, ref, l10n),
                     const SizedBox(height: 32),
-                    const DrawerSectionHeader(title: 'COMMUNITY'),
+                    DrawerSectionHeader(title: l10n.drawerCommunity),
                     const SizedBox(height: 12),
                     const DrawerOpenSourceCard(),
                     const SizedBox(height: 12),
@@ -89,15 +94,15 @@ class AppDrawer extends ConsumerWidget {
     );
   }
 
-  Widget _buildInsightsSection(BuildContext context) {
+  Widget _buildInsightsSection(BuildContext context, AppLocalizations l10n) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const DrawerSectionHeader(title: 'INSIGHTS'),
+        DrawerSectionHeader(title: l10n.drawerInsights),
         const SizedBox(height: 12),
         DrawerNavTile(
-          title: 'Usage Statistics',
-          subtitle: 'View your digital wellbeing',
+          title: l10n.usageStatisticsTitle,
+          subtitle: l10n.usageStatisticsSubtitle,
           icon: Icons.pie_chart_outline,
           onTap: () {
             Navigator.pop(context);
@@ -105,8 +110,8 @@ class AppDrawer extends ConsumerWidget {
           },
         ),
         DrawerNavTile(
-          title: 'Storage Insights',
-          subtitle: 'Unfiltered space breakdown',
+          title: l10n.storageInsightsTitle,
+          subtitle: l10n.storageInsightsSubtitle,
           icon: Icons.sd_storage_rounded,
           onTap: () {
             Navigator.pop(context);
@@ -114,8 +119,8 @@ class AppDrawer extends ConsumerWidget {
           },
         ),
         DrawerNavTile(
-          title: 'Task Manager',
-          subtitle: 'Monitor system resources',
+          title: l10n.taskManagerTitle,
+          subtitle: l10n.taskManagerSubtitle,
           icon: Icons.memory_rounded,
           onTap: () {
             Navigator.pop(context);
@@ -126,15 +131,15 @@ class AppDrawer extends ConsumerWidget {
     );
   }
 
-  Widget _buildToolsSection(BuildContext context) {
+  Widget _buildToolsSection(BuildContext context, AppLocalizations l10n) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const DrawerSectionHeader(title: 'TOOLS'),
+        DrawerSectionHeader(title: l10n.drawerTools),
         const SizedBox(height: 12),
         DrawerNavTile(
-          title: 'Deep Link Tester',
-          subtitle: 'Test and inspect URI behavior',
+          title: l10n.deeplinkTesterTitle,
+          subtitle: l10n.deeplinkTesterSubtitle,
           icon: Icons.link_rounded,
           onTap: () {
             Navigator.pop(context);
@@ -145,15 +150,15 @@ class AppDrawer extends ConsumerWidget {
     );
   }
 
-  Widget _buildInformationSection(BuildContext context, WidgetRef ref) {
+  Widget _buildInformationSection(BuildContext context, WidgetRef ref, AppLocalizations l10n) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const DrawerSectionHeader(title: 'INFORMATION'),
+        DrawerSectionHeader(title: l10n.drawerInformation),
         const SizedBox(height: 12),
         DrawerNavTile(
-          title: 'Privacy & Security',
-          subtitle: 'Offline and secure',
+          title: l10n.privacySecurityTitle,
+          subtitle: l10n.privacySecuritySubtitle,
           icon: Icons.shield_outlined,
           onTap: () {
             Navigator.pop(context);
@@ -161,9 +166,9 @@ class AppDrawer extends ConsumerWidget {
           },
         ),
         _buildUpdateCheckTile(context, ref),
-        _buildAboutTile(context, ref),
+        _buildAboutTile(context, ref, l10n),
         const SizedBox(height: 8),
-        _buildReportIssueButton(context),
+        _buildReportIssueButton(context, l10n),
       ],
     );
   }
@@ -175,18 +180,18 @@ class AppDrawer extends ConsumerWidget {
     return const SizedBox.shrink();
   }
 
-  Widget _buildAboutTile(BuildContext context, WidgetRef ref) {
+  Widget _buildAboutTile(BuildContext context, WidgetRef ref, AppLocalizations l10n) {
     final versionAsync = ref.watch(currentVersionProvider);
     final updateAsync = ref.watch(updateCheckProvider);
     final isUpdateAvailable =
         updateAsync.asData?.value.status == UpdateStatus.softUpdate;
 
     return DrawerNavTile(
-      title: 'About',
+      title: l10n.drawerAbout,
       subtitle: versionAsync.when(
-        data: (v) => 'v${v.toString()}${isUpdateAvailable ? ' • Update' : ''}',
-        loading: () => 'Checking version...',
-        error: (_, _) => 'Version Unknown',
+        data: (v) => 'v${v.toString()}${isUpdateAvailable ? l10n.updateAvailableBadge : ''}',
+        loading: () => l10n.checkingVersion,
+        error: (_, _) => l10n.versionUnknown,
       ),
       icon: Icons.info_outline,
       onTap: () {
@@ -196,7 +201,7 @@ class AppDrawer extends ConsumerWidget {
     );
   }
 
-  Widget _buildReportIssueButton(BuildContext context) {
+  Widget _buildReportIssueButton(BuildContext context, AppLocalizations l10n) {
     final theme = Theme.of(context);
 
     return Material(
@@ -235,7 +240,7 @@ class AppDrawer extends ConsumerWidget {
               ),
               const SizedBox(width: 8),
               Text(
-                'Report Issue',
+                l10n.reportIssue,
                 style: theme.textTheme.bodyMedium?.copyWith(
                   fontWeight: FontWeight.w600,
                   fontSize: 13,
