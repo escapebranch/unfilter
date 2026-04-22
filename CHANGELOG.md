@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.3+12] - 2026-04-23
+
+### Added
+
+- **Localization**: Added core localization infrastructure with initial support for English and Tamil (Creds @Alien501).
+- **Google Play Badge**: Added a Google Play Store badge to the README for direct app access.
+- **Fastlane Deployment**: Fully configured Fastlane deployment to Google Play Store using GitHub Actions and automated changelog syncing.
+
+### Fixed
+
+- **Version Config Formatting**: Fixed separator in the fixes section of the version configuration payload.
+
 ## [1.1.2+11] - 2026-04-20
 
 ### Added
