@@ -13,7 +13,7 @@
   "@chooseLanguageDialogTitle": {
     "description": "Title shown in language selection dialog"
   },
-  "chooseLanguageDialogSubtitle": "Choose how you want to navigate through application",
+  "chooseLanguageDialogSubtitle": "Select your preferred language",
   "@chooseLanguageDialogSubtitle": {
     "description": "Subtitle shown in language selection dialog"
   },
@@ -277,5 +277,59 @@
   "themeAuto": "Auto",
   "supportProject": "Support the project",
   "madeBy": "Made by ",
-  "viewAllContributors": "View all contributors"
+  "viewAllContributors": "View all contributors",
+  "languageSearchHint": "Search language...",
+  "noLanguagesFound": "No languages found",
+  "selectLanguageSection": "SELECT LANGUAGE",
+  "deepInsightsTitle": "Deep Insights",
+  "installerLabel": "Installer",
+  "kotlinVersionLabel": "Kotlin Version",
+  "minSdkLabel": "Min SDK",
+  "targetSdkLabel": "Target SDK",
+  "signatureSha1Label": "Signature (SHA-1)",
+  "splitApksLabel": "Split APKs",
+  "appSizeLabel": "App Size",
+  "apkPathLabel": "APK Path",
+  "dataDirLabel": "Data Dir",
+  "activitiesLabel": "Activities",
+  "servicesLabel": "Services",
+  "receiversLabel": "Receivers",
+  "providersLabel": "Providers",
+  "techVersionLabel": "{tech} Version",
+  "@techVersionLabel": {
+    "placeholders": {
+      "tech": { "type": "String" }
+    }
+  },
+  "splitApksValue": "{count} splits",
+  "@splitApksValue": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "aboutFramework": "About {name}",
+  "@aboutFramework": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+  "viewOfficialDocs": "View Official Documentation",
+  "shareAppDetails": "Share App Details",
+  "filteredSizeLabel": "FILTERED SIZE",
+  "totalConsumedLabel": "TOTAL CONSUMED",
+  "appCodeLabel": "App Code",
+  "userDataLabel": "User Data",
+  "cacheLabel": "Cache",
+  "appDetailsTitle": "App Details",
+  "loadingAppDetails": "Loading app details...",
+  "appDataRefreshed": "App data refreshed",
+  "failedToResync": "Failed to resync",
+  "installDateLabel": "Install Date",
+  "detectedPackagesTitle": "Detected Packages",
+  "routeNotFound": "Route not found: {name}",
+  "@routeNotFound": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  }
 }

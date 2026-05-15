@@ -125,7 +125,7 @@ abstract class AppLocalizations {
   /// Subtitle shown in language selection dialog
   ///
   /// In en, this message translates to:
-  /// **'Choose how you want to navigate through application'**
+  /// **'Select your preferred language'**
   String get chooseLanguageDialogSubtitle;
 
   /// English language name shown in selector
@@ -1297,6 +1297,210 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'View all contributors'**
   String get viewAllContributors;
+
+  /// No description provided for @languageSearchHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search language...'**
+  String get languageSearchHint;
+
+  /// No description provided for @noLanguagesFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No languages found'**
+  String get noLanguagesFound;
+
+  /// No description provided for @selectLanguageSection.
+  ///
+  /// In en, this message translates to:
+  /// **'SELECT LANGUAGE'**
+  String get selectLanguageSection;
+
+  /// No description provided for @deepInsightsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Deep Insights'**
+  String get deepInsightsTitle;
+
+  /// No description provided for @installerLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Installer'**
+  String get installerLabel;
+
+  /// No description provided for @kotlinVersionLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Kotlin Version'**
+  String get kotlinVersionLabel;
+
+  /// No description provided for @minSdkLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Min SDK'**
+  String get minSdkLabel;
+
+  /// No description provided for @targetSdkLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Target SDK'**
+  String get targetSdkLabel;
+
+  /// No description provided for @signatureSha1Label.
+  ///
+  /// In en, this message translates to:
+  /// **'Signature (SHA-1)'**
+  String get signatureSha1Label;
+
+  /// No description provided for @splitApksLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Split APKs'**
+  String get splitApksLabel;
+
+  /// No description provided for @appSizeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'App Size'**
+  String get appSizeLabel;
+
+  /// No description provided for @apkPathLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'APK Path'**
+  String get apkPathLabel;
+
+  /// No description provided for @dataDirLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Data Dir'**
+  String get dataDirLabel;
+
+  /// No description provided for @activitiesLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Activities'**
+  String get activitiesLabel;
+
+  /// No description provided for @servicesLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Services'**
+  String get servicesLabel;
+
+  /// No description provided for @receiversLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Receivers'**
+  String get receiversLabel;
+
+  /// No description provided for @providersLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Providers'**
+  String get providersLabel;
+
+  /// No description provided for @techVersionLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'{tech} Version'**
+  String techVersionLabel(String tech);
+
+  /// No description provided for @splitApksValue.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} splits'**
+  String splitApksValue(int count);
+
+  /// No description provided for @aboutFramework.
+  ///
+  /// In en, this message translates to:
+  /// **'About {name}'**
+  String aboutFramework(String name);
+
+  /// No description provided for @viewOfficialDocs.
+  ///
+  /// In en, this message translates to:
+  /// **'View Official Documentation'**
+  String get viewOfficialDocs;
+
+  /// No description provided for @shareAppDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Share App Details'**
+  String get shareAppDetails;
+
+  /// No description provided for @filteredSizeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'FILTERED SIZE'**
+  String get filteredSizeLabel;
+
+  /// No description provided for @totalConsumedLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'TOTAL CONSUMED'**
+  String get totalConsumedLabel;
+
+  /// No description provided for @appCodeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'App Code'**
+  String get appCodeLabel;
+
+  /// No description provided for @userDataLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'User Data'**
+  String get userDataLabel;
+
+  /// No description provided for @cacheLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cache'**
+  String get cacheLabel;
+
+  /// No description provided for @appDetailsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'App Details'**
+  String get appDetailsTitle;
+
+  /// No description provided for @loadingAppDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading app details...'**
+  String get loadingAppDetails;
+
+  /// No description provided for @appDataRefreshed.
+  ///
+  /// In en, this message translates to:
+  /// **'App data refreshed'**
+  String get appDataRefreshed;
+
+  /// No description provided for @failedToResync.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to resync'**
+  String get failedToResync;
+
+  /// No description provided for @installDateLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Install Date'**
+  String get installDateLabel;
+
+  /// No description provided for @detectedPackagesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Detected Packages'**
+  String get detectedPackagesTitle;
+
+  /// No description provided for @routeNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Route not found: {name}'**
+  String routeNotFound(String name);
 }
 
 class _AppLocalizationsDelegate

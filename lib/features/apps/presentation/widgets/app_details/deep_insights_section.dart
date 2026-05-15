@@ -2,6 +2,7 @@ library;
 
 import 'package:flutter/material.dart';
 
+import '../../../../../l10n/generated/app_localizations.dart';
 import '../../../domain/entities/device_app.dart';
 import 'common_widgets.dart';
 import 'constants.dart';
@@ -15,11 +16,12 @@ class DeepInsightsSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SectionHeader(title: "Deep Insights"),
+        SectionHeader(title: l10n.deepInsightsTitle),
         const SizedBox(height: AppDetailsSpacing.standard),
         Container(
           padding: const EdgeInsets.all(AppDetailsSpacing.lg),
@@ -34,9 +36,9 @@ class DeepInsightsSection extends StatelessWidget {
           ),
           child: Column(
             children: [
-              ..._buildDetailItems(),
+              ..._buildDetailItems(l10n),
               const SizedBox(height: AppDetailsSpacing.xl),
-              _buildComponentCounts(theme),
+              _buildComponentCounts(theme, l10n),
             ],
           ),
         ),
@@ -44,13 +46,13 @@ class DeepInsightsSection extends StatelessWidget {
     );
   }
 
-  List<Widget> _buildDetailItems() {
+  List<Widget> _buildDetailItems(AppLocalizations l10n) {
     final items = <Widget>[];
 
     if (app.installerStore != 'Unknown') {
       items.add(
         DetailItem(
-          label: "Installer",
+          label: l10n.installerLabel,
           value: formatInstallerName(app.installerStore),
           showDivider: true,
         ),
@@ -61,7 +63,7 @@ class DeepInsightsSection extends StatelessWidget {
       for (final entry in app.techVersions.entries) {
         items.add(
           DetailItem(
-            label: "${entry.key} Version",
+            label: l10n.techVersionLabel(entry.key),
             value: entry.value,
             showDivider: true,
           ),
@@ -72,7 +74,7 @@ class DeepInsightsSection extends StatelessWidget {
     if (app.kotlinVersion != null && !app.techVersions.containsKey('Kotlin')) {
       items.add(
         DetailItem(
-          label: "Kotlin Version",
+          label: l10n.kotlinVersionLabel,
           value: app.kotlinVersion!,
           showDivider: true,
         ),
@@ -81,7 +83,7 @@ class DeepInsightsSection extends StatelessWidget {
 
     items.add(
       DetailItem(
-        label: "Min SDK",
+        label: l10n.minSdkLabel,
         value: "${app.minSdkVersion} (${getSdkVersionName(app.minSdkVersion)})",
         showDivider: true,
       ),
@@ -89,7 +91,7 @@ class DeepInsightsSection extends StatelessWidget {
 
     items.add(
       DetailItem(
-        label: "Target SDK",
+        label: l10n.targetSdkLabel,
         value:
             "${app.targetSdkVersion} (${getSdkVersionName(app.targetSdkVersion)})",
         showDivider: true,
@@ -99,7 +101,7 @@ class DeepInsightsSection extends StatelessWidget {
     if (app.signingSha1 != null) {
       items.add(
         DetailItem(
-          label: "Signature (SHA-1)",
+          label: l10n.signatureSha1Label,
           value: app.signingSha1!,
           showDivider: true,
         ),
@@ -109,8 +111,8 @@ class DeepInsightsSection extends StatelessWidget {
     if (app.splitApks.isNotEmpty) {
       items.add(
         DetailItem(
-          label: "Split APKs",
-          value: "${app.splitApks.length} splits",
+          label: l10n.splitApksLabel,
+          value: l10n.splitApksValue(app.splitApks.length),
           showDivider: true,
         ),
       );
@@ -118,37 +120,37 @@ class DeepInsightsSection extends StatelessWidget {
 
     items.add(
       DetailItem(
-        label: "App Size",
+        label: l10n.appSizeLabel,
         value: formatBytes(app.size),
         showDivider: true,
       ),
     );
 
     items.add(
-      DetailItem(label: "APK Path", value: app.apkPath, showDivider: true),
+      DetailItem(label: l10n.apkPathLabel, value: app.apkPath, showDivider: true),
     );
 
-    items.add(DetailItem(label: "Data Dir", value: app.dataDir));
+    items.add(DetailItem(label: l10n.dataDirLabel, value: app.dataDir));
 
     return items;
   }
 
-  Widget _buildComponentCounts(ThemeData theme) {
+  Widget _buildComponentCounts(ThemeData theme, AppLocalizations l10n) {
     return Column(
       children: [
         Row(
           children: [
-            _ComponentCount(label: "Activities", count: app.activitiesCount),
+            _ComponentCount(label: l10n.activitiesLabel, count: app.activitiesCount),
             const SizedBox(width: AppDetailsSpacing.md),
-            _ComponentCount(label: "Services", count: app.servicesCount),
+            _ComponentCount(label: l10n.servicesLabel, count: app.servicesCount),
           ],
         ),
         const SizedBox(height: AppDetailsSpacing.md),
         Row(
           children: [
-            _ComponentCount(label: "Receivers", count: app.receiversCount),
+            _ComponentCount(label: l10n.receiversLabel, count: app.receiversCount),
             const SizedBox(width: AppDetailsSpacing.md),
-            _ComponentCount(label: "Providers", count: app.providersCount),
+            _ComponentCount(label: l10n.providersLabel, count: app.providersCount),
           ],
         ),
       ],

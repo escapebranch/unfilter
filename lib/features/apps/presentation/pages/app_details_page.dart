@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../home/presentation/widgets/premium_app_bar.dart';
 import '../../../../core/widgets/top_shadow_gradient.dart';
+import '../../../../l10n/generated/app_localizations.dart';
 import '../../domain/entities/device_app.dart';
 import '../providers/app_detail_provider.dart';
 import '../providers/apps_provider.dart';
@@ -95,18 +96,20 @@ class _AppDetailsPageState extends ConsumerState<AppDetailsPage> {
           _currentApp = updatedApp;
         });
 
-        _showSnackbar(
-          icon: Icons.check_circle_rounded,
-          message: 'App data refreshed',
-          isSuccess: true,
-        );
+        if (mounted) {
+          _showSnackbar(
+            icon: Icons.check_circle_rounded,
+            message: AppLocalizations.of(context).appDataRefreshed,
+            isSuccess: true,
+          );
+        }
       }
     } catch (e) {
       debugPrint('Resync error: $e');
       if (mounted) {
         _showSnackbar(
           icon: Icons.error_outline_rounded,
-          message: 'Failed to resync',
+          message: AppLocalizations.of(context).failedToResync,
           isSuccess: false,
         );
       }
@@ -135,6 +138,7 @@ class _AppDetailsPageState extends ConsumerState<AppDetailsPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
     final usageHistoryAsync = ref.watch(
       appUsageHistoryProvider((
         packageName: app.packageName,
@@ -203,7 +207,7 @@ class _AppDetailsPageState extends ConsumerState<AppDetailsPage> {
           ),
           const TopShadowGradient(),
           PremiumAppBar(
-            title: "App Details",
+            title: l10n.appDetailsTitle,
             scrollController: _scrollController,
             onResync: (_isResyncing || _isInitialLoading)
                 ? null
@@ -252,7 +256,7 @@ class _AppDetailsPageState extends ConsumerState<AppDetailsPage> {
                         ),
                         const SizedBox(width: 12),
                         Text(
-                          "Loading app details...",
+                          l10n.loadingAppDetails,
                           style: theme.textTheme.labelMedium?.copyWith(
                             color: theme.colorScheme.onPrimaryContainer,
                             fontWeight: FontWeight.w600,

@@ -22,7 +22,7 @@ class AppLocalizationsTa extends AppLocalizations {
 
   @override
   String get chooseLanguageDialogSubtitle =>
-      'பயன்பாட்டை நீங்கள் எப்படி பயன்படுத்த வேண்டும் என்பதைத் தேர்ந்தெடுக்கவும்';
+      'விருப்பமான மொழியைத் தேர்ந்தெடுக்கவும்';
 
   @override
   String get languageEnglish => 'ஆங்கிலம்';
@@ -677,4 +677,114 @@ class AppLocalizationsTa extends AppLocalizations {
 
   @override
   String get viewAllContributors => 'அனைத்து பங்களிப்பாளர்களையும் காணுங்கள்';
+
+  @override
+  String get languageSearchHint => 'மொழியைத் தேடு...';
+
+  @override
+  String get noLanguagesFound => 'மொழிகள் எதுவும் இல்லை';
+
+  @override
+  String get selectLanguageSection => 'மொழியைத் தேர்ந்தெடுக்கவும்';
+
+  @override
+  String get deepInsightsTitle => 'ஆழமான நுண்ணறிவு';
+
+  @override
+  String get installerLabel => 'நிறுவியவர்';
+
+  @override
+  String get kotlinVersionLabel => 'Kotlin பதிப்பு';
+
+  @override
+  String get minSdkLabel => 'Min SDK';
+
+  @override
+  String get targetSdkLabel => 'Target SDK';
+
+  @override
+  String get signatureSha1Label => 'கையெழுத்து (SHA-1)';
+
+  @override
+  String get splitApksLabel => 'Split APK-கள்';
+
+  @override
+  String get appSizeLabel => 'செயலி அளவு';
+
+  @override
+  String get apkPathLabel => 'APK பாதை';
+
+  @override
+  String get dataDirLabel => 'தரவு கோப்பகம்';
+
+  @override
+  String get activitiesLabel => 'செயல்பாடுகள்';
+
+  @override
+  String get servicesLabel => 'சேவைகள்';
+
+  @override
+  String get receiversLabel => 'பெறுநர்கள்';
+
+  @override
+  String get providersLabel => 'வழங்குநர்கள்';
+
+  @override
+  String techVersionLabel(String tech) {
+    return '$tech பதிப்பு';
+  }
+
+  @override
+  String splitApksValue(int count) {
+    return '$count பிரிவுகள்';
+  }
+
+  @override
+  String aboutFramework(String name) {
+    return '$name பற்றி';
+  }
+
+  @override
+  String get viewOfficialDocs => 'அதிகாரப்பூர்வ ஆவணத்தைப் பார்';
+
+  @override
+  String get shareAppDetails => 'செயலி விவரங்களைப் பகிர்';
+
+  @override
+  String get filteredSizeLabel => 'வடிகட்டப்பட்ட அளவு';
+
+  @override
+  String get totalConsumedLabel => 'மொத்த பயன்பாடு';
+
+  @override
+  String get appCodeLabel => 'செயலி குறியீடு';
+
+  @override
+  String get userDataLabel => 'பயனர் தரவு';
+
+  @override
+  String get cacheLabel => 'தற்காலிக சேமிப்பு';
+
+  @override
+  String get appDetailsTitle => 'செயலி விவரங்கள்';
+
+  @override
+  String get loadingAppDetails => 'செயலி விவரங்களை ஏற்றுகிறது...';
+
+  @override
+  String get appDataRefreshed => 'செயலி தரவு புதுப்பிக்கப்பட்டது';
+
+  @override
+  String get failedToResync => 'ஒத்திசைக்க முடியவில்லை';
+
+  @override
+  String get installDateLabel => 'நிறுவிய தேதி';
+
+  @override
+  String get detectedPackagesTitle => 'கண்டறியப்பட்ட தொகுப்புகள்';
+
+  @override
+  String routeNotFound(String name) {
+    return 'பாதை கிடைக்கவில்லை: $name';
+  }
 }

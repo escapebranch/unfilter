@@ -21,8 +21,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get chooseLanguageDialogTitle => 'Choose Language';
 
   @override
-  String get chooseLanguageDialogSubtitle =>
-      'Choose how you want to navigate through application';
+  String get chooseLanguageDialogSubtitle => 'Select your preferred language';
 
   @override
   String get languageEnglish => 'English';
@@ -671,4 +670,114 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get viewAllContributors => 'View all contributors';
+
+  @override
+  String get languageSearchHint => 'Search language...';
+
+  @override
+  String get noLanguagesFound => 'No languages found';
+
+  @override
+  String get selectLanguageSection => 'SELECT LANGUAGE';
+
+  @override
+  String get deepInsightsTitle => 'Deep Insights';
+
+  @override
+  String get installerLabel => 'Installer';
+
+  @override
+  String get kotlinVersionLabel => 'Kotlin Version';
+
+  @override
+  String get minSdkLabel => 'Min SDK';
+
+  @override
+  String get targetSdkLabel => 'Target SDK';
+
+  @override
+  String get signatureSha1Label => 'Signature (SHA-1)';
+
+  @override
+  String get splitApksLabel => 'Split APKs';
+
+  @override
+  String get appSizeLabel => 'App Size';
+
+  @override
+  String get apkPathLabel => 'APK Path';
+
+  @override
+  String get dataDirLabel => 'Data Dir';
+
+  @override
+  String get activitiesLabel => 'Activities';
+
+  @override
+  String get servicesLabel => 'Services';
+
+  @override
+  String get receiversLabel => 'Receivers';
+
+  @override
+  String get providersLabel => 'Providers';
+
+  @override
+  String techVersionLabel(String tech) {
+    return '$tech Version';
+  }
+
+  @override
+  String splitApksValue(int count) {
+    return '$count splits';
+  }
+
+  @override
+  String aboutFramework(String name) {
+    return 'About $name';
+  }
+
+  @override
+  String get viewOfficialDocs => 'View Official Documentation';
+
+  @override
+  String get shareAppDetails => 'Share App Details';
+
+  @override
+  String get filteredSizeLabel => 'FILTERED SIZE';
+
+  @override
+  String get totalConsumedLabel => 'TOTAL CONSUMED';
+
+  @override
+  String get appCodeLabel => 'App Code';
+
+  @override
+  String get userDataLabel => 'User Data';
+
+  @override
+  String get cacheLabel => 'Cache';
+
+  @override
+  String get appDetailsTitle => 'App Details';
+
+  @override
+  String get loadingAppDetails => 'Loading app details...';
+
+  @override
+  String get appDataRefreshed => 'App data refreshed';
+
+  @override
+  String get failedToResync => 'Failed to resync';
+
+  @override
+  String get installDateLabel => 'Install Date';
+
+  @override
+  String get detectedPackagesTitle => 'Detected Packages';
+
+  @override
+  String routeNotFound(String name) {
+    return 'Route not found: $name';
+  }
 }

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../../../../l10n/generated/app_localizations.dart';
 import '../../../domain/entities/device_app.dart';
 import 'constants.dart';
 import 'framework_info.dart';
@@ -18,6 +19,7 @@ class AppHeaderCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
     final isDark = theme.brightness == Brightness.dark;
     final stackColor = getStackColor(app.stack, isDark);
 
@@ -30,9 +32,9 @@ class AppHeaderCard extends StatelessWidget {
         const SizedBox(height: AppDetailsSpacing.sm),
         _buildPackageName(theme),
         const SizedBox(height: AppDetailsSpacing.standard),
-        _buildStackBadge(stackColor),
+        _buildStackBadge(stackColor, l10n),
         const SizedBox(height: AppDetailsSpacing.lg),
-        _buildShareButton(theme),
+        _buildShareButton(theme, l10n),
       ],
     );
   }
@@ -109,14 +111,14 @@ class AppHeaderCard extends StatelessWidget {
     );
   }
 
-  Widget _buildStackBadge(Color stackColor) {
+  Widget _buildStackBadge(Color stackColor, AppLocalizations l10n) {
     final displayName = app.stack == 'Jetpack' ? 'Jetpack Compose' : app.stack;
 
     return Builder(
       builder: (context) {
         final theme = Theme.of(context);
         return GestureDetector(
-          onTap: () => _showFrameworkInfo(context, theme),
+          onTap: () => _showFrameworkInfo(context, theme, l10n),
           child: Container(
             padding: const EdgeInsets.symmetric(
               horizontal: AppDetailsSpacing.standard,
@@ -156,7 +158,7 @@ class AppHeaderCard extends StatelessWidget {
     );
   }
 
-  void _showFrameworkInfo(BuildContext context, ThemeData theme) {
+  void _showFrameworkInfo(BuildContext context, ThemeData theme, AppLocalizations l10n) {
     final frameworkInfo = FrameworkInfoData.getInfo(app.stack);
     final isDark = theme.brightness == Brightness.dark;
     final stackColor = getStackColor(app.stack, isDark);
@@ -272,7 +274,7 @@ class AppHeaderCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'About ${frameworkInfo.name}',
+                        l10n.aboutFramework(frameworkInfo.name),
                         style: theme.textTheme.titleMedium?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
@@ -322,7 +324,7 @@ class AppHeaderCard extends StatelessWidget {
                               color: theme.colorScheme.primary,
                             ),
                             label: Text(
-                              'View Official Documentation',
+                              l10n.viewOfficialDocs,
                               style: TextStyle(
                                 color: theme.colorScheme.primary,
                                 fontWeight: FontWeight.w600,
@@ -342,7 +344,7 @@ class AppHeaderCard extends StatelessWidget {
     );
   }
 
-  Widget _buildShareButton(ThemeData theme) {
+  Widget _buildShareButton(ThemeData theme, AppLocalizations l10n) {
     return GestureDetector(
       onTap: onShare,
       child: Container(
@@ -369,7 +371,7 @@ class AppHeaderCard extends StatelessWidget {
             ),
             const SizedBox(width: AppDetailsSpacing.sm),
             Text(
-              "Share App Details",
+              l10n.shareAppDetails,
               style: TextStyle(
                 color: theme.colorScheme.primary,
                 fontWeight: FontWeight.w600,

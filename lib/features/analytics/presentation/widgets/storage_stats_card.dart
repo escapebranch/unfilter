@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../l10n/generated/app_localizations.dart';
 import 'constants.dart';
 
 class StorageStatsCard extends StatelessWidget {
@@ -25,6 +26,7 @@ class StorageStatsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
 
     return Container(
       padding: const EdgeInsets.all(24),
@@ -55,7 +57,7 @@ class StorageStatsCard extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            isFiltered ? 'FILTERED SIZE' : 'TOTAL CONSUMED',
+            isFiltered ? l10n.filteredSizeLabel : l10n.totalConsumedLabel,
             style: theme.textTheme.labelSmall?.copyWith(
               fontWeight: FontWeight.bold,
               letterSpacing: 1.5,
@@ -67,17 +69,17 @@ class StorageStatsCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               _StorageStatItem(
-                label: 'App Code',
+                label: l10n.appCodeLabel,
                 bytes: appCodeSize,
                 color: StorageColors.appCode,
               ),
               _StorageStatItem(
-                label: 'User Data',
+                label: l10n.userDataLabel,
                 bytes: dataSize,
                 color: StorageColors.userData,
               ),
               _StorageStatItem(
-                label: 'Cache',
+                label: l10n.cacheLabel,
                 bytes: cacheSize,
                 color: StorageColors.cache,
               ),
