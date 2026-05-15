@@ -1,0 +1,31 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../domain/entities/language.dart';
+
+final languagesProvider = Provider<List<Language>>((ref) {
+  return const [
+    Language(name: 'English', nativeName: 'English', code: 'en'),
+    Language(name: 'Tamil', nativeName: 'தமிழ்', code: 'ta'),
+  ];
+});
+
+class LanguageSearchQuery extends Notifier<String> {
+  @override
+  String build() => '';
+
+  void setQuery(String query) => state = query;
+}
+
+final languageSearchQueryProvider = NotifierProvider<LanguageSearchQuery, String>(LanguageSearchQuery.new);
+
+final filteredLanguagesProvider = Provider<List<Language>>((ref) {
+  final languages = ref.watch(languagesProvider);
+  final query = ref.watch(languageSearchQueryProvider).toLowerCase();
+
+  if (query.isEmpty) return languages;
+
+  return languages.where((lang) {
+    return lang.name.toLowerCase().contains(query) ||
+        lang.nativeName.toLowerCase().contains(query) ||
+        lang.code.toLowerCase().contains(query);
+  }).toList();
+});

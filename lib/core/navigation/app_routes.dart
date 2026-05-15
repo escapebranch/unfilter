@@ -16,6 +16,8 @@ import '../../features/apps/presentation/pages/app_details_page.dart';
 import '../../features/apps/presentation/pages/app_details_by_package_page.dart';
 import '../../features/apps/domain/entities/device_app.dart';
 import '../../features/analytics/presentation/pages/storage_insights_page.dart';
+import '../../features/language/presentation/pages/language_page.dart';
+import '../../l10n/generated/app_localizations.dart';
 import 'navigation.dart';
 
 import '../../features/onboarding/presentation/pages/onboarding_page.dart';
@@ -37,6 +39,7 @@ abstract class AppRoutes {
   static const String appDetails = '/app-details';
   static const String storageInsights = '/storage-insights';
   static const String updateCheck = '/update-check';
+  static const String language = '/language';
 }
 
 class AppRouteFactory {
@@ -157,10 +160,22 @@ class AppRouteFactory {
           transitionType: TransitionType.fade,
         );
 
+      case AppRoutes.language:
+        return BubbleRevealPageRoute(
+          page: const LanguagePage(),
+          settings: settings,
+          tapPosition: TapTracker.lastTapPosition,
+        );
+
       default:
         return MaterialPageRoute(
-          builder: (_) => Scaffold(
-            body: Center(child: Text('Route not found: ${settings.name}')),
+          builder: (context) => Scaffold(
+            body: Center(
+              child: Text(
+                AppLocalizations.of(context)
+                    .routeNotFound(settings.name ?? 'unknown'),
+              ),
+            ),
           ),
         );
     }
@@ -242,5 +257,9 @@ class AppRouteFactory {
 
   static Future<void> toOnboarding(BuildContext context) {
     return Navigator.of(context).pushReplacementNamed(AppRoutes.onboarding);
+  }
+
+  static Future<void> toLanguage(BuildContext context) {
+    return PremiumNavigation.push(context, const LanguagePage());
   }
 }
