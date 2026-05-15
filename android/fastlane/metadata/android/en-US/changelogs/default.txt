@@ -1,1 +1,2 @@
-Bug fixes and performance improvements.
+- Premium Language Selection feature.
+- Expanded localization and Tamil support.

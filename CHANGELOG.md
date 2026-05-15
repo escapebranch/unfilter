@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.0+13] - 2026-05-16
+
+### Added
+
+- **Premium Language Selection**: Implemented a dedicated Language Selection page with search and filtering for a better user experience.
+- **Enhanced Localization**: Significantly expanded localization coverage and improved Tamil translations for technical app details and deep insights.
+
 ## [1.1.3+12] - 2026-04-23
 
 ### Added

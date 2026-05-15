@@ -1,0 +1,3 @@
+- Implemented premium Language Selection feature with search and filtering.
+- Expanded localization coverage for technical app details.
+- Added high-quality Tamil translations.
