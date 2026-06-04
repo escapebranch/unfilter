@@ -28,7 +28,7 @@ dependencies:
   package_info_plus: ^10.1.0
   pub_semver: ^2.2.0
   share_plus: ^13.1.0
-  flutter_native_splash: ^2.4.3
+  flutter_native_splash: ^2.4.8
 
 dev_dependencies:
   flutter_test:
