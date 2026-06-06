@@ -688,6 +688,16 @@ class AppLocalizationsTa extends AppLocalizations {
   String get shareLogs => 'பதிவுகளைப் பகிரவும்';
 
   @override
+  String get crashRecoveryTitle => 'செயலி தொடங்குவதில் தோல்வி';
+
+  @override
+  String get crashRecoverySubtitle =>
+      'செயலி தொடங்கும் போது ஒரு பிழை ஏற்பட்டது. என்ன நடந்தது என்பதைப் பார்க்க நீங்கள் பதிவுகளைப் பார்க்கலாம் அல்லது அதைச் சரிசெய்ய எங்களுக்குத் தெரிவிக்கலாம்.';
+
+  @override
+  String get restartApp => 'செயலியை மீண்டும் தொடங்கு';
+
+  @override
   String get drawerCommunity => 'சமூகம்';
 
   @override

@@ -1316,6 +1316,24 @@ abstract class AppLocalizations {
   /// **'Share Logs'**
   String get shareLogs;
 
+  /// No description provided for @crashRecoveryTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'App Startup Failed'**
+  String get crashRecoveryTitle;
+
+  /// No description provided for @crashRecoverySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'We encountered a critical error during startup. You can view logs to see what happened or report it to help us improve.'**
+  String get crashRecoverySubtitle;
+
+  /// No description provided for @restartApp.
+  ///
+  /// In en, this message translates to:
+  /// **'Restart App'**
+  String get restartApp;
+
   /// No description provided for @drawerCommunity.
   ///
   /// In en, this message translates to:

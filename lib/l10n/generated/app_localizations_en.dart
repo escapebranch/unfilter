@@ -681,6 +681,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get shareLogs => 'Share Logs';
 
   @override
+  String get crashRecoveryTitle => 'App Startup Failed';
+
+  @override
+  String get crashRecoverySubtitle =>
+      'We encountered a critical error during startup. You can view logs to see what happened or report it to help us improve.';
+
+  @override
+  String get restartApp => 'Restart App';
+
+  @override
   String get drawerCommunity => 'COMMUNITY';
 
   @override
