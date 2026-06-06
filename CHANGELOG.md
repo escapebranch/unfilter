@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.0+14] - 2026-06-06
+
+### Added
+
+- **Professional Logging System**: Implemented a core `LoggingService` that automatically strips informal icons/emojis and standardizes log formatting across the entire app.
+- **Log Viewer & Management**: Added a dedicated App Logs viewer with a professional fixed header, multi-select capability, and batch copy/export functionality.
+- **Global Crash Recovery**: Integrated a principal-grade crash recovery system that intercepts startup and runtime errors, presenting users with a stable diagnostic interface.
+- **Dynamic Locale Typography**: Upgraded the typography system to intelligently scale font sizes and letter spacing based on the active locale, with specific pro-level optimizations for the Tamil language.
+
+### Fixed
+
+- **Typography Consistency**: Ensured the 'UncutSans' brand font is applied uniformly across all 15+ Material text styles and specialized UI components (Buttons, Inputs, etc.).
+- **Professional Log Formatting**: Removed informal icons (🔍, 🔵, ✅, ❌) from all repository, provider, and native Android diagnostic reports.
+
 ## [1.2.0+13] - 2026-05-16
 
 ### Added

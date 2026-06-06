@@ -522,7 +522,7 @@ private val EVENT_CHANNEL = "com.escapebranch.unfilter/scan_progress"
         report.append("  4. Restart device and try again\n\n")
         
         report.append("═══════════════════════════════════════\n")
-        report.append("App Version: 1.1.3+10\n")
+        report.append("App Version: 1.3.0+14\n")
         report.append("Error Code: OUT_OF_MEMORY\n")
         report.append("═══════════════════════════════════════")
         
@@ -571,7 +571,7 @@ private val EVENT_CHANNEL = "com.escapebranch.unfilter/scan_progress"
         report.append("  4. If issue persists, restart device\n\n")
         
         report.append("═══════════════════════════════════════\n")
-        report.append("App Version: 1.1.3+10\n")
+        report.append("App Version: 1.3.0+14\n")
         report.append("Error Code: GENERIC_ERROR\n")
         report.append("═══════════════════════════════════════")
         
