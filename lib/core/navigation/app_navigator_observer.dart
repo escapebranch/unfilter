@@ -31,7 +31,7 @@ class AppNavigatorObserver extends NavigatorObserver {
     super.didReplace(newRoute: newRoute, oldRoute: oldRoute);
     if (enableLogging) {
       debugPrint(
-        '📍 REPLACE: ${oldRoute?.settings.name ?? "unknown"} → '
+        '[Nav] REPLACE: ${oldRoute?.settings.name ?? "unknown"} -> '
         '${newRoute?.settings.name ?? "unknown"}',
       );
     }
@@ -68,14 +68,7 @@ class AppNavigatorObserver extends NavigatorObserver {
     final routeName = route.settings.name ?? route.runtimeType.toString();
     final previousName = previousRoute?.settings.name ?? 'none';
 
-    final emoji = switch (action) {
-      'PUSH' => '➡️',
-      'POP' => '⬅️',
-      'REMOVE' => '🗑️',
-      _ => '📍',
-    };
-
-    debugPrint('$emoji $action: $routeName (from: $previousName)');
+    debugPrint('[Nav] $action: $routeName (from: $previousName)');
   }
 
   void onScreenView(String screenName) {

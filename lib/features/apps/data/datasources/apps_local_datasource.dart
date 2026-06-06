@@ -35,7 +35,7 @@ class AppsLocalDataSource {
 
       return await compute(_decodeApps, content);
     } catch (e) {
-      debugPrint('Error reading cache: $e');
+      debugPrint('[AppsLocalCache] ERROR: Error reading cache: $e');
       return [];
     }
   }
@@ -64,9 +64,10 @@ class AppsLocalDataSource {
       final file = await _localFile;
       if (await file.exists()) {
         await file.delete();
+        debugPrint('[AppsLocalCache] INFO: Cache cleared');
       }
     } catch (e) {
-      debugPrint('Error clearing cache: $e');
+      debugPrint('[AppsLocalCache] ERROR: Error clearing cache: $e');
     }
   }
 }

@@ -29,13 +29,18 @@ class UpdateService {
 
   Future<UpdateState> checkUpdate() async {
     try {
+      debugPrint('[UpdateService] Checking for updates...');
       final current = await getCurrentVersion();
+      debugPrint('[UpdateService] Current version: $current');
+      
       final config = await _fetchConfig();
+      debugPrint('[UpdateService] Latest version: ${config.latestNativeVersion}');
 
       if (current.isLowerThan(
         config.minSupportedNativeVersion,
         ignoreBuild: true,
       )) {
+        debugPrint('[UpdateService] Status: Force update required');
         return UpdateState(
           status: AppUpdateStatus.forceUpdate,
           config: config,
@@ -44,6 +49,7 @@ class UpdateService {
       }
 
       if (current.isLowerThan(config.latestNativeVersion, ignoreBuild: true)) {
+        debugPrint('[UpdateService] Status: Soft update available');
         return UpdateState(
           status: AppUpdateStatus.softUpdate,
           config: config,
@@ -51,13 +57,14 @@ class UpdateService {
         );
       }
 
+      debugPrint('[UpdateService] Status: Up to date');
       return UpdateState(
         status: AppUpdateStatus.upToDate,
         config: config,
         currentVersion: current,
       );
     } catch (e) {
-      debugPrint('Update check failed: $e');
+      debugPrint('[UpdateService] ERROR: Update check failed: $e');
       return UpdateState(
         status: AppUpdateStatus.upToDate,
         config: null,
@@ -70,14 +77,18 @@ class UpdateService {
   }
 
   Future<UpdateConfig> _fetchConfig() async {
-    final response = await http
-        .get(Uri.parse(_configUrl))
-        .timeout(const Duration(seconds: 10));
+    try {
+      final response = await http
+          .get(Uri.parse(_configUrl))
+          .timeout(const Duration(seconds: 10));
 
-    if (response.statusCode == 200) {
-      return UpdateConfig.fromJson(jsonDecode(response.body));
-    } else {
-      throw Exception('Failed to load version config: ${response.statusCode}');
+      if (response.statusCode == 200) {
+        return UpdateConfig.fromJson(jsonDecode(response.body));
+      } else {
+        throw Exception('HTTP ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Failed to load version config: $e');
     }
   }
 }

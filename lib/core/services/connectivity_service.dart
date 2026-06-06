@@ -26,10 +26,12 @@ class ConnectivityService {
 
   Future<ConnectivityStatus> checkConnectivity() async {
     try {
+      debugPrint('[Connectivity] Checking connectivity...');
       for (final host in _primaryHosts) {
         try {
           final result = await InternetAddress.lookup(host).timeout(_timeout);
           if (result.isNotEmpty && result.first.rawAddress.isNotEmpty) {
+            debugPrint('[Connectivity] Connected via $host');
             return ConnectivityStatus.connected;
           }
         } on SocketException catch (_) {
@@ -38,32 +40,39 @@ class ConnectivityService {
           continue;
         }
       }
+      debugPrint('[Connectivity] Status: Offline');
       return ConnectivityStatus.offline;
     } catch (e) {
-      debugPrint('Connectivity check error: $e');
+      debugPrint('[Connectivity] ERROR: Connectivity check error: $e');
       return ConnectivityStatus.unknown;
     }
   }
 
   Future<ConnectivityStatus> checkUpdateServerConnectivity() async {
     try {
+      debugPrint('[Connectivity] Checking update server reachability...');
       final result = await InternetAddress.lookup(
         'raw.githubusercontent.com',
       ).timeout(_timeout);
       if (result.isNotEmpty && result.first.rawAddress.isNotEmpty) {
+        debugPrint('[Connectivity] Update server is reachable');
         return ConnectivityStatus.connected;
       }
+      debugPrint('[Connectivity] Update server unreachable');
       return ConnectivityStatus.serverUnreachable;
     } on SocketException catch (_) {
       final generalStatus = await checkConnectivity();
       if (generalStatus == ConnectivityStatus.connected) {
+        debugPrint('[Connectivity] Update server unreachable (but internet is OK)');
         return ConnectivityStatus.serverUnreachable;
       }
+      debugPrint('[Connectivity] Update server unreachable (Offline)');
       return ConnectivityStatus.offline;
     } on TimeoutException catch (_) {
+      debugPrint('[Connectivity] Update server check timed out');
       return ConnectivityStatus.serverUnreachable;
     } catch (e) {
-      debugPrint('Update server connectivity check error: $e');
+      debugPrint('[Connectivity] ERROR: Update server check error: $e');
       return ConnectivityStatus.unknown;
     }
   }

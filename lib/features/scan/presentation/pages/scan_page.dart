@@ -121,7 +121,7 @@ class _ScanPageState extends ConsumerState<ScanPage>
               if (_retryCount < _maxRetries) {
                 _retryCount++;
                 debugPrint(
-                  "[Unfilter] ScanPage: Auto-retry attempt $_retryCount/$_maxRetries",
+                  "ScanPage: Auto-retry attempt $_retryCount/$_maxRetries",
                 );
                 setState(() => _hasStartedScan = false);
                 Future.delayed(const Duration(milliseconds: 500), () {
@@ -152,7 +152,7 @@ class _ScanPageState extends ConsumerState<ScanPage>
         })
         .catchError((error) {
           if (!mounted) return;
-          debugPrint("[Unfilter] ScanPage: Scan error: $error");
+          debugPrint("ScanPage: Scan error: $error");
 
           if (_retryCount < _maxRetries) {
             _retryCount++;

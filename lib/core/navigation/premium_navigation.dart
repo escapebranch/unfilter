@@ -28,14 +28,14 @@ class PremiumNavigation {
 
     final overlayState = Overlay.of(context, rootOverlay: true);
 
-    debugPrint("[PremiumNavigation] 🔵 Start Push: $page");
+    debugPrint("[PremiumNavigation] DEBUG: Start Push: $page");
 
     final capturedImage = await _captureScreenshot(pixelRatio);
 
     if (capturedImage == null ||
         capturedImage.width == 0 ||
         capturedImage.height == 0) {
-      debugPrint("[PremiumNavigation] ⚠️ Screenshot failed. Fallback.");
+      debugPrint("[PremiumNavigation] ERROR: Screenshot failed. Fallback.");
       navigator.push(
         PageRouteBuilder(
           pageBuilder: (_, _, _) => page,
@@ -64,12 +64,12 @@ class PremiumNavigation {
 
       overlayState.insert(entry);
       overlayInserted = true;
-      debugPrint("[PremiumNavigation] ❄️ UI Frozen");
+      debugPrint("[PremiumNavigation] INFO: UI Frozen");
       HapticFeedback.lightImpact();
 
       await animationCompleter.future;
 
-      debugPrint("[PremiumNavigation] 🔄 Swapping Route...");
+      debugPrint("[PremiumNavigation] INFO: Swapping Route...");
 
       navigator.push(
         PageRouteBuilder(
@@ -81,7 +81,7 @@ class PremiumNavigation {
 
       await Future.delayed(const Duration(milliseconds: 60));
 
-      debugPrint("[PremiumNavigation] 🌫️ Fading Out Overlay...");
+      debugPrint("[PremiumNavigation] INFO: Fading Out Overlay...");
       fadeNotifier.value = true;
 
       await Future.delayed(const Duration(milliseconds: 320));
@@ -89,10 +89,10 @@ class PremiumNavigation {
       if (overlayInserted) {
         entry.remove();
         overlayInserted = false;
-        debugPrint("[PremiumNavigation] ✨ Transition Complete");
+        debugPrint("[PremiumNavigation] INFO: Transition Complete");
       }
     } catch (e) {
-      debugPrint("[PremiumNavigation] 🛑 CRITICAL ERROR: $e");
+      debugPrint("[PremiumNavigation] ERROR: CRITICAL ERROR: $e");
       if (overlayInserted) {
         entry.remove();
       }

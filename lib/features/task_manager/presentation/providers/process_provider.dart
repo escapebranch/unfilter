@@ -74,7 +74,7 @@ Future<SystemDetails> _fetchSystemDetails() async {
         .timeout(_fetchTimeout);
     return await compute(_parseSystemDetails, result);
   } on TimeoutException {
-    debugPrint('System details fetch timed out');
+    debugPrint('[TaskManager] ERROR: System details fetch timed out');
     return const SystemDetails(
       memInfo: {},
       cpuTemp: 0,
@@ -83,7 +83,7 @@ Future<SystemDetails> _fetchSystemDetails() async {
       cpuCores: 1,
     );
   } catch (e) {
-    debugPrint('Error fetching system details: $e');
+    debugPrint('[TaskManager] ERROR: Error fetching system details: $e');
     return const SystemDetails(
       memInfo: {},
       cpuTemp: 0,
@@ -101,10 +101,10 @@ Future<List<ActiveApp>> _fetchRecentlyActiveApps({int hoursAgo = 24}) async {
         .timeout(_fetchTimeout);
     return await compute(_parseActiveApps, result);
   } on TimeoutException {
-    debugPrint('Active apps fetch timed out');
+    debugPrint('[TaskManager] ERROR: Active apps fetch timed out');
     return [];
   } catch (e) {
-    debugPrint('Error fetching active apps: $e');
+    debugPrint('[TaskManager] ERROR: Error fetching active apps: $e');
     return [];
   }
 }
@@ -112,6 +112,7 @@ Future<List<ActiveApp>> _fetchRecentlyActiveApps({int hoursAgo = 24}) async {
 final processProvider = FutureProvider.autoDispose<List<AndroidProcess>>((
   ref,
 ) async {
+  debugPrint('[TaskManager] DEBUG: Fetching processes...');
   return _fetchProcesses();
 });
 
@@ -120,10 +121,11 @@ final systemDetailsProvider = StreamProvider.autoDispose<SystemDetails>((ref) {
 
   controller = StreamController<SystemDetails>(
     onListen: () async {
+      debugPrint('[TaskManager] DEBUG: System details stream listening');
       try {
         controller.add(await _fetchSystemDetails());
       } catch (e) {
-        debugPrint('Initial system details fetch failed: $e');
+        debugPrint('[TaskManager] ERROR: Initial system details fetch failed: $e');
       }
 
       Timer.periodic(_refreshInterval, (timer) async {
@@ -134,11 +136,14 @@ final systemDetailsProvider = StreamProvider.autoDispose<SystemDetails>((ref) {
         try {
           controller.add(await _fetchSystemDetails());
         } catch (e) {
-          debugPrint('Periodic system details fetch failed: $e');
+          debugPrint('[TaskManager] ERROR: Periodic system details fetch failed: $e');
         }
       });
     },
-    onCancel: () => controller.close(),
+    onCancel: () {
+      debugPrint('[TaskManager] DEBUG: System details stream cancelled');
+      controller.close();
+    },
   );
 
   return controller.stream;

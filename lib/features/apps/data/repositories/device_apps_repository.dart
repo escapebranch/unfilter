@@ -85,10 +85,10 @@ class DeviceAppsRepository {
               ),
             );
             debugPrint(
-              "[DeviceAppsRepo] Chunk $i/${totalChunks - 1}: ${chunk.length} apps received",
+              "[DeviceAppsRepo] INFO: Chunk $i/${totalChunks - 1}: ${chunk.length} apps received",
             );
           } catch (e) {
-            debugPrint("[DeviceAppsRepo] Chunk $i failed: $e, continuing...");
+            debugPrint("[DeviceAppsRepo] ERROR: Chunk $i failed: $e");
             // Continue with remaining chunks even if one fails
           }
         }
@@ -111,7 +111,7 @@ class DeviceAppsRepository {
       return apps;
     } on PlatformException catch (e) {
       if (e.code == 'ABORTED') {
-        debugPrint("Scan was superseded, will retry once...");
+        debugPrint("[DeviceAppsRepo] INFO: Scan was superseded, retrying...");
         _scanInProgress = null;
         await Future.delayed(const Duration(milliseconds: 200));
         return getInstalledApps(
@@ -119,11 +119,11 @@ class DeviceAppsRepository {
           includeDetails: includeDetails,
         );
       }
-      debugPrint("Failed to get apps: '${e.message}'");
+      debugPrint("[DeviceAppsRepo] ERROR: Failed to get apps: '${e.message}'");
       completer.completeError(e);
       rethrow;
     } catch (e) {
-      debugPrint("Failed to get apps: '$e'");
+      debugPrint("[DeviceAppsRepo] ERROR: Failed to get apps: '$e'");
       completer.completeError(e);
       rethrow;
     } finally {
@@ -157,7 +157,7 @@ class DeviceAppsRepository {
           ),
         );
       } on PlatformException catch (e) {
-        debugPrint("Failed to get app details chunk: '${e.message}'");
+        debugPrint("[DeviceAppsRepo] ERROR: Failed to get app details chunk: '${e.message}'");
       }
     }
     return allApps;
@@ -168,7 +168,7 @@ class DeviceAppsRepository {
       final bool result = await platform.invokeMethod('checkUsagePermission');
       return result;
     } on PlatformException catch (e) {
-      debugPrint("Failed to check permission: '${e.message}'");
+      debugPrint("[DeviceAppsRepo] ERROR: Failed to check permission: '${e.message}'");
       return false;
     }
   }
@@ -177,7 +177,7 @@ class DeviceAppsRepository {
     try {
       await platform.invokeMethod('requestUsagePermission');
     } on PlatformException catch (e) {
-      debugPrint("Failed to request permission: '${e.message}'");
+      debugPrint("[DeviceAppsRepo] ERROR: Failed to request permission: '${e.message}'");
     }
   }
 
@@ -186,7 +186,7 @@ class DeviceAppsRepository {
       final bool result = await platform.invokeMethod('checkInstallPermission');
       return result;
     } on PlatformException catch (e) {
-      debugPrint("Failed to check install permission: '${e.message}'");
+      debugPrint("[DeviceAppsRepo] ERROR: Failed to check install permission: '${e.message}'");
       return false;
     }
   }
@@ -195,7 +195,7 @@ class DeviceAppsRepository {
     try {
       await platform.invokeMethod('requestInstallPermission');
     } on PlatformException catch (e) {
-      debugPrint("Failed to request install permission: '${e.message}'");
+      debugPrint("[DeviceAppsRepo] ERROR: Failed to request install permission: '${e.message}'");
     }
   }
 
@@ -214,7 +214,7 @@ class DeviceAppsRepository {
           .map((e) => AppUsagePoint.fromMap(e))
           .toList();
     } on PlatformException catch (e) {
-      debugPrint("Failed to get usage history: '${e.message}'");
+      debugPrint("[DeviceAppsRepo] ERROR: Failed to get usage history: '${e.message}'");
       return [];
     }
   }
@@ -245,7 +245,7 @@ class DeviceAppsRepository {
         hasData: result['hasData'] as bool? ?? false,
       );
     } on PlatformException catch (e) {
-      debugPrint("Failed to get available data range: '${e.message}'");
+      debugPrint("[DeviceAppsRepo] ERROR: Failed to get available data range: '${e.message}'");
       return UsageDataRange(
         oldestTimestamp: 0,
         newestTimestamp: 0,
@@ -278,7 +278,7 @@ class DeviceAppsRepository {
         );
       }).toList();
     } on PlatformException catch (e) {
-      debugPrint("Failed to get daily usage snapshots: '${e.message}'");
+      debugPrint("[DeviceAppsRepo] ERROR: Failed to get daily usage snapshots: '${e.message}'");
       return [];
     }
   }

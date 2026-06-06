@@ -12,10 +12,10 @@ class StorageRepository {
     Duration timeout = const Duration(seconds: 10),
   }) async {
     try {
-      debugPrint('🔍 StorageRepository.getStorageBreakdown:');
-      debugPrint('   📦 Package: $packageName');
+      debugPrint('[StorageRepo] getStorageBreakdown:');
+      debugPrint('   Package: $packageName');
       debugPrint(
-        '   🎯 Detailed: $detailed ${detailed ? "(DEEP SCAN)" : "(QUICK SCAN)"}',
+        '   Detailed: $detailed ${detailed ? "(DEEP SCAN)" : "(QUICK SCAN)"}',
       );
 
       final result = await _channel
@@ -25,7 +25,7 @@ class StorageRepository {
           })
           .timeout(timeout);
 
-      debugPrint('✅ Platform returned result for $packageName');
+      debugPrint('[StorageRepo] Platform returned result for $packageName');
 
       if (result == null) {
         throw PlatformException(
@@ -38,7 +38,7 @@ class StorageRepository {
         result as Map<Object?, Object?>,
       );
       debugPrint(
-        '📊 Total: ${breakdown.totalCombined} bytes, Confidence: ${(breakdown.confidenceLevel * 100).toInt()}%',
+        '[StorageRepo] Total: ${breakdown.totalCombined} bytes, Confidence: ${(breakdown.confidenceLevel * 100).toInt()}%',
       );
       debugPrint(
         '   ${breakdown.limitations.isEmpty ? "No limitations" : "Limitations: ${breakdown.limitations.length}"}',
@@ -46,7 +46,7 @@ class StorageRepository {
 
       return breakdown;
     } on TimeoutException {
-      debugPrint('⏱️ TIMEOUT for $packageName after $timeout');
+      debugPrint('[StorageRepo] ERROR: TIMEOUT for $packageName after $timeout');
       try {
         await cancelAnalysis(packageName);
       } catch (_) {}
@@ -58,7 +58,7 @@ class StorageRepository {
     } on PlatformException {
       rethrow;
     } catch (e) {
-      debugPrint('❌ ERROR in getStorageBreakdown: $e');
+      debugPrint('[StorageRepo] ERROR in getStorageBreakdown: $e');
       throw PlatformException(
         code: 'UNKNOWN_ERROR',
         message: 'Storage analysis failed: $e',

@@ -30,7 +30,7 @@ class InstalledAppsNotifier extends AsyncNotifier<List<DeviceApp>> {
 
   Future<void> fullScan() async {
     if (_isScanInProgress) {
-      debugPrint("[Unfilter] fullScan: Scan already in progress, skipping");
+      debugPrint("fullScan: Scan already in progress, skipping");
       return;
     }
 
@@ -38,14 +38,17 @@ class InstalledAppsNotifier extends AsyncNotifier<List<DeviceApp>> {
     final repository = ref.read(deviceAppsRepositoryProvider);
 
     try {
+      debugPrint("fullScan: Starting full scan...");
       state = const AsyncValue.loading();
       await repository.clearCache();
       state = await AsyncValue.guard(
         () => repository.getInstalledApps(forceRefresh: true),
       );
       if (state.hasError && state.error != null) {
+        debugPrint("fullScan: Scan failed: ${state.error}");
         throw state.error!;
       }
+      debugPrint("fullScan: Scan completed successfully");
       _lastRevalidationTime = DateTime.now();
     } finally {
       _isScanInProgress = false;
@@ -55,14 +58,14 @@ class InstalledAppsNotifier extends AsyncNotifier<List<DeviceApp>> {
   Future<void> backgroundRevalidate() async {
     if (_isScanInProgress) {
       debugPrint(
-        "[Unfilter] backgroundRevalidate: Full scan in progress, skipping",
+        "backgroundRevalidate: Full scan in progress, skipping",
       );
       return;
     }
 
     if (_isRevalidating) {
       debugPrint(
-        "[Unfilter] backgroundRevalidate: Already revalidating, skipping",
+        "backgroundRevalidate: Already revalidating, skipping",
       );
       return;
     }
@@ -71,7 +74,7 @@ class InstalledAppsNotifier extends AsyncNotifier<List<DeviceApp>> {
       final elapsed = DateTime.now().difference(_lastRevalidationTime!);
       if (elapsed < _revalidationCooldown) {
         debugPrint(
-          "[Unfilter] backgroundRevalidate: Cooldown active (${elapsed.inSeconds}s < ${_revalidationCooldown.inSeconds}s), skipping",
+          "backgroundRevalidate: Cooldown active (${elapsed.inSeconds}s < ${_revalidationCooldown.inSeconds}s), skipping",
         );
         return;
       }
@@ -83,20 +86,20 @@ class InstalledAppsNotifier extends AsyncNotifier<List<DeviceApp>> {
     };
     if (currentApps.isEmpty) {
       debugPrint(
-        "[Unfilter] backgroundRevalidate: No existing data, skipping (use fullScan instead)",
+        "backgroundRevalidate: No existing data, skipping (use fullScan instead)",
       );
       return;
     }
 
     _isRevalidating = true;
-    debugPrint("[Unfilter] backgroundRevalidate: Starting...");
+    debugPrint("backgroundRevalidate: Starting revalidation...");
 
     try {
       await revalidate(cachedApps: currentApps);
       _lastRevalidationTime = DateTime.now();
-      debugPrint("[Unfilter] backgroundRevalidate: Complete");
+      debugPrint("backgroundRevalidate: Revalidation complete");
     } catch (e) {
-      debugPrint("[Unfilter] backgroundRevalidate: Failed - $e");
+      debugPrint("backgroundRevalidate: Revalidation failed: $e");
     } finally {
       _isRevalidating = false;
     }
@@ -106,20 +109,20 @@ class InstalledAppsNotifier extends AsyncNotifier<List<DeviceApp>> {
     final repository = ref.read(deviceAppsRepositoryProvider);
 
     try {
-      debugPrint("[Unfilter] ResyncApp: Fetching details for $packageName");
+      debugPrint("resyncApp: Fetching details for $packageName");
 
       final details = await repository.getAppsDetails([packageName]);
 
       if (details.isEmpty) {
         debugPrint(
-          "[Unfilter] ResyncApp: No details returned for $packageName",
+          "resyncApp: No details returned for $packageName",
         );
         return null;
       }
 
       final updatedApp = details.first;
       debugPrint(
-        "[Unfilter] ResyncApp: Got updated details for ${updatedApp.appName}",
+        "resyncApp: Got updated details for ${updatedApp.appName}",
       );
 
       final currentApps = switch (state) {
@@ -136,10 +139,10 @@ class InstalledAppsNotifier extends AsyncNotifier<List<DeviceApp>> {
       await repository.updateCache(updatedApps);
       state = AsyncValue.data(updatedApps);
 
-      debugPrint("[Unfilter] ResyncApp: Updated cache and state");
+      debugPrint("resyncApp: Updated cache and state");
       return updatedApp;
     } catch (e) {
-      debugPrint("[Unfilter] ResyncApp: Failed - $e");
+      debugPrint("resyncApp: Failed for $packageName: $e");
       return null;
     }
   }
@@ -148,20 +151,20 @@ class InstalledAppsNotifier extends AsyncNotifier<List<DeviceApp>> {
     final repository = ref.read(deviceAppsRepositoryProvider);
 
     try {
-      debugPrint("[Unfilter] Revalidate: Start");
+      debugPrint("revalidate: Start");
       final appsToCheck =
           cachedApps ?? await repository.getInstalledApps(forceRefresh: false);
       final cachedMap = {for (var app in appsToCheck) app.packageName: app};
       debugPrint(
-        "[Unfilter] Revalidate: Cached apps count: ${appsToCheck.length}",
+        "revalidate: Cached apps count: ${appsToCheck.length}",
       );
 
-      debugPrint("[Unfilter] Revalidate: Fetching lite apps...");
+      debugPrint("revalidate: Fetching lite apps...");
       final liteApps = await repository.getInstalledApps(
         forceRefresh: true,
         includeDetails: false,
       );
-      debugPrint("[Unfilter] Revalidate: Lite apps count: ${liteApps.length}");
+      debugPrint("revalidate: Lite apps count: ${liteApps.length}");
 
       final finalApps = <DeviceApp>[];
       final appsToResolve = <String>[];
@@ -176,21 +179,21 @@ class InstalledAppsNotifier extends AsyncNotifier<List<DeviceApp>> {
       }
 
       debugPrint(
-        "[Unfilter] Revalidate: Need to resolve ${appsToResolve.length} apps",
+        "revalidate: Need to resolve ${appsToResolve.length} apps",
       );
       if (appsToResolve.isNotEmpty) {
         final details = await repository.getAppsDetails(appsToResolve);
         finalApps.addAll(details);
-        debugPrint("[Unfilter] Revalidate: Resolved details");
+        debugPrint("revalidate: Resolved ${details.length} apps");
       }
 
-      debugPrint("[Unfilter] Revalidate: Updating cache and state");
+      debugPrint("revalidate: Updating cache and state");
       await repository.updateCache(finalApps);
 
       state = AsyncValue.data(finalApps);
-      debugPrint("[Unfilter] Revalidate: Done");
+      debugPrint("revalidate: Done");
     } catch (e) {
-      debugPrint("Revalidate failed: $e");
+      debugPrint("revalidate failed: $e");
     }
   }
 }
