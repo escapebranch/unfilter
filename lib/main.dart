@@ -11,10 +11,13 @@ import 'core/navigation/navigation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'core/providers/shared_preferences_provider.dart';
+import 'core/services/logging_service.dart';
 
 Future<void> main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+
+  LoggingService().init();
 
   final prefs = await SharedPreferences.getInstance();
 
@@ -51,8 +54,8 @@ class UnfilterApp extends ConsumerWidget {
       locale: selectedLocale,
       onGenerateTitle: (context) => AppLocalizations.of(context).appTitle,
       debugShowCheckedModeBanner: false,
-      theme: AppTheme.lightTheme,
-      darkTheme: AppTheme.darkTheme,
+      theme: AppTheme.getTheme(isDark: false, locale: selectedLocale),
+      darkTheme: AppTheme.getTheme(isDark: true, locale: selectedLocale),
       themeMode: themeMode,
       themeAnimationDuration: Duration.zero,
       builder: (context, child) => RepaintBoundary(

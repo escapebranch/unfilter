@@ -6,7 +6,73 @@ import 'pro_transitions.dart';
 class AppTheme {
   AppTheme._();
 
-  static final ThemeData lightTheme = ThemeData(
+  static ThemeData getTheme({required bool isDark, Locale? locale}) {
+    final baseTheme = isDark ? _baseDarkTheme : _baseLightTheme;
+    final isTamil = locale?.languageCode == 'ta';
+    
+    // Pro-level typography scaling factor for Tamil
+    // Tamil glyphs are taller and wider; we shrink variedly based on context
+    final double displayFactor = isTamil ? 0.60 : 1.0;  // 40% shrink for big headers
+    final double headlineFactor = isTamil ? 0.70 : 1.0; // 30% shrink for sub-headers
+    final double bodyFactor = isTamil ? 0.80 : 1.0;     // 20% shrink for readability
+    final double labelFactor = isTamil ? 0.75 : 1.0;    // 25% shrink for buttons/tags
+
+    final textTheme = (isDark ? _darkTextTheme : _lightTextTheme).copyWith(
+      displayLarge: (isDark ? _darkTextTheme : _lightTextTheme).displayLarge?.copyWith(
+        fontSize: ((isDark ? _darkTextTheme : _lightTextTheme).displayLarge?.fontSize ?? 57) * displayFactor,
+        letterSpacing: isTamil ? -0.2 : -1.5,
+      ),
+      displayMedium: (isDark ? _darkTextTheme : _lightTextTheme).displayMedium?.copyWith(
+        fontSize: ((isDark ? _darkTextTheme : _lightTextTheme).displayMedium?.fontSize ?? 45) * displayFactor,
+        letterSpacing: isTamil ? -0.1 : -0.5,
+      ),
+      displaySmall: (isDark ? _darkTextTheme : _lightTextTheme).displaySmall?.copyWith(
+        fontSize: ((isDark ? _darkTextTheme : _lightTextTheme).displaySmall?.fontSize ?? 36) * displayFactor,
+      ),
+      headlineLarge: (isDark ? _darkTextTheme : _lightTextTheme).headlineLarge?.copyWith(
+        fontSize: ((isDark ? _darkTextTheme : _lightTextTheme).headlineLarge?.fontSize ?? 32) * headlineFactor,
+      ),
+      headlineMedium: (isDark ? _darkTextTheme : _lightTextTheme).headlineMedium?.copyWith(
+        fontSize: ((isDark ? _darkTextTheme : _lightTextTheme).headlineMedium?.fontSize ?? 28) * headlineFactor,
+      ),
+      headlineSmall: (isDark ? _darkTextTheme : _lightTextTheme).headlineSmall?.copyWith(
+        fontSize: ((isDark ? _darkTextTheme : _lightTextTheme).headlineSmall?.fontSize ?? 24) * headlineFactor,
+      ),
+      bodyLarge: (isDark ? _darkTextTheme : _lightTextTheme).bodyLarge?.copyWith(
+        fontSize: 16 * bodyFactor,
+      ),
+      bodyMedium: (isDark ? _darkTextTheme : _lightTextTheme).bodyMedium?.copyWith(
+        fontSize: 14 * bodyFactor,
+      ),
+      bodySmall: (isDark ? _darkTextTheme : _lightTextTheme).bodySmall?.copyWith(
+        fontSize: 12 * bodyFactor,
+      ),
+      labelLarge: (isDark ? _darkTextTheme : _lightTextTheme).labelLarge?.copyWith(
+        fontSize: 14 * labelFactor,
+      ),
+      labelMedium: (isDark ? _darkTextTheme : _lightTextTheme).labelMedium?.copyWith(
+        fontSize: 12 * labelFactor,
+      ),
+      labelSmall: (isDark ? _darkTextTheme : _lightTextTheme).labelSmall?.copyWith(
+        fontSize: 11 * labelFactor,
+      ),
+    );
+
+    return baseTheme.copyWith(
+      textTheme: textTheme.apply(
+        fontFamily: 'UncutSans',
+        bodyColor: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+        displayColor: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+      ),
+      appBarTheme: baseTheme.appBarTheme.copyWith(
+        titleTextStyle: baseTheme.appBarTheme.titleTextStyle?.copyWith(
+          fontSize: (baseTheme.appBarTheme.titleTextStyle?.fontSize ?? 20) * (isTamil ? 0.85 : 1.0),
+        ),
+      ),
+    );
+  }
+
+  static final ThemeData _baseLightTheme = ThemeData(
     useMaterial3: true,
     fontFamily: 'UncutSans',
     brightness: Brightness.light,
@@ -104,40 +170,6 @@ class AppTheme {
       thickness: 1,
     ),
     iconTheme: const IconThemeData(color: AppColors.lightTextPrimary),
-    textTheme:
-        const TextTheme(
-          displayLarge: TextStyle(
-            color: AppColors.lightTextPrimary,
-            fontWeight: FontWeight.bold,
-            letterSpacing: -1.5,
-          ),
-          displayMedium: TextStyle(
-            color: AppColors.lightTextPrimary,
-            fontWeight: FontWeight.bold,
-            letterSpacing: -0.5,
-          ),
-          displaySmall: TextStyle(
-            color: AppColors.lightTextPrimary,
-            fontWeight: FontWeight.bold,
-          ),
-          headlineMedium: TextStyle(
-            color: AppColors.lightTextPrimary,
-            fontWeight: FontWeight.w700,
-          ),
-          bodyLarge: TextStyle(color: AppColors.lightTextPrimary, fontSize: 16),
-          bodyMedium: TextStyle(
-            color: AppColors.lightTextPrimary,
-            fontSize: 14,
-          ),
-          labelLarge: TextStyle(
-            color: AppColors.lightTextPrimary,
-            fontWeight: FontWeight.w600,
-          ),
-        ).apply(
-          bodyColor: AppColors.lightTextPrimary,
-          displayColor: AppColors.lightTextPrimary,
-          fontFamily: 'UncutSans',
-        ),
     pageTransitionsTheme: const PageTransitionsTheme(
       builders: {
         TargetPlatform.android: ProPageTransitionsBuilder(),
@@ -149,7 +181,7 @@ class AppTheme {
     ),
   );
 
-  static final ThemeData darkTheme = ThemeData(
+  static final ThemeData _baseDarkTheme = ThemeData(
     useMaterial3: true,
     fontFamily: 'UncutSans',
     brightness: Brightness.dark,
@@ -247,37 +279,6 @@ class AppTheme {
       thickness: 1,
     ),
     iconTheme: const IconThemeData(color: AppColors.darkTextPrimary),
-    textTheme:
-        const TextTheme(
-          displayLarge: TextStyle(
-            color: AppColors.darkTextPrimary,
-            fontWeight: FontWeight.bold,
-            letterSpacing: -1.5,
-          ),
-          displayMedium: TextStyle(
-            color: AppColors.darkTextPrimary,
-            fontWeight: FontWeight.bold,
-            letterSpacing: -0.5,
-          ),
-          displaySmall: TextStyle(
-            color: AppColors.darkTextPrimary,
-            fontWeight: FontWeight.bold,
-          ),
-          headlineMedium: TextStyle(
-            color: AppColors.darkTextPrimary,
-            fontWeight: FontWeight.w700,
-          ),
-          bodyLarge: TextStyle(color: AppColors.darkTextPrimary, fontSize: 16),
-          bodyMedium: TextStyle(color: AppColors.darkTextPrimary, fontSize: 14),
-          labelLarge: TextStyle(
-            color: AppColors.darkTextPrimary,
-            fontWeight: FontWeight.w600,
-          ),
-        ).apply(
-          bodyColor: AppColors.darkTextPrimary,
-          displayColor: AppColors.darkTextPrimary,
-          fontFamily: 'UncutSans',
-        ),
     pageTransitionsTheme: const PageTransitionsTheme(
       builders: {
         TargetPlatform.android: ProPageTransitionsBuilder(),
@@ -288,4 +289,54 @@ class AppTheme {
       },
     ),
   );
+
+  static const TextTheme _lightTextTheme = TextTheme(
+    displayLarge: TextStyle(
+      fontWeight: FontWeight.bold,
+      letterSpacing: -1.5,
+    ),
+    displayMedium: TextStyle(
+      fontWeight: FontWeight.bold,
+      letterSpacing: -0.5,
+    ),
+    displaySmall: TextStyle(
+      fontWeight: FontWeight.bold,
+    ),
+    headlineMedium: TextStyle(
+      fontWeight: FontWeight.w700,
+    ),
+    bodyLarge: TextStyle(fontSize: 16),
+    bodyMedium: TextStyle(
+      fontSize: 14,
+    ),
+    labelLarge: TextStyle(
+      fontWeight: FontWeight.w600,
+    ),
+  );
+
+  static const TextTheme _darkTextTheme = TextTheme(
+    displayLarge: TextStyle(
+      fontWeight: FontWeight.bold,
+      letterSpacing: -1.5,
+    ),
+    displayMedium: TextStyle(
+      fontWeight: FontWeight.bold,
+      letterSpacing: -0.5,
+    ),
+    displaySmall: TextStyle(
+      fontWeight: FontWeight.bold,
+    ),
+    headlineMedium: TextStyle(
+      fontWeight: FontWeight.w700,
+    ),
+    bodyLarge: TextStyle(fontSize: 16),
+    bodyMedium: TextStyle(fontSize: 14),
+    labelLarge: TextStyle(
+      fontWeight: FontWeight.w600,
+    ),
+  );
+
+  // Keep these for backward compatibility or simple cases, but prefer getTheme()
+  static final ThemeData lightTheme = getTheme(isDark: false);
+  static final ThemeData darkTheme = getTheme(isDark: true);
 }
