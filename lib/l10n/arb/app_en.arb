@@ -13,7 +13,7 @@
   "@chooseLanguageDialogTitle": {
     "description": "Title shown in language selection dialog"
   },
-  "chooseLanguageDialogSubtitle": "Select your preferred language",
+  "chooseLanguageDialogSubtitle": "Select your language",
   "@chooseLanguageDialogSubtitle": {
     "description": "Subtitle shown in language selection dialog"
   },
@@ -273,6 +273,14 @@
   "versionUnknown": "Version Unknown",
   "updateAvailableBadge": " • Update",
   "reportIssue": "Report Issue",
+  "reportBug": "Report a Bug",
+  "reportBugSubtitle": "Found a glitch? Let us know on GitHub",
+  "viewLogs": "View Logs",
+  "viewLogsSubtitle": "Inspect system & app events",
+  "exportLogs": "Export Logs",
+  "exportLogsSubtitle": "Save logs as a ZIP archive",
+  "logsTitle": "App Logs",
+  "shareLogs": "Share Logs",
   "drawerCommunity": "COMMUNITY",
   "themeAuto": "Auto",
   "supportProject": "Support the project",

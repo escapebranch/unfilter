@@ -21,7 +21,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get chooseLanguageDialogTitle => 'Choose Language';
 
   @override
-  String get chooseLanguageDialogSubtitle => 'Select your preferred language';
+  String get chooseLanguageDialogSubtitle => 'Select your language';
 
   @override
   String get languageEnglish => 'English';
@@ -655,6 +655,30 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get reportIssue => 'Report Issue';
+
+  @override
+  String get reportBug => 'Report a Bug';
+
+  @override
+  String get reportBugSubtitle => 'Found a glitch? Let us know on GitHub';
+
+  @override
+  String get viewLogs => 'View Logs';
+
+  @override
+  String get viewLogsSubtitle => 'Inspect system & app events';
+
+  @override
+  String get exportLogs => 'Export Logs';
+
+  @override
+  String get exportLogsSubtitle => 'Save logs as a ZIP archive';
+
+  @override
+  String get logsTitle => 'App Logs';
+
+  @override
+  String get shareLogs => 'Share Logs';
 
   @override
   String get drawerCommunity => 'COMMUNITY';

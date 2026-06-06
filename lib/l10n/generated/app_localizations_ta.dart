@@ -664,6 +664,30 @@ class AppLocalizationsTa extends AppLocalizations {
   String get reportIssue => 'பிழையை தெரிவி';
 
   @override
+  String get reportBug => 'பிழையைத் தெரிவி';
+
+  @override
+  String get reportBugSubtitle => 'GitHub-இல் பிழையைப் பகிரவும்';
+
+  @override
+  String get viewLogs => 'பதிவுகளைப் பார்';
+
+  @override
+  String get viewLogsSubtitle => 'செயலி நிகழ்வுகளைச் சரிபார்க்கவும்';
+
+  @override
+  String get exportLogs => 'பதிவுகளை ஏற்றுமதி செய்';
+
+  @override
+  String get exportLogsSubtitle => 'ZIP கோப்பாகச் சேமிக்கவும்';
+
+  @override
+  String get logsTitle => 'பதிவுகள்';
+
+  @override
+  String get shareLogs => 'பதிவுகளைப் பகிரவும்';
+
+  @override
   String get drawerCommunity => 'சமூகம்';
 
   @override

@@ -125,7 +125,7 @@ abstract class AppLocalizations {
   /// Subtitle shown in language selection dialog
   ///
   /// In en, this message translates to:
-  /// **'Select your preferred language'**
+  /// **'Select your language'**
   String get chooseLanguageDialogSubtitle;
 
   /// English language name shown in selector
@@ -1267,6 +1267,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Report Issue'**
   String get reportIssue;
+
+  /// No description provided for @reportBug.
+  ///
+  /// In en, this message translates to:
+  /// **'Report a Bug'**
+  String get reportBug;
+
+  /// No description provided for @reportBugSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Found a glitch? Let us know on GitHub'**
+  String get reportBugSubtitle;
+
+  /// No description provided for @viewLogs.
+  ///
+  /// In en, this message translates to:
+  /// **'View Logs'**
+  String get viewLogs;
+
+  /// No description provided for @viewLogsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Inspect system & app events'**
+  String get viewLogsSubtitle;
+
+  /// No description provided for @exportLogs.
+  ///
+  /// In en, this message translates to:
+  /// **'Export Logs'**
+  String get exportLogs;
+
+  /// No description provided for @exportLogsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Save logs as a ZIP archive'**
+  String get exportLogsSubtitle;
+
+  /// No description provided for @logsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'App Logs'**
+  String get logsTitle;
+
+  /// No description provided for @shareLogs.
+  ///
+  /// In en, this message translates to:
+  /// **'Share Logs'**
+  String get shareLogs;
 
   /// No description provided for @drawerCommunity.
   ///

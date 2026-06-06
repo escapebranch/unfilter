@@ -12,6 +12,7 @@ import '../../features/home/presentation/pages/info/privacy_page.dart';
 import '../../features/home/presentation/pages/info/deeplink_tester_page.dart';
 import '../../features/home/presentation/pages/info/sponsors_page.dart';
 import '../../features/home/presentation/pages/info/contributors_page.dart';
+import '../../features/home/presentation/pages/view_logs_page.dart';
 import '../../features/apps/presentation/pages/app_details_page.dart';
 import '../../features/apps/presentation/pages/app_details_by_package_page.dart';
 import '../../features/apps/domain/entities/device_app.dart';
@@ -40,6 +41,7 @@ abstract class AppRoutes {
   static const String storageInsights = '/storage-insights';
   static const String updateCheck = '/update-check';
   static const String language = '/language';
+  static const String logs = '/logs';
 }
 
 class AppRouteFactory {
@@ -167,6 +169,13 @@ class AppRouteFactory {
           tapPosition: TapTracker.lastTapPosition,
         );
 
+      case AppRoutes.logs:
+        return BubbleRevealPageRoute(
+          page: const ViewLogsPage(),
+          settings: settings,
+          tapPosition: TapTracker.lastTapPosition,
+        );
+
       default:
         return MaterialPageRoute(
           builder: (context) => Scaffold(
@@ -261,5 +270,9 @@ class AppRouteFactory {
 
   static Future<void> toLanguage(BuildContext context) {
     return PremiumNavigation.push(context, const LanguagePage());
+  }
+
+  static Future<void> toLogs(BuildContext context) {
+    return PremiumNavigation.push(context, const ViewLogsPage());
   }
 }
