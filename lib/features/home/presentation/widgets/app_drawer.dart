@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:unfilter/l10n/generated/app_localizations.dart';
+import 'report_issue_modal.dart';
 
 import '../../../../core/navigation/navigation.dart';
 import '../../../update/presentation/providers/update_provider.dart';
@@ -207,12 +207,9 @@ class AppDrawer extends ConsumerWidget {
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        onTap: () async {
+        onTap: () {
           Navigator.pop(context);
-          final uri = Uri.parse('https://github.com/r4khul/unfilter/issues');
-          if (await canLaunchUrl(uri)) {
-            await launchUrl(uri, mode: LaunchMode.externalApplication);
-          }
+          ReportIssueModal.show(context);
         },
         borderRadius: BorderRadius.circular(16),
         overlayColor: WidgetStateProperty.all(

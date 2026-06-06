@@ -6,6 +6,28 @@ import 'package:flutter/material.dart';
 
 import '../constants/constants.dart';
 
+class SnackBarUtils {
+  SnackBarUtils._();
+
+  static void showSuccess(BuildContext context, String message) {
+    showPremiumSnackbar(
+      context: context,
+      icon: Icons.check_circle_outline_rounded,
+      message: message,
+      isSuccess: true,
+    );
+  }
+
+  static void showError(BuildContext context, String message) {
+    showPremiumSnackbar(
+      context: context,
+      icon: Icons.error_outline_rounded,
+      message: message,
+      isSuccess: false,
+    );
+  }
+}
+
 void showPremiumSnackbar({
   required BuildContext context,
   required IconData icon,
