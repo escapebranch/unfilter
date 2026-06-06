@@ -92,6 +92,10 @@ class LoggingService {
     _logController.add(logs);
   }
 
+  String getLogString() {
+    return _logs.map((e) => e.toString()).join('\n');
+  }
+
   Future<File> exportLogs() async {
     final directory = await getTemporaryDirectory();
     final timestamp = DateFormat('yyyyMMdd_HHmmss').format(DateTime.now());

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
@@ -12,19 +13,51 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'core/providers/shared_preferences_provider.dart';
 import 'core/services/logging_service.dart';
+import 'core/widgets/crash_recovery_screen.dart';
 
 Future<void> main() async {
-  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
-  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  runZonedGuarded(() async {
+    WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+    FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
-  LoggingService().init();
+    LoggingService().init();
 
-  final prefs = await SharedPreferences.getInstance();
+    FlutterError.onError = (details) {
+      FlutterError.presentError(details);
+      debugPrint('[GlobalError] Framework error: ${details.exception}\n${details.stack}');
+    };
 
+    final prefs = await SharedPreferences.getInstance();
+
+    runApp(
+      ProviderScope(
+        overrides: [sharedPreferencesProvider.overrideWithValue(prefs)],
+        child: const UnfilterApp(),
+      ),
+    );
+  }, (error, stack) {
+    debugPrint('[GlobalError] Critical async error: $error\n$stack');
+    _showCrashScreen(error, stack);
+  });
+}
+
+void _showCrashScreen(Object error, StackTrace stack) {
   runApp(
     ProviderScope(
-      overrides: [sharedPreferencesProvider.overrideWithValue(prefs)],
-      child: const UnfilterApp(),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: AppTheme.lightTheme,
+        darkTheme: AppTheme.darkTheme,
+        themeMode: ThemeMode.system,
+        localizationsDelegates: const [
+          AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: const [Locale("en"), Locale("ta")],
+        home: CrashRecoveryScreen(error: error, stackTrace: stack),
+      ),
     ),
   );
 }
@@ -58,12 +91,18 @@ class UnfilterApp extends ConsumerWidget {
       darkTheme: AppTheme.getTheme(isDark: true, locale: selectedLocale),
       themeMode: themeMode,
       themeAnimationDuration: Duration.zero,
-      builder: (context, child) => RepaintBoundary(
-        key: PremiumNavigation.rootBoundaryKey,
-        child: TapPositionProvider(
-          child: ThemeTransitionWrapper(child: child!),
-        ),
-      ),
+      builder: (context, child) {
+        ErrorWidget.builder = (details) => CrashRecoveryScreen(
+              error: details.exception,
+              stackTrace: details.stack,
+            );
+        return RepaintBoundary(
+          key: PremiumNavigation.rootBoundaryKey,
+          child: TapPositionProvider(
+            child: ThemeTransitionWrapper(child: child!),
+          ),
+        );
+      },
       home: const AppEntry(),
       onGenerateRoute: AppRouteFactory.onGenerateRoute,
       navigatorObservers: [AppNavigatorObserver(ref: ref)],
