@@ -1,108 +1,159 @@
-import 'dart:convert';
+import 'dart:async';
 import 'package:flutter/foundation.dart';
-import 'package:http/http.dart' as http;
-import 'package:package_info_plus/package_info_plus.dart';
+import 'package:flutter/services.dart';
 
-import 'version_models.dart';
+enum InAppUpdateAvailability {
+  available,
+  inProgress,
+  notAvailable,
+  unknown,
+}
 
-class UpdateService {
-  final String _configUrl;
+enum InAppUpdateInstallStatus {
+  canceled,
+  downloaded,
+  downloading,
+  failed,
+  installed,
+  installing,
+  pending,
+  unknown,
+}
 
-  AppVersion? _currentVersion;
+class InAppUpdateInfo {
+  final InAppUpdateAvailability availability;
+  final int availableVersionCode;
+  final int updatePriority;
+  final bool isFlexibleUpdateAllowed;
+  final bool isImmediateUpdateAllowed;
+  final int bytesDownloaded;
+  final int totalBytesToDownload;
 
-  UpdateService({
-    String configUrl =
-        'https://raw.githubusercontent.com/r4khul/unfilter/main/version_config.json',
-  }) : _configUrl = configUrl;
+  InAppUpdateInfo({
+    required this.availability,
+    required this.availableVersionCode,
+    required this.updatePriority,
+    required this.isFlexibleUpdateAllowed,
+    required this.isImmediateUpdateAllowed,
+    required this.bytesDownloaded,
+    required this.totalBytesToDownload,
+  });
 
-  Future<AppVersion> getCurrentVersion() async {
-    if (_currentVersion != null) return _currentVersion!;
-
-    final packageInfo = await PackageInfo.fromPlatform();
-    final nativeVersion = AppVersion.parse(
-      '${packageInfo.version}+${packageInfo.buildNumber}',
+  factory InAppUpdateInfo.fromMap(Map<dynamic, dynamic> map) {
+    return InAppUpdateInfo(
+      availability: _parseAvailability(map['availability']),
+      availableVersionCode: map['availableVersionCode'] ?? 0,
+      updatePriority: map['updatePriority'] ?? 0,
+      isFlexibleUpdateAllowed: map['isFlexibleUpdateAllowed'] ?? false,
+      isImmediateUpdateAllowed: map['isImmediateUpdateAllowed'] ?? false,
+      bytesDownloaded: map['bytesDownloaded'] ?? 0,
+      totalBytesToDownload: map['totalBytesToDownload'] ?? 0,
     );
-
-    _currentVersion = nativeVersion;
-    return _currentVersion!;
   }
 
-  Future<UpdateState> checkUpdate() async {
-    try {
-      debugPrint('[UpdateService] Checking for updates...');
-      final current = await getCurrentVersion();
-      debugPrint('[UpdateService] Current version: $current');
-      
-      final config = await _fetchConfig();
-      debugPrint('[UpdateService] Latest version: ${config.latestNativeVersion}');
-
-      if (current.isLowerThan(
-        config.minSupportedNativeVersion,
-        ignoreBuild: true,
-      )) {
-        debugPrint('[UpdateService] Status: Force update required');
-        return UpdateState(
-          status: AppUpdateStatus.forceUpdate,
-          config: config,
-          currentVersion: current,
-        );
-      }
-
-      if (current.isLowerThan(config.latestNativeVersion, ignoreBuild: true)) {
-        debugPrint('[UpdateService] Status: Soft update available');
-        return UpdateState(
-          status: AppUpdateStatus.softUpdate,
-          config: config,
-          currentVersion: current,
-        );
-      }
-
-      debugPrint('[UpdateService] Status: Up to date');
-      return UpdateState(
-        status: AppUpdateStatus.upToDate,
-        config: config,
-        currentVersion: current,
-      );
-    } catch (e) {
-      debugPrint('[UpdateService] ERROR: Update check failed: $e');
-      return UpdateState(
-        status: AppUpdateStatus.upToDate,
-        config: null,
-        currentVersion:
-            _currentVersion ??
-            const AppVersion(major: 0, minor: 0, patch: 0, build: 0),
-        error: e.toString(),
-      );
-    }
-  }
-
-  Future<UpdateConfig> _fetchConfig() async {
-    try {
-      final response = await http
-          .get(Uri.parse(_configUrl))
-          .timeout(const Duration(seconds: 10));
-
-      if (response.statusCode == 200) {
-        return UpdateConfig.fromJson(jsonDecode(response.body));
-      } else {
-        throw Exception('HTTP ${response.statusCode}');
-      }
-    } catch (e) {
-      throw Exception('Failed to load version config: $e');
+  static InAppUpdateAvailability _parseAvailability(String? value) {
+    switch (value) {
+      case 'AVAILABLE':
+        return InAppUpdateAvailability.available;
+      case 'IN_PROGRESS':
+        return InAppUpdateAvailability.inProgress;
+      case 'NOT_AVAILABLE':
+        return InAppUpdateAvailability.notAvailable;
+      default:
+        return InAppUpdateAvailability.unknown;
     }
   }
 }
 
-class UpdateState {
-  final AppUpdateStatus status;
-  final UpdateConfig? config;
-  final AppVersion currentVersion;
-  final String? error;
+class InAppUpdateInstallState {
+  final InAppUpdateInstallStatus status;
+  final int bytesDownloaded;
+  final int totalBytesToDownload;
+  final int installErrorCode;
 
-  UpdateState({
+  InAppUpdateInstallState({
     required this.status,
-    this.config,
-    required this.currentVersion,
-    this.error,
+    required this.bytesDownloaded,
+    required this.totalBytesToDownload,
+    required this.installErrorCode,
   });
+
+  factory InAppUpdateInstallState.fromMap(Map<dynamic, dynamic> map) {
+    return InAppUpdateInstallState(
+      status: _parseStatus(map['status']),
+      bytesDownloaded: map['bytesDownloaded'] ?? 0,
+      totalBytesToDownload: map['totalBytesToDownload'] ?? 0,
+      installErrorCode: map['installErrorCode'] ?? 0,
+    );
+  }
+
+  static InAppUpdateInstallStatus _parseStatus(String? value) {
+    switch (value) {
+      case 'CANCELED':
+        return InAppUpdateInstallStatus.canceled;
+      case 'DOWNLOADED':
+        return InAppUpdateInstallStatus.downloaded;
+      case 'DOWNLOADING':
+        return InAppUpdateInstallStatus.downloading;
+      case 'FAILED':
+        return InAppUpdateInstallStatus.failed;
+      case 'INSTALLED':
+        return InAppUpdateInstallStatus.installed;
+      case 'INSTALLING':
+        return InAppUpdateInstallStatus.installing;
+      case 'PENDING':
+        return InAppUpdateInstallStatus.pending;
+      default:
+        return InAppUpdateInstallStatus.unknown;
+    }
+  }
+}
+
+class UpdateService {
+  static const MethodChannel _channel = MethodChannel(
+    'com.escapebranch.unfilter/update',
+  );
+  static const EventChannel _eventChannel = EventChannel(
+    'com.escapebranch.unfilter/update_events',
+  );
+
+  Stream<InAppUpdateInstallState>? _updateEvents;
+
+  Stream<InAppUpdateInstallState> get updateEvents {
+    _updateEvents ??= _eventChannel
+        .receiveBroadcastStream()
+        .map((event) => InAppUpdateInstallState.fromMap(event as Map));
+    return _updateEvents!;
+  }
+
+  Future<InAppUpdateInfo> checkForUpdate() async {
+    try {
+      final Map<dynamic, dynamic>? result = await _channel.invokeMethod(
+        'checkForUpdate',
+      );
+      if (result == null) throw Exception('Failed to check for update');
+      return InAppUpdateInfo.fromMap(result);
+    } on PlatformException catch (e) {
+      debugPrint('[UpdateService] Error checking for update: ${e.message}');
+      rethrow;
+    }
+  }
+
+  Future<void> startFlexibleUpdate() async {
+    try {
+      await _channel.invokeMethod('startUpdate', {'type': 'FLEXIBLE'});
+    } on PlatformException catch (e) {
+      debugPrint('[UpdateService] Error starting flexible update: ${e.message}');
+      rethrow;
+    }
+  }
+
+  Future<void> completeUpdate() async {
+    try {
+      await _channel.invokeMethod('completeUpdate');
+    } on PlatformException catch (e) {
+      debugPrint('[UpdateService] Error completing update: ${e.message}');
+      rethrow;
+    }
+  }
 }
