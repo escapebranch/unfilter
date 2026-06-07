@@ -16,6 +16,8 @@ import kotlin.concurrent.withLock
 class MainActivity : FlutterActivity() {
 private val CHANNEL = "com.escapebranch.unfilter/apps"
 private val EVENT_CHANNEL = "com.escapebranch.unfilter/scan_progress"
+private val UPDATE_CHANNEL = "com.escapebranch.unfilter/update"
+private val UPDATE_EVENT_CHANNEL = "com.escapebranch.unfilter/update_events"
     
     companion object {
         private const val TAG = "MainActivity"
@@ -24,6 +26,7 @@ private val EVENT_CHANNEL = "com.escapebranch.unfilter/scan_progress"
     private val executor = Executors.newFixedThreadPool(4) 
     private val handler = Handler(Looper.getMainLooper())
     private var eventSink: EventChannel.EventSink? = null
+    private var updateEventSink: EventChannel.EventSink? = null
     
     private val scanLock = ReentrantLock()
     @Volatile private var scanInProgress = false
@@ -41,6 +44,7 @@ private val EVENT_CHANNEL = "com.escapebranch.unfilter/scan_progress"
     private lateinit var systemReader: SystemDetailReader
     private lateinit var storageAnalyzer: StorageAnalyzer
     private lateinit var batteryAnalyzer: BatteryAnalyzer
+    private lateinit var updateManager: UpdateManager
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
@@ -52,6 +56,7 @@ private val EVENT_CHANNEL = "com.escapebranch.unfilter/scan_progress"
         systemReader = SystemDetailReader(this)
         storageAnalyzer = StorageAnalyzer(this)
         batteryAnalyzer = BatteryAnalyzer(this)
+        updateManager = UpdateManager(this)
         
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler { call, result ->
             when (call.method) {
@@ -457,6 +462,22 @@ private val EVENT_CHANNEL = "com.escapebranch.unfilter/scan_progress"
             }
         }
 
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, UPDATE_CHANNEL).setMethodCallHandler { call, result ->
+            when (call.method) {
+                "checkForUpdate" -> updateManager.checkForUpdate(result)
+                "startUpdate" -> {
+                    val type = call.argument<String>("type") ?: "FLEXIBLE"
+                    updateManager.startUpdate(this, type, result)
+                }
+                "completeUpdate" -> updateManager.completeUpdate(result)
+                else -> result.notImplemented()
+            }
+        }
+
+        updateManager.setStatusListener { event ->
+            handler.post { updateEventSink?.success(event) }
+        }
+
         EventChannel(flutterEngine.dartExecutor.binaryMessenger, EVENT_CHANNEL).setStreamHandler(
             object : EventChannel.StreamHandler {
                 override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
@@ -467,12 +488,39 @@ private val EVENT_CHANNEL = "com.escapebranch.unfilter/scan_progress"
                 }
             }
         )
+
+        EventChannel(flutterEngine.dartExecutor.binaryMessenger, UPDATE_EVENT_CHANNEL).setStreamHandler(
+            object : EventChannel.StreamHandler {
+                override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
+                    updateEventSink = events
+                }
+                override fun onCancel(arguments: Any?) {
+                    updateEventSink = null
+                }
+            }
+        )
     }
+
+    override fun onResume() {
+        super.onResume()
+        updateManager.handleOnResume(this)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == UpdateManager.UPDATE_REQUEST_CODE) {
+            if (resultCode != RESULT_OK) {
+                Log.e(TAG, "Update flow failed! Result code: $resultCode")
+            }
+        }
+    }
+
     override fun cleanUpFlutterEngine(flutterEngine: FlutterEngine) {
         super.cleanUpFlutterEngine(flutterEngine)
         try {
             appRepository.shutdown()
             storageAnalyzer.shutdown()
+            updateManager.unregisterListener()
         } catch (e: Exception) {
         }
     }
