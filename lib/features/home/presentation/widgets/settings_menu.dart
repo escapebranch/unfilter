@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../../../update/domain/update_service.dart';
-import '../../../update/presentation/providers/update_provider.dart';
+import '../../../../core/version/version_provider.dart';
+import '../../../../core/version/update_service.dart';
 
 class SettingsMenu extends ConsumerWidget {
   const SettingsMenu({super.key});
@@ -12,12 +11,10 @@ class SettingsMenu extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final updateAsync = ref.watch(updateCheckProvider);
+    final updateInfo = ref.watch(updateInfoProvider);
 
-    final hasUpdate = updateAsync.maybeWhen(
-      data: (result) =>
-          result.status == UpdateStatus.softUpdate ||
-          result.status == UpdateStatus.forceUpdate,
+    final hasUpdate = updateInfo.maybeWhen(
+      data: (info) => info.availability == InAppUpdateAvailability.available,
       orElse: () => false,
     );
 

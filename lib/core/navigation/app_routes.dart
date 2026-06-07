@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../features/home/presentation/pages/home_page.dart';
 import '../../core/widgets/app_entry.dart';
-import '../../features/update/presentation/pages/update_check_page.dart';
 import '../../features/search/presentation/pages/search_page.dart';
 import '../../features/scan/presentation/pages/scan_page.dart';
 import '../../features/analytics/presentation/pages/analytics_page.dart';
@@ -39,7 +38,6 @@ abstract class AppRoutes {
   static const String contributors = '/contributors';
   static const String appDetails = '/app-details';
   static const String storageInsights = '/storage-insights';
-  static const String updateCheck = '/update-check';
   static const String language = '/language';
   static const String logs = '/logs';
 }
@@ -144,13 +142,6 @@ class AppRouteFactory {
         final app = settings.arguments as DeviceApp;
         return BubbleRevealPageRoute(
           page: AppDetailsPage(app: app),
-          settings: settings,
-          tapPosition: TapTracker.lastTapPosition,
-        );
-
-      case AppRoutes.updateCheck:
-        return BubbleRevealPageRoute(
-          page: const UpdateCheckPage(),
           settings: settings,
           tapPosition: TapTracker.lastTapPosition,
         );
@@ -260,10 +251,6 @@ class AppRouteFactory {
     );
   }
 
-  static Future<void> toUpdateCheck(BuildContext context) {
-    return PremiumNavigation.push(context, const UpdateCheckPage());
-  }
-
   static Future<void> toOnboarding(BuildContext context) {
     return Navigator.of(context).pushReplacementNamed(AppRoutes.onboarding);
   }
@@ -276,3 +263,4 @@ class AppRouteFactory {
     return PremiumNavigation.push(context, const ViewLogsPage());
   }
 }
+

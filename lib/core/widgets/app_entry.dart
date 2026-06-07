@@ -5,6 +5,7 @@ import '../../features/onboarding/presentation/providers/onboarding_provider.dar
 import '../../features/home/presentation/pages/home_page.dart';
 import '../../features/onboarding/presentation/pages/onboarding_page.dart';
 import '../../features/analytics/presentation/providers/usage_stats_providers.dart';
+import '../version/update_ui.dart';
 
 class AppEntry extends ConsumerWidget {
   const AppEntry({super.key});
@@ -20,7 +21,7 @@ class AppEntry extends ConsumerWidget {
     });
 
     if (hasCompletedOnboarding) {
-      return const HomePage();
+      return const VersionGate(child: HomePage());
     } else {
       return const OnboardingPage();
     }

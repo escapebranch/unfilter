@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:unfilter/l10n/generated/app_localizations.dart';
-import 'version_models.dart';
 import 'version_provider.dart';
 import 'update_service.dart';
 
@@ -13,15 +11,12 @@ class VersionGate extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final updateState = ref.watch(updateStateProvider);
+    final updateInfo = ref.watch(updateInfoProvider);
+    final isDismissed = ref.watch(dismissedUpdateProvider);
 
-    return updateState.when(
-      data: (state) {
-        if (state.status == AppUpdateStatus.forceUpdate) {
-          return ForceUpdateScreen(state: state);
-        }
-
-        if (state.status == AppUpdateStatus.softUpdate) {
+    return updateInfo.when(
+      data: (info) {
+        if (info.availability == InAppUpdateAvailability.available && !isDismissed) {
           return Stack(
             children: [
               child,
@@ -29,13 +24,38 @@ class VersionGate extends ConsumerWidget {
                 bottom: 0,
                 left: 0,
                 right: 0,
-                child: SoftUpdateBanner(state: state),
+                child: FlexibleUpdateBanner(info: info),
               ),
             ],
           );
         }
 
-        return child;
+        // Also check if an update is already downloaded
+        return Consumer(
+          builder: (context, ref, _) {
+            final events = ref.watch(updateEventsProvider);
+            return events.when(
+              data: (state) {
+                if (state.status == InAppUpdateInstallStatus.downloaded) {
+                  return Stack(
+                    children: [
+                      child,
+                      Positioned(
+                        bottom: 0,
+                        left: 0,
+                        right: 0,
+                        child: UpdateDownloadedBanner(),
+                      ),
+                    ],
+                  );
+                }
+                return child;
+              },
+              loading: () => child,
+              error: (e, s) => child,
+            );
+          },
+        );
       },
       loading: () => child,
       error: (e, s) => child,
@@ -43,120 +63,32 @@ class VersionGate extends ConsumerWidget {
   }
 }
 
-class ForceUpdateScreen extends StatelessWidget {
-  final UpdateState state;
+class FlexibleUpdateBanner extends ConsumerWidget {
+  final InAppUpdateInfo info;
 
-  const ForceUpdateScreen({super.key, required this.state});
+  const FlexibleUpdateBanner({super.key, required this.info});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
-    
-    return Scaffold(
-      backgroundColor: Colors.black,
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Icon(
-                Icons.system_security_update_rounded,
-                size: 80,
-                color: Colors.white,
-              ),
-              const SizedBox(height: 32),
-              Text(
-                l10n.criticalUpdateMessage,
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.grey[400],
-                  height: 1.5,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 48),
-              _buildVersionInfo(
-                l10n.currentVersionLabel,
-                state.currentVersion.displayString,
-                Colors.grey,
-              ),
-              const SizedBox(height: 16),
-              _buildVersionInfo(
-                l10n.requiredVersionLabel,
-                state.config?.minSupportedNativeVersion.nativeVersion ??
-                    l10n.commonUnknownLabel,
-                Colors.redAccent,
-              ),
-              const Spacer(),
-              SizedBox(
-                width: double.infinity,
-                height: 56,
-                child: ElevatedButton(
-                  onPressed: () {
-                    if (state.config?.apkUrl != null) {
-                      launchUrl(
-                        Uri.parse(state.config!.apkUrl),
-                        mode: LaunchMode.externalApplication,
-                      );
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    foregroundColor: Colors.black,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                  ),
-                  child: Text(
-                    l10n.downloadUpdateAction,
-                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 24),
-            ],
-          ),
-        ),
-      ),
+    final events = ref.watch(updateEventsProvider);
+
+    return events.when(
+      data: (state) {
+        if (state.status == InAppUpdateInstallStatus.downloading) {
+          return _buildDownloadingBanner(context, state);
+        }
+        if (state.status == InAppUpdateInstallStatus.downloaded) {
+          return const UpdateDownloadedBanner();
+        }
+        return _buildPromptBanner(context, ref, l10n);
+      },
+      loading: () => _buildPromptBanner(context, ref, l10n),
+      error: (e, s) => _buildPromptBanner(context, ref, l10n),
     );
   }
 
-  Widget _buildVersionInfo(String label, String value, Color color) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-      decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.05),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(label, style: const TextStyle(color: Colors.grey)),
-          Text(
-            value,
-            style: TextStyle(
-              color: color,
-              fontWeight: FontWeight.bold,
-              fontFamily: 'monospace',
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class SoftUpdateBanner extends StatelessWidget {
-  final UpdateState state;
-
-  const SoftUpdateBanner({super.key, required this.state});
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
-
+  Widget _buildPromptBanner(BuildContext context, WidgetRef ref, AppLocalizations l10n) {
     return Material(
       color: Colors.transparent,
       child: Container(
@@ -197,6 +129,7 @@ class SoftUpdateBanner extends StatelessWidget {
                 const Spacer(),
                 GestureDetector(
                   onTap: () {
+                    ref.read(dismissedUpdateProvider.notifier).dismiss();
                   },
                   child: const Icon(Icons.close, color: Colors.grey, size: 20),
                 ),
@@ -204,7 +137,7 @@ class SoftUpdateBanner extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             Text(
-              l10n.newNativeVersionAvailable(state.config?.latestNativeVersion.nativeVersion ?? 'Unknown'),
+              l10n.newNativeVersionAvailable(info.availableVersionCode.toString()),
               style: TextStyle(color: Colors.grey[400], fontSize: 13),
             ),
             const SizedBox(height: 16),
@@ -212,12 +145,7 @@ class SoftUpdateBanner extends StatelessWidget {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () {
-                  if (state.config?.apkUrl != null) {
-                    launchUrl(
-                      Uri.parse(state.config!.apkUrl),
-                      mode: LaunchMode.externalApplication,
-                    );
-                  }
+                  ref.read(updateServiceProvider).startFlexibleUpdate();
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blueAccent,
@@ -227,6 +155,135 @@ class SoftUpdateBanner extends StatelessWidget {
                   ),
                 ),
                 child: Text(l10n.updateNowAction),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDownloadingBanner(BuildContext context, InAppUpdateInstallState state) {
+    final progress = state.totalBytesToDownload > 0 
+        ? state.bytesDownloaded / state.totalBytesToDownload 
+        : 0.0;
+    
+    return Material(
+      color: Colors.transparent,
+      child: Container(
+        margin: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: const Color(0xFF1A1A1A),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              children: [
+                const SizedBox(
+                  width: 16,
+                  height: 16,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    valueColor: AlwaysStoppedAnimation(Colors.blueAccent),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                const Text(
+                  'Downloading update...',
+                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                ),
+                const Spacer(),
+                Text(
+                  '${(progress * 100).toInt()}%',
+                  style: const TextStyle(color: Colors.grey, fontSize: 12),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(4),
+              child: LinearProgressIndicator(
+                value: progress,
+                backgroundColor: Colors.white.withValues(alpha: 0.05),
+                valueColor: const AlwaysStoppedAnimation(Colors.blueAccent),
+                minHeight: 4,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class UpdateDownloadedBanner extends ConsumerWidget {
+  const UpdateDownloadedBanner({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Material(
+      color: Colors.transparent,
+      child: Container(
+        margin: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: const Color(0xFF1A1A1A),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: Colors.greenAccent.withValues(alpha: 0.3)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.3),
+              blurRadius: 20,
+              offset: const Offset(0, 10),
+            ),
+          ],
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Row(
+              children: [
+                Icon(
+                  Icons.check_circle_rounded,
+                  color: Colors.greenAccent,
+                  size: 20,
+                ),
+                SizedBox(width: 12),
+                Text(
+                  'Update Ready',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            const Text(
+              'The update has been downloaded. Restart the app to apply it.',
+              style: TextStyle(color: Colors.grey, fontSize: 13),
+            ),
+            const SizedBox(height: 16),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () {
+                  ref.read(updateServiceProvider).completeUpdate();
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.greenAccent,
+                  foregroundColor: Colors.black,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                child: const Text('Restart & Update', style: TextStyle(fontWeight: FontWeight.bold)),
               ),
             ),
           ],

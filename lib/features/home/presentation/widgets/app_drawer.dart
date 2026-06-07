@@ -4,8 +4,8 @@ import 'package:unfilter/l10n/generated/app_localizations.dart';
 import 'report_issue_modal.dart';
 
 import '../../../../core/navigation/navigation.dart';
-import '../../../update/presentation/providers/update_provider.dart';
-import '../../../update/domain/update_service.dart';
+import '../../../../core/version/version_provider.dart';
+import '../../../../core/version/update_service.dart';
 import 'drawer/drawer_header.dart';
 import 'drawer/drawer_section_header.dart';
 import 'drawer/drawer_nav_tile.dart';
@@ -181,15 +181,14 @@ class AppDrawer extends ConsumerWidget {
   }
 
   Widget _buildAboutTile(BuildContext context, WidgetRef ref, AppLocalizations l10n) {
-    final versionAsync = ref.watch(currentVersionProvider);
-    final updateAsync = ref.watch(updateCheckProvider);
+    final updateInfo = ref.watch(updateInfoProvider);
     final isUpdateAvailable =
-        updateAsync.asData?.value.status == UpdateStatus.softUpdate;
+        updateInfo.asData?.value.availability == InAppUpdateAvailability.available;
 
     return DrawerNavTile(
       title: l10n.drawerAbout,
-      subtitle: versionAsync.when(
-        data: (v) => 'v${v.toString()}${isUpdateAvailable ? l10n.updateAvailableBadge : ''}',
+      subtitle: updateInfo.when(
+        data: (info) => 'v${info.availableVersionCode}${isUpdateAvailable ? l10n.updateAvailableBadge : ''}',
         loading: () => l10n.checkingVersion,
         error: (_, _) => l10n.versionUnknown,
       ),

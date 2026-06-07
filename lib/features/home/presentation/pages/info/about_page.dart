@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../../core/navigation/navigation.dart';
-import '../../../../update/presentation/providers/update_provider.dart';
+import '../../../../../core/version/version_provider.dart';
 import '../../widgets/external_link_tile.dart';
 import '../../widgets/github_cta_card.dart';
 import '../../widgets/premium_app_bar.dart';
@@ -28,7 +28,7 @@ class _AboutPageState extends ConsumerState<AboutPage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-    final versionAsync = ref.watch(currentVersionProvider);
+    final updateInfo = ref.watch(updateInfoProvider);
 
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
@@ -52,7 +52,7 @@ class _AboutPageState extends ConsumerState<AboutPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _HeroSection(isDark: isDark, versionAsync: versionAsync),
+                      _HeroSection(isDark: isDark, updateInfo: updateInfo),
                       const SizedBox(height: 32),
                       _buildDescription(theme),
                       const SizedBox(height: 32),
@@ -110,9 +110,9 @@ class _AboutPageState extends ConsumerState<AboutPage> {
 
 class _HeroSection extends StatelessWidget {
   final bool isDark;
-  final AsyncValue<dynamic> versionAsync;
+  final AsyncValue<dynamic> updateInfo;
 
-  const _HeroSection({required this.isDark, required this.versionAsync});
+  const _HeroSection({required this.isDark, required this.updateInfo});
 
   @override
   Widget build(BuildContext context) {
@@ -194,9 +194,9 @@ class _HeroSection extends StatelessWidget {
             color: theme.colorScheme.primary.withValues(alpha: 0.7),
           ),
           const SizedBox(width: 6),
-          versionAsync.when(
-            data: (v) => Text(
-              'v$v • Stable',
+          updateInfo.when(
+            data: (info) => Text(
+              'v${info.availableVersionCode} • Stable',
               style: theme.textTheme.labelSmall?.copyWith(
                 fontWeight: FontWeight.w600,
                 fontSize: 11,
