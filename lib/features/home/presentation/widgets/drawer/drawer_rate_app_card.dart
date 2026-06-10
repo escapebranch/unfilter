@@ -11,6 +11,8 @@ class DrawerRateAppCard extends ConsumerWidget {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context);
     final isDark = theme.brightness == Brightness.dark;
+    final reviewService = ref.watch(reviewServiceProvider);
+    final hasRated = reviewService.hasRatedManually;
 
     return Container(
       decoration: BoxDecoration(
@@ -32,9 +34,11 @@ class DrawerRateAppCard extends ConsumerWidget {
         color: Colors.transparent,
         borderRadius: BorderRadius.circular(16),
         child: InkWell(
-          onTap: () {
-            ref.read(reviewServiceProvider).launchReview();
-          },
+          onTap: hasRated
+              ? null
+              : () {
+                  ref.read(reviewServiceProvider).launchReview();
+                },
           borderRadius: BorderRadius.circular(16),
           highlightColor: theme.colorScheme.primary.withValues(alpha: 0.05),
           splashColor: theme.colorScheme.primary.withValues(alpha: 0.1),
@@ -45,22 +49,25 @@ class DrawerRateAppCard extends ConsumerWidget {
                 Container(
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      colors: [Color(0xFFFFD700), Color(0xFFFFA000)],
+                    gradient: LinearGradient(
+                      colors: hasRated
+                          ? [const Color(0xFF4CAF50), const Color(0xFF388E3C)]
+                          : [const Color(0xFFFFD700), const Color(0xFFFFA000)],
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                     ),
                     borderRadius: BorderRadius.circular(12),
                     boxShadow: [
                       BoxShadow(
-                        color: const Color(0xFFFFA000).withValues(alpha: 0.4),
+                        color: (hasRated ? const Color(0xFF388E3C) : const Color(0xFFFFA000))
+                            .withValues(alpha: 0.4),
                         blurRadius: 8.0,
                         offset: const Offset(0, 3.0),
                       ),
                     ],
                   ),
-                  child: const Icon(
-                    Icons.star_rounded,
+                  child: Icon(
+                    hasRated ? Icons.check_rounded : Icons.star_rounded,
                     color: Colors.white,
                     size: 20,
                   ),
@@ -72,14 +79,14 @@ class DrawerRateAppCard extends ConsumerWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        l10n.rateApp,
+                        hasRated ? 'Thanks for the love! 😁' : l10n.rateApp,
                         style: theme.textTheme.titleSmall?.copyWith(
                           fontWeight: FontWeight.w700,
                         ),
                       ),
                       const SizedBox(height: 2),
                       Text(
-                        'Love the app? Let us know!',
+                        hasRated ? 'We appreciate your support.' : 'Love the app? Let us know!',
                         style: theme.textTheme.bodySmall?.copyWith(
                           color: theme.colorScheme.onSurfaceVariant,
                         ),
@@ -87,11 +94,12 @@ class DrawerRateAppCard extends ConsumerWidget {
                     ],
                   ),
                 ),
-                Icon(
-                  Icons.chevron_right_rounded,
-                  size: 20,
-                  color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
-                ),
+                if (!hasRated)
+                  Icon(
+                    Icons.chevron_right_rounded,
+                    size: 20,
+                    color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
+                  ),
               ],
             ),
           ),

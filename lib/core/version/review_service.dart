@@ -22,14 +22,20 @@ class ReviewService {
   static const String _keyAutomatedPromptCount = 'automated_review_prompt_count';
   static const String _keyAppEntryCount = 'app_entry_count';
   static const String _keyReviewTriggerDisabled = 'review_trigger_disabled';
+  static const String _keyHasRatedManually = 'has_rated_manually';
 
   ReviewService(this._prefs);
+
+  /// Whether the user has already engaged with the manual rating option.
+  bool get hasRatedManually => _prefs.getBool(_keyHasRatedManually) ?? false;
 
   /// Launches the in-app review flow manually.
   /// 
   /// This is used when the user explicitly clicks the "Rate App" button.
   /// It bypasses all automated trigger rules.
   Future<void> launchReview() async {
+    await _prefs.setBool(_keyHasRatedManually, true);
+    await _prefs.setBool(_keyReviewTriggerDisabled, true);
     await _invokeNativeReview();
   }
 
