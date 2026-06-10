@@ -12,6 +12,7 @@ enum ReviewTriggerScenario {
 
 class ReviewService {
   final SharedPreferences _prefs;
+  bool _hasCheckedEntryThisSession = false;
 
   static const MethodChannel _channel = MethodChannel(
     'com.escapebranch.unfilter/review',
@@ -52,6 +53,9 @@ class ReviewService {
 
     switch (scenario) {
       case ReviewTriggerScenario.appEntry:
+        if (_hasCheckedEntryThisSession) return;
+        _hasCheckedEntryThisSession = true;
+
         final entryCount = _prefs.getInt(_keyAppEntryCount) ?? 0;
         final newEntryCount = entryCount + 1;
         await _prefs.setInt(_keyAppEntryCount, newEntryCount);
