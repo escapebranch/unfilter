@@ -47,6 +47,7 @@ private val REVIEW_CHANNEL = "com.escapebranch.unfilter/review"
     private lateinit var storageAnalyzer: StorageAnalyzer
     private lateinit var batteryAnalyzer: BatteryAnalyzer
     private lateinit var updateManager: UpdateManager
+    private lateinit var reviewManager: com.google.android.play.core.review.ReviewManager
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
@@ -59,6 +60,7 @@ private val REVIEW_CHANNEL = "com.escapebranch.unfilter/review"
         storageAnalyzer = StorageAnalyzer(this)
         batteryAnalyzer = BatteryAnalyzer(this)
         updateManager = UpdateManager(this)
+        reviewManager = ReviewManagerFactory.create(this)
         
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler { call, result ->
             when (call.method) {
@@ -478,22 +480,17 @@ private val REVIEW_CHANNEL = "com.escapebranch.unfilter/review"
 
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, REVIEW_CHANNEL).setMethodCallHandler { call, result ->
             if (call.method == "launchReview") {
-                val manager = ReviewManagerFactory.create(this)
-                val request = manager.requestReviewFlow()
+                val request = reviewManager.requestReviewFlow()
                 request.addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         val reviewInfo = task.result
-                        val flow = manager.launchReviewFlow(this, reviewInfo)
+                        val flow = reviewManager.launchReviewFlow(this@MainActivity, reviewInfo)
                         flow.addOnCompleteListener { _ ->
-                            // The flow has finished. The API does not indicate whether the user
-                            // reviewed or not, or even whether the review dialog was shown.
                             result.success(null)
                         }
                     } else {
-                        // There was some problem, log or handle the error code.
-                        Log.e(TAG, "Review flow request failed", task.exception)
-                        // Even if it fails, we shouldn't inform the user, but we return success or error?
-                        // Usually, just return success so the app continues.
+                        val exception = task.exception
+                        Log.e(TAG, "Review flow request failed: ${exception?.message}", exception)
                         result.success(null)
                     }
                 }

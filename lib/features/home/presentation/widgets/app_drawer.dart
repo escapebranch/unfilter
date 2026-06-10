@@ -11,6 +11,7 @@ import 'drawer/drawer_section_header.dart';
 import 'drawer/drawer_nav_tile.dart';
 import 'drawer/drawer_theme_switcher.dart';
 import 'drawer/drawer_open_source_card.dart';
+import 'drawer/drawer_rate_app_card.dart';
 import 'drawer/drawer_sponsor_card.dart';
 import 'drawer/drawer_contributors_card.dart';
 import 'choose_language_button.dart';
@@ -67,6 +68,8 @@ class AppDrawer extends ConsumerWidget {
                     _buildInformationSection(context, ref, l10n),
                     const SizedBox(height: 32),
                     DrawerSectionHeader(title: l10n.drawerCommunity),
+                    const SizedBox(height: 12),
+                    const DrawerRateAppCard(),
                     const SizedBox(height: 12),
                     const DrawerOpenSourceCard(),
                     const SizedBox(height: 12),
@@ -167,84 +170,9 @@ class AppDrawer extends ConsumerWidget {
         ),
         _buildUpdateCheckTile(context, ref),
         _buildAboutTile(context, ref, l10n),
-        const SizedBox(height: 12),
-        _buildActionButtons(context, ref, l10n),
+        const SizedBox(height: 8),
+        _buildReportIssueButton(context, l10n),
       ],
-    );
-  }
-
-  Widget _buildActionButtons(
-    BuildContext context,
-    WidgetRef ref,
-    AppLocalizations l10n,
-  ) {
-    return Row(
-      children: [
-        Expanded(
-          child: _buildRateAppButton(context, ref, l10n),
-        ),
-        const SizedBox(width: 8),
-        Expanded(
-          child: _buildReportIssueButton(context, l10n),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildRateAppButton(
-    BuildContext context,
-    WidgetRef ref,
-    AppLocalizations l10n,
-  ) {
-    final theme = Theme.of(context);
-
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: () {
-          ref.read(reviewServiceProvider).launchReview();
-        },
-        borderRadius: BorderRadius.circular(16),
-        overlayColor: WidgetStateProperty.all(
-          theme.colorScheme.primary.withValues(alpha: 0.05),
-        ),
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-          decoration: BoxDecoration(
-            color: theme.colorScheme.surfaceContainerHighest.withValues(
-              alpha: 0.3,
-            ),
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(
-              color: theme.colorScheme.outlineVariant.withValues(alpha: 0.3),
-              width: 1,
-            ),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                Icons.star_outline_rounded,
-                size: 18,
-                color: theme.colorScheme.onSurfaceVariant,
-              ),
-              const SizedBox(width: 8),
-              Flexible(
-                child: Text(
-                  l10n.rateApp,
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 13,
-                    color: theme.colorScheme.onSurfaceVariant,
-                  ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
     );
   }
 
@@ -302,7 +230,7 @@ class AppDrawer extends ConsumerWidget {
             ),
           ),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
             children: [
               Icon(
                 Icons.bug_report_outlined,
@@ -310,22 +238,18 @@ class AppDrawer extends ConsumerWidget {
                 color: theme.colorScheme.onSurfaceVariant,
               ),
               const SizedBox(width: 8),
-              Flexible(
-                child: Text(
-                  l10n.reportIssue,
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 13,
-                    color: theme.colorScheme.onSurfaceVariant,
-                  ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
+              Text(
+                l10n.reportIssue,
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 13,
+                  color: theme.colorScheme.onSurfaceVariant,
                 ),
               ),
-              const SizedBox(width: 4),
+              const SizedBox(width: 6),
               Icon(
                 Icons.open_in_new_rounded,
-                size: 12,
+                size: 14,
                 color: theme.colorScheme.onSurfaceVariant.withValues(
                   alpha: 0.5,
                 ),
