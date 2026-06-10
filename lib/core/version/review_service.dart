@@ -22,20 +22,18 @@ class ReviewService {
   static const String _keyAutomatedPromptCount = 'automated_review_prompt_count';
   static const String _keyAppEntryCount = 'app_entry_count';
   static const String _keyReviewTriggerDisabled = 'review_trigger_disabled';
-  static const String _keyHasRatedManually = 'has_rated_manually';
+  static const String _keyHasCompletedReview = 'has_completed_review';
 
   ReviewService(this._prefs);
 
-  /// Whether the user has already engaged with the manual rating option.
-  bool get hasRatedManually => _prefs.getBool(_keyHasRatedManually) ?? false;
+  /// Whether the user has already completed a review flow (manual or automated).
+  bool get hasCompletedReview => _prefs.getBool(_keyHasCompletedReview) ?? false;
 
   /// Launches the in-app review flow manually.
   /// 
   /// This is used when the user explicitly clicks the "Rate App" button.
   /// It bypasses all automated trigger rules.
   Future<void> launchReview() async {
-    await _prefs.setBool(_keyHasRatedManually, true);
-    await _prefs.setBool(_keyReviewTriggerDisabled, true);
     await _invokeNativeReview();
   }
 
@@ -44,7 +42,7 @@ class ReviewService {
   /// Following the "3-strikes" rule: if the automated prompt has been shown 3 times,
   /// it will never be shown automatically again.
   Future<void> requestReviewTrigger(ReviewTriggerScenario scenario) async {
-    if (_prefs.getBool(_keyReviewTriggerDisabled) ?? false) {
+    if (_prefs.getBool(_keyReviewTriggerDisabled) ?? false || hasCompletedReview) {
       return;
     }
 
@@ -90,6 +88,10 @@ class ReviewService {
   Future<void> _invokeNativeReview() async {
     try {
       await _channel.invokeMethod('launchReview');
+      // If we reach here, the flow has finished (or quota was hit).
+      // We mark it as completed to show the "Thanks" state and stop further prompts.
+      await _prefs.setBool(_keyHasCompletedReview, true);
+      await _prefs.setBool(_keyReviewTriggerDisabled, true);
     } on PlatformException catch (e) {
       debugPrint('[ReviewService] Error launching review flow: ${e.message}');
     } catch (e) {

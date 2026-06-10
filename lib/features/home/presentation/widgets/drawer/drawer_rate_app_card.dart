@@ -12,7 +12,7 @@ class DrawerRateAppCard extends ConsumerWidget {
     final l10n = AppLocalizations.of(context);
     final isDark = theme.brightness == Brightness.dark;
     final reviewService = ref.watch(reviewServiceProvider);
-    final hasRated = reviewService.hasRatedManually;
+    final hasRated = reviewService.hasCompletedReview;
 
     return Container(
       decoration: BoxDecoration(
