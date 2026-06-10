@@ -6,6 +6,8 @@ import '../../features/home/presentation/pages/home_page.dart';
 import '../../features/onboarding/presentation/pages/onboarding_page.dart';
 import '../../features/analytics/presentation/providers/usage_stats_providers.dart';
 import '../version/update_ui.dart';
+import '../version/version_provider.dart';
+import '../version/review_service.dart';
 
 class AppEntry extends ConsumerWidget {
   const AppEntry({super.key});
@@ -18,6 +20,7 @@ class AppEntry extends ConsumerWidget {
       FlutterNativeSplash.remove();
 
       _initializeUsageTracking(ref);
+      _checkReviewTrigger(ref);
     });
 
     if (hasCompletedOnboarding) {
@@ -25,6 +28,10 @@ class AppEntry extends ConsumerWidget {
     } else {
       return const OnboardingPage();
     }
+  }
+
+  void _checkReviewTrigger(WidgetRef ref) {
+    ref.read(reviewServiceProvider).requestReviewTrigger(ReviewTriggerScenario.appEntry);
   }
 
   void _initializeUsageTracking(WidgetRef ref) async {
