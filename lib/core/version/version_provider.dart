@@ -1,8 +1,14 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'update_service.dart';
+import 'review_service.dart';
 
 final updateServiceProvider = Provider<UpdateService>((ref) {
   return UpdateService();
+});
+
+final reviewServiceProvider = Provider<ReviewService>((ref) {
+  final prefs = ref.watch(sharedPreferencesProvider);
+  return ReviewService(prefs);
 });
 
 final updateInfoProvider = FutureProvider<InAppUpdateInfo>((ref) async {

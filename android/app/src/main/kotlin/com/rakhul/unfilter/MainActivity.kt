@@ -5,6 +5,7 @@ import android.os.Handler
 import android.os.Looper
 import android.provider.Settings
 import android.util.Log
+import com.google.android.play.core.review.ReviewManagerFactory
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.EventChannel
@@ -18,6 +19,7 @@ private val CHANNEL = "com.escapebranch.unfilter/apps"
 private val EVENT_CHANNEL = "com.escapebranch.unfilter/scan_progress"
 private val UPDATE_CHANNEL = "com.escapebranch.unfilter/update"
 private val UPDATE_EVENT_CHANNEL = "com.escapebranch.unfilter/update_events"
+private val REVIEW_CHANNEL = "com.escapebranch.unfilter/review"
     
     companion object {
         private const val TAG = "MainActivity"
@@ -471,6 +473,32 @@ private val UPDATE_EVENT_CHANNEL = "com.escapebranch.unfilter/update_events"
                 }
                 "completeUpdate" -> updateManager.completeUpdate(result)
                 else -> result.notImplemented()
+            }
+        }
+
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, REVIEW_CHANNEL).setMethodCallHandler { call, result ->
+            if (call.method == "launchReview") {
+                val manager = ReviewManagerFactory.create(this)
+                val request = manager.requestReviewFlow()
+                request.addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        val reviewInfo = task.result
+                        val flow = manager.launchReviewFlow(this, reviewInfo)
+                        flow.addOnCompleteListener { _ ->
+                            // The flow has finished. The API does not indicate whether the user
+                            // reviewed or not, or even whether the review dialog was shown.
+                            result.success(null)
+                        }
+                    } else {
+                        // There was some problem, log or handle the error code.
+                        Log.e(TAG, "Review flow request failed", task.exception)
+                        // Even if it fails, we shouldn't inform the user, but we return success or error?
+                        // Usually, just return success so the app continues.
+                        result.success(null)
+                    }
+                }
+            } else {
+                result.notImplemented()
             }
         }
 
