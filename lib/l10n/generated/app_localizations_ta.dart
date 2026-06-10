@@ -664,6 +664,9 @@ class AppLocalizationsTa extends AppLocalizations {
   String get reportIssue => 'பிழையை தெரிவி';
 
   @override
+  String get rateApp => 'மதிப்பிடு';
+
+  @override
   String get reportBug => 'பிழையைத் தெரிவி';
 
   @override

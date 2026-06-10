@@ -1268,6 +1268,12 @@ abstract class AppLocalizations {
   /// **'Report Issue'**
   String get reportIssue;
 
+  /// No description provided for @rateApp.
+  ///
+  /// In en, this message translates to:
+  /// **'Rate App'**
+  String get rateApp;
+
   /// No description provided for @reportBug.
   ///
   /// In en, this message translates to:

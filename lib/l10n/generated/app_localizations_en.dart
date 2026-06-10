@@ -657,6 +657,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get reportIssue => 'Report Issue';
 
   @override
+  String get rateApp => 'Rate App';
+
+  @override
   String get reportBug => 'Report a Bug';
 
   @override
