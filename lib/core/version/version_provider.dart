@@ -1,7 +1,12 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import '../providers/shared_preferences_provider.dart';
 import 'update_service.dart';
 import 'review_service.dart';
+
+final packageInfoProvider = FutureProvider<PackageInfo>((ref) async {
+  return PackageInfo.fromPlatform();
+});
 
 final updateServiceProvider = Provider<UpdateService>((ref) {
   return UpdateService();

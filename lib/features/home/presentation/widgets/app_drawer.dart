@@ -69,9 +69,9 @@ class AppDrawer extends ConsumerWidget {
                     const SizedBox(height: 32),
                     DrawerSectionHeader(title: l10n.drawerCommunity),
                     const SizedBox(height: 12),
-                    const DrawerRateAppCard(),
-                    const SizedBox(height: 12),
                     const DrawerOpenSourceCard(),
+                    const SizedBox(height: 12),
+                    const DrawerRateAppCard(),
                     const SizedBox(height: 12),
                     DrawerSponsorCard(
                       onViewSponsors: () {
@@ -185,16 +185,28 @@ class AppDrawer extends ConsumerWidget {
 
   Widget _buildAboutTile(BuildContext context, WidgetRef ref, AppLocalizations l10n) {
     final updateInfo = ref.watch(updateInfoProvider);
+    final packageInfo = ref.watch(packageInfoProvider);
+    
     final isUpdateAvailable =
         updateInfo.asData?.value.availability == InAppUpdateAvailability.available;
 
+    final String versionText = packageInfo.when(
+      data: (info) => 'v${info.version}',
+      loading: () => '...',
+      error: (_, _) => l10n.versionUnknown,
+    );
+
+    final String subtitle = updateInfo.when(
+      data: (info) => isUpdateAvailable 
+          ? '$versionText${l10n.updateAvailableBadge}'
+          : versionText,
+      loading: () => versionText,
+      error: (_, _) => versionText,
+    );
+
     return DrawerNavTile(
       title: l10n.drawerAbout,
-      subtitle: updateInfo.when(
-        data: (info) => 'v${info.availableVersionCode}${isUpdateAvailable ? l10n.updateAvailableBadge : ''}',
-        loading: () => l10n.checkingVersion,
-        error: (_, _) => l10n.versionUnknown,
-      ),
+      subtitle: subtitle,
       icon: Icons.info_outline,
       onTap: () {
         Navigator.pop(context);

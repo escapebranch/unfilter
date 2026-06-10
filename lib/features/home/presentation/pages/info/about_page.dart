@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../../core/navigation/navigation.dart';
+import '../../../../../core/version/update_service.dart';
 import '../../../../../core/version/version_provider.dart';
 import '../../widgets/external_link_tile.dart';
 import '../../widgets/github_cta_card.dart';
@@ -29,6 +30,7 @@ class _AboutPageState extends ConsumerState<AboutPage> {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
     final updateInfo = ref.watch(updateInfoProvider);
+    final packageInfo = ref.watch(packageInfoProvider);
 
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
@@ -52,7 +54,11 @@ class _AboutPageState extends ConsumerState<AboutPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _HeroSection(isDark: isDark, updateInfo: updateInfo),
+                      _HeroSection(
+                        isDark: isDark, 
+                        updateInfo: updateInfo,
+                        packageInfo: packageInfo,
+                      ),
                       const SizedBox(height: 32),
                       _buildDescription(theme),
                       const SizedBox(height: 32),
@@ -111,8 +117,13 @@ class _AboutPageState extends ConsumerState<AboutPage> {
 class _HeroSection extends StatelessWidget {
   final bool isDark;
   final AsyncValue<dynamic> updateInfo;
+  final AsyncValue<dynamic> packageInfo;
 
-  const _HeroSection({required this.isDark, required this.updateInfo});
+  const _HeroSection({
+    required this.isDark, 
+    required this.updateInfo,
+    required this.packageInfo,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -194,26 +205,46 @@ class _HeroSection extends StatelessWidget {
             color: theme.colorScheme.primary.withValues(alpha: 0.7),
           ),
           const SizedBox(width: 6),
-          updateInfo.when(
-            data: (info) => Text(
-              'v${info.availableVersionCode} • Stable',
-              style: theme.textTheme.labelSmall?.copyWith(
-                fontWeight: FontWeight.w600,
-                fontSize: 11,
-                color: theme.colorScheme.onSurfaceVariant,
-              ),
-            ),
-            loading: () => SizedBox(
-              width: 10,
-              height: 10,
-              child: CircularProgressIndicator(
-                strokeWidth: 1.5,
-                color: theme.colorScheme.onSurfaceVariant,
-              ),
-            ),
-            error: (_, _) => Text('v?.?.?', style: theme.textTheme.labelSmall),
-          ),
+          _buildVersionText(theme),
         ],
+      ),
+    );
+  }
+
+  Widget _buildVersionText(ThemeData theme) {
+    final String localVersion = packageInfo.when(
+      data: (info) => 'v${info.version}',
+      loading: () => '...',
+      error: (_, _) => 'v?.?.?',
+    );
+
+    return updateInfo.when(
+      data: (info) {
+        final isUpdateAvailable = info.availability == InAppUpdateAvailability.available;
+        return Text(
+          '$localVersion${isUpdateAvailable ? ' • Update' : ' • Stable'}',
+          style: theme.textTheme.labelSmall?.copyWith(
+            fontWeight: FontWeight.w600,
+            fontSize: 11,
+            color: theme.colorScheme.onSurfaceVariant,
+          ),
+        );
+      },
+      loading: () => Text(
+        localVersion,
+        style: theme.textTheme.labelSmall?.copyWith(
+          fontWeight: FontWeight.w600,
+          fontSize: 11,
+          color: theme.colorScheme.onSurfaceVariant,
+        ),
+      ),
+      error: (_, _) => Text(
+        localVersion,
+        style: theme.textTheme.labelSmall?.copyWith(
+          fontWeight: FontWeight.w600,
+          fontSize: 11,
+          color: theme.colorScheme.onSurfaceVariant,
+        ),
       ),
     );
   }
