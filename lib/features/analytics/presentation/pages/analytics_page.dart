@@ -14,6 +14,8 @@ import '../providers/usage_stats_providers.dart';
  
 import 'package:unfilter/l10n/generated/app_localizations.dart';
 
+import '../../../../core/version/review_service.dart';
+import '../../../../core/version/version_provider.dart';
 import '../../../home/presentation/widgets/premium_app_bar.dart';
 import '../../../../core/widgets/top_shadow_gradient.dart';
 import '../../../home/presentation/widgets/usage_stats_share_poster.dart';
@@ -694,6 +696,11 @@ class _AnalyticsPageState extends ConsumerState<AnalyticsPage>
           text: l10n.shareAnalyticsViralText,
         ),
       );
+
+      // Trigger review prompt logic
+      ref.read(reviewServiceProvider).requestReviewTrigger(
+            ReviewTriggerScenario.shareUsageStatistics,
+          );
     } catch (e) {
       debugPrint('Share error: $e');
       if (mounted) {

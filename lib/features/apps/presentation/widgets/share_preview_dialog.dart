@@ -3,17 +3,20 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
 import 'package:unfilter/l10n/generated/app_localizations.dart';
 
+import '../../../../core/version/review_service.dart';
+import '../../../../core/version/version_provider.dart';
 import '../../domain/entities/device_app.dart';
 import 'customizable_share_poster.dart';
 import 'share_options_config.dart';
 import 'share_config_notifier.dart';
 
-class SharePreviewDialog extends StatefulWidget {
+class SharePreviewDialog extends ConsumerStatefulWidget {
   final DeviceApp app;
 
   const SharePreviewDialog({super.key, required this.app});
@@ -32,10 +35,10 @@ class SharePreviewDialog extends StatefulWidget {
   }
 
   @override
-  State<SharePreviewDialog> createState() => _SharePreviewDialogState();
+  ConsumerState<SharePreviewDialog> createState() => _SharePreviewDialogState();
 }
 
-class _SharePreviewDialogState extends State<SharePreviewDialog>
+class _SharePreviewDialogState extends ConsumerState<SharePreviewDialog>
     with SingleTickerProviderStateMixin {
   final GlobalKey _posterKey = GlobalKey();
   late final ShareConfigNotifier _configNotifier;
@@ -123,6 +126,11 @@ class _SharePreviewDialogState extends State<SharePreviewDialog>
           text: _buildShareText(_configNotifier.value, l10n),
         ),
       );
+
+      // Trigger review prompt logic
+      ref.read(reviewServiceProvider).requestReviewTrigger(
+            ReviewTriggerScenario.shareAppDetails,
+          );
     } catch (e) {
       debugPrint("Share error: $e");
       if (mounted) {

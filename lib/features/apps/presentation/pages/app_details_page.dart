@@ -11,6 +11,8 @@ import '../providers/app_detail_provider.dart';
 import '../providers/apps_provider.dart';
 import '../widgets/app_details/app_details_widgets.dart';
 import '../widgets/share_preview_dialog.dart';
+import '../../../../core/version/review_service.dart';
+import '../../../../core/version/version_provider.dart';
 
 class AppDetailsPage extends ConsumerStatefulWidget {
   final DeviceApp app;
@@ -103,6 +105,11 @@ class _AppDetailsPageState extends ConsumerState<AppDetailsPage> {
             isSuccess: true,
           );
         }
+
+        // Trigger review prompt logic (Smart Revalidate)
+        ref.read(reviewServiceProvider).requestReviewTrigger(
+              ReviewTriggerScenario.smartRevalidate,
+            );
       }
     } catch (e) {
       debugPrint('Resync error: $e');
