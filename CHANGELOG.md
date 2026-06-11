@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.4.0+15] - 2026-06-11
+
+### Added
+
+- **Play Core In-App Updates**: Integrated Google Play Core In-App Updates with flexible and immediate update flows, new update banners, and refactored UpdateService.
+- **Play In-App Review**: Added native Play In-App Review integration with sophisticated automated triggers and manual review access via AppDrawer.
+- **Rate App Experience**: Implemented community-focused Rate App card with 'Thanks' state feedback after user interaction.
+- **Localization**: Added Rate App strings for English and Tamil.
+
+### Fixed
+
+- **Version Resolution**: Fixed local version detection for GitHub builds.
+- **Review Trigger**: Prevented double-trigger of app entry review prompt.
+- **Missing Import**: Added missing import for sharedPreferencesProvider in review service.
+
 ## [1.3.0+14] - 2026-06-06
 
 ### Added
