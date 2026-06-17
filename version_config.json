@@ -1,5 +1,5 @@
 {
-  "latest_native_version": "1.4.0+15",
+  "latest_native_version": "1.4.1+16",
   "min_supported_native_version": "1.0.0+1",
   "release_page_url": "https://github.com/r4khul/unfilter/releases",
   "apk_direct_download_url": "https://github.com/r4khul/unfilter/releases/latest/download/UnFilter_universal.apk",
@@ -9,17 +9,15 @@
     "x86_64": "https://github.com/r4khul/unfilter/releases/latest/download/UnFilter_x86_64.apk"
   },
   "use_per_abi": true,
-  "release_notes": "v1.4.0+15: Added Google Play Core In-App Updates, Play In-App Review integration with automated triggers, and enhanced Rate App experience.",
+  "release_notes": "v1.4.1+16: Fixed in-app review system bugs, improved Rate App to deep-link Play Store, and improved usage stats custom date range display.",
   "force_update": false,
   "features": [
-    "Integrated Google Play Core In-App Updates with flexible and immediate update flows.",
-    "Added native Play In-App Review integration with sophisticated automated triggers.",
-    "Implemented community-focused Rate App card with Thanks state feedback.",
-    "Added Rate App option to AppDrawer for easy manual access."
+    "Rate App now deep-links directly to the Play Store review page.",
+    "Usage statistics custom date range now displays the actual start and end dates instead of a duration."
   ],
   "fixes": [
-    "Fixed local version detection for GitHub builds.",
-    "Prevented double-trigger of app entry review prompt.",
-    "Added missing import for sharedPreferencesProvider in review service."
+    "Fixed in-app review falsely marking users as having reviewed the app.",
+    "Fixed operator precedence bug in review trigger guard condition.",
+    "Removed false Thank You state from Rate App card that appeared without user rating."
   ]
 }

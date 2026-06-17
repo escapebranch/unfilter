@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.4.1+16] - 2026-06-17
+
+### Added
+
+- **Rate App Deep Link**: Rate App button now directly opens the Play Store review page via `market://` intent, bypassing the in-app review API entirely.
+- **Custom Date Range Label**: Usage statistics now shows the actual date range (e.g. "Jun 1 – Jun 15, 2025") instead of a computed duration when a custom range is selected.
+
+### Fixed
+
+- **In-App Review False Positive**: Fixed bug where the review system incorrectly marked the user as having reviewed the app immediately after showing the review dialog, causing the menu to show "Thank you" even though no review was submitted.
+- **Review Trigger Operator Precedence**: Fixed a subtle Dart operator precedence bug in the review guard condition (`?? false || hasCompletedReview`) that caused the condition to short-circuit incorrectly.
+- **Removed False Thank You State**: Removed `hasCompletedReview` tracking from automated review flows since the native Play Review API provides no feedback on whether the user actually submitted a review.
+
 ## [1.4.0+15] - 2026-06-11
 
 ### Added
