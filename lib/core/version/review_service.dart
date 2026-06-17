@@ -23,29 +23,15 @@ class ReviewService {
       'automated_review_prompt_count';
   static const String _keyAppEntryCount = 'app_entry_count';
   static const String _keyReviewTriggerDisabled = 'review_trigger_disabled';
-  static const String _keyHasCompletedReview = 'has_completed_review';
 
   ReviewService(this._prefs);
-
-  /// Whether the user has already completed a review flow (manual or automated).
-  bool get hasCompletedReview =>
-      _prefs.getBool(_keyHasCompletedReview) ?? false;
-
-  /// Launches the in-app review flow manually.
-  ///
-  /// This is used when the user explicitly clicks the "Rate App" button.
-  /// It bypasses all automated trigger rules.
-  Future<void> launchReview() async {
-    await _invokeNativeReview();
-  }
 
   /// Checks if an automated review prompt should be triggered based on the scenario.
   ///
   /// Following the "3-strikes" rule: if the automated prompt has been shown 3 times,
   /// it will never be shown automatically again.
   Future<void> requestReviewTrigger(ReviewTriggerScenario scenario) async {
-    if (_prefs.getBool(_keyReviewTriggerDisabled) ??
-        false || hasCompletedReview) {
+    if (_prefs.getBool(_keyReviewTriggerDisabled) ?? false) {
       return;
     }
 

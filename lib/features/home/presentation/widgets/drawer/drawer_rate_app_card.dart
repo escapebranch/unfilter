@@ -1,22 +1,38 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:unfilter/l10n/generated/app_localizations.dart';
-import '../../../../../core/version/version_provider.dart';
 
-class DrawerRateAppCard extends ConsumerWidget {
+class DrawerRateAppCard extends StatelessWidget {
   const DrawerRateAppCard({super.key});
 
+  static const String _packageId = 'com.escapebranch.unfilter';
+
+  Future<void> _openPlayStoreReview() async {
+    final marketUri = Uri.parse('market://details?id=$_packageId');
+    final webUri = Uri.parse(
+      'https://play.google.com/store/apps/details?id=$_packageId',
+    );
+    try {
+      await launchUrl(
+        marketUri,
+        mode: LaunchMode.externalNonBrowserApplication,
+      );
+    } catch (_) {
+      await launchUrl(webUri, mode: LaunchMode.externalApplication);
+    }
+  }
+
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context);
     final isDark = theme.brightness == Brightness.dark;
-    final reviewService = ref.watch(reviewServiceProvider);
-    final hasRated = reviewService.hasCompletedReview;
 
     return Container(
       decoration: BoxDecoration(
-        color: isDark ? theme.colorScheme.surface : theme.colorScheme.surfaceContainerLowest,
+        color: isDark
+            ? theme.colorScheme.surface
+            : theme.colorScheme.surfaceContainerLowest,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: theme.colorScheme.outlineVariant.withValues(alpha: 0.3),
@@ -34,11 +50,7 @@ class DrawerRateAppCard extends ConsumerWidget {
         color: Colors.transparent,
         borderRadius: BorderRadius.circular(16),
         child: InkWell(
-          onTap: hasRated
-              ? null
-              : () {
-                  ref.read(reviewServiceProvider).launchReview();
-                },
+          onTap: _openPlayStoreReview,
           borderRadius: BorderRadius.circular(16),
           highlightColor: theme.colorScheme.primary.withValues(alpha: 0.05),
           splashColor: theme.colorScheme.primary.withValues(alpha: 0.1),
@@ -49,25 +61,22 @@ class DrawerRateAppCard extends ConsumerWidget {
                 Container(
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: hasRated
-                          ? [const Color(0xFF4CAF50), const Color(0xFF388E3C)]
-                          : [const Color(0xFFFFD700), const Color(0xFFFFA000)],
+                    gradient: const LinearGradient(
+                      colors: [Color(0xFFFFD700), Color(0xFFFFA000)],
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                     ),
                     borderRadius: BorderRadius.circular(12),
                     boxShadow: [
                       BoxShadow(
-                        color: (hasRated ? const Color(0xFF388E3C) : const Color(0xFFFFA000))
-                            .withValues(alpha: 0.4),
+                        color: const Color(0xFFFFA000).withValues(alpha: 0.4),
                         blurRadius: 8.0,
                         offset: const Offset(0, 3.0),
                       ),
                     ],
                   ),
-                  child: Icon(
-                    hasRated ? Icons.check_rounded : Icons.star_rounded,
+                  child: const Icon(
+                    Icons.star_rounded,
                     color: Colors.white,
                     size: 20,
                   ),
@@ -79,14 +88,14 @@ class DrawerRateAppCard extends ConsumerWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        hasRated ? 'Thanks for the love! 😁' : l10n.rateApp,
+                        l10n.rateApp,
                         style: theme.textTheme.titleSmall?.copyWith(
                           fontWeight: FontWeight.w700,
                         ),
                       ),
                       const SizedBox(height: 2),
                       Text(
-                        hasRated ? 'We appreciate your support.' : 'Love the app? Let us know!',
+                        'Love the app? Let us know!',
                         style: theme.textTheme.bodySmall?.copyWith(
                           color: theme.colorScheme.onSurfaceVariant,
                         ),
@@ -94,12 +103,13 @@ class DrawerRateAppCard extends ConsumerWidget {
                     ],
                   ),
                 ),
-                if (!hasRated)
-                  Icon(
-                    Icons.chevron_right_rounded,
-                    size: 20,
-                    color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
+                Icon(
+                  Icons.chevron_right_rounded,
+                  size: 20,
+                  color: theme.colorScheme.onSurfaceVariant.withValues(
+                    alpha: 0.5,
                   ),
+                ),
               ],
             ),
           ),
