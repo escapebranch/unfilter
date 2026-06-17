@@ -11,7 +11,7 @@ import 'package:share_plus/share_plus.dart';
 import '../../../apps/domain/entities/device_app.dart';
 import '../../../apps/presentation/providers/apps_provider.dart';
 import '../providers/usage_stats_providers.dart';
- 
+
 import 'package:unfilter/l10n/generated/app_localizations.dart';
 
 import '../../../../core/version/review_service.dart';
@@ -75,7 +75,11 @@ class _AnalyticsPageState extends ConsumerState<AnalyticsPage>
       body: appsAsync.when(
         data: (apps) => _buildDataState(apps, theme),
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (err, _) => Center(child: Text(AppLocalizations.of(context).commonErrorWithDetails(err.toString()))),
+        error: (err, _) => Center(
+          child: Text(
+            AppLocalizations.of(context).commonErrorWithDetails(err.toString()),
+          ),
+        ),
       ),
     );
   }
@@ -406,11 +410,27 @@ class _AnalyticsPageState extends ConsumerState<AnalyticsPage>
     PersistentUsageStats persistentStats,
     ThemeData theme,
   ) {
+    final selectedRange = ref.read(selectedUsageTimeRangeProvider);
+    final customDateRange = ref.read(selectedCustomDateRangeProvider);
     final aggregationService = ref.read(usageAggregationServiceProvider);
-    final periodText = aggregationService.formatTrackedPeriod(
-      persistentStats.trackedPeriod,
-    );
     final l10n = AppLocalizations.of(context);
+
+    final String periodText;
+    if (selectedRange == UsageTimeRange.custom && customDateRange != null) {
+      final fmt = DateFormat('MMM d');
+      final fmtYear = DateFormat('MMM d, yyyy');
+      final start = customDateRange.start;
+      final end = customDateRange.end;
+      if (start.year == end.year) {
+        periodText = '${fmt.format(start)} – ${fmtYear.format(end)}';
+      } else {
+        periodText = '${fmtYear.format(start)} – ${fmtYear.format(end)}';
+      }
+    } else {
+      periodText = aggregationService.formatTrackedPeriod(
+        persistentStats.trackedPeriod,
+      );
+    }
 
     return SliverToBoxAdapter(
       child: Padding(
@@ -445,7 +465,9 @@ class _AnalyticsPageState extends ConsumerState<AnalyticsPage>
                     ),
                     if (persistentStats.storedSnapshotCount > 0)
                       Text(
-                        l10n.daysStoredLocally(persistentStats.storedSnapshotCount),
+                        l10n.daysStoredLocally(
+                          persistentStats.storedSnapshotCount,
+                        ),
                         style: theme.textTheme.bodySmall?.copyWith(
                           color: theme.colorScheme.onSurfaceVariant,
                         ),
@@ -532,7 +554,9 @@ class _AnalyticsPageState extends ConsumerState<AnalyticsPage>
             return Padding(
               padding: const EdgeInsets.only(bottom: 16),
               child: Text(
-                _searchQuery.isEmpty ? AppLocalizations.of(context).topContributorsSection : AppLocalizations.of(context).searchResultsSection,
+                _searchQuery.isEmpty
+                    ? AppLocalizations.of(context).topContributorsSection
+                    : AppLocalizations.of(context).searchResultsSection,
                 style: theme.textTheme.labelSmall?.copyWith(
                   fontWeight: FontWeight.bold,
                   letterSpacing: 2.0,
@@ -698,9 +722,9 @@ class _AnalyticsPageState extends ConsumerState<AnalyticsPage>
       );
 
       // Trigger review prompt logic
-      ref.read(reviewServiceProvider).requestReviewTrigger(
-            ReviewTriggerScenario.shareUsageStatistics,
-          );
+      ref
+          .read(reviewServiceProvider)
+          .requestReviewTrigger(ReviewTriggerScenario.shareUsageStatistics);
     } catch (e) {
       debugPrint('Share error: $e');
       if (mounted) {
