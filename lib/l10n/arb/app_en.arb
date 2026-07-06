@@ -139,7 +139,7 @@
       "error": { "type": "String" }
     }
   },
-  "shareTextExposed": "{appName} just got exposed 🔍",
+  "shareTextExposed": "{appName} — App Details via UnFilter",
   "@shareTextExposed": {
     "placeholders": {
       "appName": { "type": "String" }

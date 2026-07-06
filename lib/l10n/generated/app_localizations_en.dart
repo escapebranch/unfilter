@@ -321,7 +321,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String shareTextExposed(String appName) {
-    return '$appName just got exposed 🔍';
+    return '$appName — App Details via UnFilter';
   }
 
   @override

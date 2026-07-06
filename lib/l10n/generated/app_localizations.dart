@@ -671,7 +671,7 @@ abstract class AppLocalizations {
   /// No description provided for @shareTextExposed.
   ///
   /// In en, this message translates to:
-  /// **'{appName} just got exposed 🔍'**
+  /// **'{appName} — App Details via UnFilter'**
   String shareTextExposed(String appName);
 
   /// No description provided for @shareTextBuiltWith.

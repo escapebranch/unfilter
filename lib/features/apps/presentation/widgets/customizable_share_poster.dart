@@ -130,17 +130,17 @@ class CustomizableSharePoster extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "APP EXPOSED",
+              "App Details",
               style: TextStyle(
                 color: _textSecondary,
                 fontSize: 12,
-                letterSpacing: 4,
-                fontWeight: FontWeight.bold,
+                letterSpacing: 0.5,
+                fontWeight: FontWeight.w500,
               ),
             ),
             const SizedBox(height: 4),
             Text(
-              "Unfiltered Truth",
+              "UnFilter",
               style: TextStyle(
                 color: _textPrimary,
                 fontSize: 24,
@@ -355,12 +355,12 @@ class CustomizableSharePoster extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "DEEP INSIGHTS",
+            "More Details",
             style: TextStyle(
               color: _textSecondary,
               fontSize: 11,
-              letterSpacing: 2,
-              fontWeight: FontWeight.bold,
+              letterSpacing: 0.3,
+              fontWeight: FontWeight.w600,
             ),
           ),
           const SizedBox(height: 12),
@@ -398,14 +398,20 @@ class CustomizableSharePoster extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.auto_awesome, color: _textTertiary, size: 16),
-            const SizedBox(width: 8),
             Text(
-              "Analyzed by Unfilter",
+              "via ",
               style: TextStyle(
                 color: _textTertiary,
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
+                fontSize: 13,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+            Text(
+              "UnFilter",
+              style: TextStyle(
+                color: _textTertiary,
+                fontSize: 13,
+                fontWeight: FontWeight.w700,
               ),
             ),
           ],
