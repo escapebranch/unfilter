@@ -21,6 +21,18 @@ final languagesProvider = Provider<List<Language>>((ref) {
       code: 'tr',
       translationProgress: 82,
     ),
+    Language(
+      name: 'Indonesian',
+      nativeName: 'Bahasa Indonesia',
+      code: 'id',
+      translationProgress: 90,
+    ),
+    Language(
+      name: 'Hindi',
+      nativeName: 'हिन्दी',
+      code: 'hi',
+      translationProgress: 90,
+    ),
   ];
 });
 

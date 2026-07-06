@@ -375,6 +375,11 @@ class _ConnectSection extends StatelessWidget {
           value: 'r4khul',
           url: 'https://github.com/r4khul',
         ),
+        ExternalLinkTile(
+          label: 'LinkedIn',
+          value: 'rakhul',
+          url: 'https://linkedin.com/in/rakhul',
+        ),
       ],
     );
   }
