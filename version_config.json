@@ -1,5 +1,5 @@
 {
-  "latest_native_version": "1.4.1+16",
+  "latest_native_version": "1.5.1+17",
   "min_supported_native_version": "1.0.0+1",
   "release_page_url": "https://github.com/r4khul/unfilter/releases",
   "apk_direct_download_url": "https://github.com/r4khul/unfilter/releases/latest/download/UnFilter_universal.apk",
@@ -9,15 +9,17 @@
     "x86_64": "https://github.com/r4khul/unfilter/releases/latest/download/UnFilter_x86_64.apk"
   },
   "use_per_abi": true,
-  "release_notes": "v1.4.1+16: Fixed in-app review system bugs, improved Rate App to deep-link Play Store, and improved usage stats custom date range display.",
+  "release_notes": "v1.5.1+17: Added in-app update flow with release notes sheet, update banner card, and localization support for Turkish, Hindi, and Indonesian. Tamil translations improved.",
   "force_update": false,
   "features": [
-    "Rate App now deep-links directly to the Play Store review page.",
-    "Usage statistics custom date range now displays the actual start and end dates instead of a duration."
+    "New 'What's New' release notes sheet shows version info, features, and fixes from within the app.",
+    "In-app update flow: trigger a Play Store flexible update or download APK directly from the update banner.",
+    "Home screen update banner card surfaces update availability with version chip and change count.",
+    "Added Turkish (Türkçe) localization.",
+    "Added Hindi (हिन्दी) localization.",
+    "Added Indonesian (Bahasa Indonesia) localization."
   ],
   "fixes": [
-    "Fixed in-app review falsely marking users as having reviewed the app.",
-    "Fixed operator precedence bug in review trigger guard condition.",
-    "Removed false Thank You state from Rate App card that appeared without user rating."
+    "Improved and expanded Tamil translations for better accuracy across technical and UI strings."
   ]
 }

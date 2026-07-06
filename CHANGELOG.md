@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.5.1+17] - 2026-07-06
+
+### Added
+
+- **Release Notes Sheet**: New "What's New" bottom sheet displays the latest version's features and bug fixes fetched from `version_config.json`, accessible from the home screen update banner.
+- **In-App Update Flow**: Update banner card and release notes sheet now integrate with the Play Core flexible update API — users can trigger a Play Store update directly from within the app, with a loading state and fallback to direct APK download.
+- **Update Banner Card**: Home screen card that surfaces update availability (Play Store) or the latest release notes, with version chip, change count subtitle, and haptic tap.
+- **Localization — Turkish**: Added full Turkish (`tr`) translation covering all app strings.
+- **Localization — Hindi**: Added full Hindi (`hi`) translation covering all app strings.
+- **Localization — Indonesian**: Added full Indonesian (`id`) translation covering all app strings.
+
+### Improved
+
+- **Tamil Localization**: Significantly improved and expanded Tamil (`ta`) translations for better accuracy and coverage across technical and UI strings.
+
 ## [1.4.1+16] - 2026-06-17
 
 ### Added
