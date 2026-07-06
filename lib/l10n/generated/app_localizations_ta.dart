@@ -31,6 +31,9 @@ class AppLocalizationsTa extends AppLocalizations {
   String get languageTamil => 'தமிழ்';
 
   @override
+  String get languageTurkish => 'துருக்கியம்';
+
+  @override
   String get confirmButtonLabel => 'உறுதிப்படுத்து';
 
   @override
@@ -328,7 +331,7 @@ class AppLocalizationsTa extends AppLocalizations {
 
   @override
   String shareTextExposed(String appName) {
-    return '$appName just got exposed 🔍';
+    return '$appName — UnFilter மூலம் செயலி விவரங்கள்';
   }
 
   @override

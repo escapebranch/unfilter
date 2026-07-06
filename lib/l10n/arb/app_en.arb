@@ -25,6 +25,10 @@
   "@languageTamil": {
     "description": "Tamil language name shown in selector"
   },
+  "languageTurkish": "Turkish",
+  "@languageTurkish": {
+    "description": "Turkish language name shown in selector"
+  },
   "confirmButtonLabel": "Confirm",
   "@confirmButtonLabel": {
     "description": "Generic confirm action label"

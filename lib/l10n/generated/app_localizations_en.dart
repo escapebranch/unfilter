@@ -30,6 +30,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get languageTamil => 'Tamil';
 
   @override
+  String get languageTurkish => 'Turkish';
+
+  @override
   String get confirmButtonLabel => 'Confirm';
 
   @override

@@ -5,6 +5,7 @@ final languagesProvider = Provider<List<Language>>((ref) {
   return const [
     Language(name: 'English', nativeName: 'English', code: 'en'),
     Language(name: 'Tamil', nativeName: 'தமிழ்', code: 'ta'),
+    Language(name: 'Turkish', nativeName: 'Türkçe', code: 'tr'),
   ];
 });
 
@@ -15,7 +16,8 @@ class LanguageSearchQuery extends Notifier<String> {
   void setQuery(String query) => state = query;
 }
 
-final languageSearchQueryProvider = NotifierProvider<LanguageSearchQuery, String>(LanguageSearchQuery.new);
+final languageSearchQueryProvider =
+    NotifierProvider<LanguageSearchQuery, String>(LanguageSearchQuery.new);
 
 final filteredLanguagesProvider = Provider<List<Language>>((ref) {
   final languages = ref.watch(languagesProvider);
