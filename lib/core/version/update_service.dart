@@ -2,12 +2,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
-enum InAppUpdateAvailability {
-  available,
-  inProgress,
-  notAvailable,
-  unknown,
-}
+enum InAppUpdateAvailability { available, inProgress, notAvailable, unknown }
 
 enum InAppUpdateInstallStatus {
   canceled,
@@ -120,13 +115,24 @@ class UpdateService {
   Stream<InAppUpdateInstallState>? _updateEvents;
 
   Stream<InAppUpdateInstallState> get updateEvents {
-    _updateEvents ??= _eventChannel
-        .receiveBroadcastStream()
-        .map((event) => InAppUpdateInstallState.fromMap(event as Map));
+    _updateEvents ??= _eventChannel.receiveBroadcastStream().map(
+      (event) => InAppUpdateInstallState.fromMap(event as Map),
+    );
     return _updateEvents!;
   }
 
   Future<InAppUpdateInfo> checkForUpdate() async {
+    if (kDebugMode) {
+      return InAppUpdateInfo(
+        availability: InAppUpdateAvailability.notAvailable,
+        availableVersionCode: 0,
+        updatePriority: 0,
+        isFlexibleUpdateAllowed: false,
+        isImmediateUpdateAllowed: false,
+        bytesDownloaded: 0,
+        totalBytesToDownload: 0,
+      );
+    }
     try {
       final Map<dynamic, dynamic>? result = await _channel.invokeMethod(
         'checkForUpdate',
@@ -143,7 +149,9 @@ class UpdateService {
     try {
       await _channel.invokeMethod('startUpdate', {'type': 'FLEXIBLE'});
     } on PlatformException catch (e) {
-      debugPrint('[UpdateService] Error starting flexible update: ${e.message}');
+      debugPrint(
+        '[UpdateService] Error starting flexible update: ${e.message}',
+      );
       rethrow;
     }
   }

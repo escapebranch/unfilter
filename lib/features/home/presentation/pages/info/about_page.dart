@@ -7,6 +7,7 @@ import '../../../../../core/version/version_provider.dart';
 import '../../widgets/external_link_tile.dart';
 import '../../widgets/github_cta_card.dart';
 import '../../widgets/premium_app_bar.dart';
+import '../../widgets/update_banner_card.dart';
 import '../../../../../core/widgets/top_shadow_gradient.dart';
 
 class AboutPage extends ConsumerStatefulWidget {
@@ -55,11 +56,13 @@ class _AboutPageState extends ConsumerState<AboutPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       _HeroSection(
-                        isDark: isDark, 
+                        isDark: isDark,
                         updateInfo: updateInfo,
                         packageInfo: packageInfo,
                       ),
-                      const SizedBox(height: 32),
+                      const SizedBox(height: 24),
+                      const UpdateBannerCard(),
+                      const SizedBox(height: 24),
                       _buildDescription(theme),
                       const SizedBox(height: 32),
                       const _HowItWorksCard(),
@@ -120,7 +123,7 @@ class _HeroSection extends StatelessWidget {
   final AsyncValue<dynamic> packageInfo;
 
   const _HeroSection({
-    required this.isDark, 
+    required this.isDark,
     required this.updateInfo,
     required this.packageInfo,
   });
@@ -220,7 +223,8 @@ class _HeroSection extends StatelessWidget {
 
     return updateInfo.when(
       data: (info) {
-        final isUpdateAvailable = info.availability == InAppUpdateAvailability.available;
+        final isUpdateAvailable =
+            info.availability == InAppUpdateAvailability.available;
         return Text(
           '$localVersion${isUpdateAvailable ? ' • Update' : ' • Stable'}',
           style: theme.textTheme.labelSmall?.copyWith(
