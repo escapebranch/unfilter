@@ -3,9 +3,24 @@ import '../../domain/entities/language.dart';
 
 final languagesProvider = Provider<List<Language>>((ref) {
   return const [
-    Language(name: 'English', nativeName: 'English', code: 'en'),
-    Language(name: 'Tamil', nativeName: 'தமிழ்', code: 'ta'),
-    Language(name: 'Turkish', nativeName: 'Türkçe', code: 'tr'),
+    Language(
+      name: 'English',
+      nativeName: 'English',
+      code: 'en',
+      translationProgress: 100,
+    ),
+    Language(
+      name: 'Tamil',
+      nativeName: 'தமிழ்',
+      code: 'ta',
+      translationProgress: 90,
+    ),
+    Language(
+      name: 'Turkish',
+      nativeName: 'Türkçe',
+      code: 'tr',
+      translationProgress: 82,
+    ),
   ];
 });
 

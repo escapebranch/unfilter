@@ -3,6 +3,7 @@ library;
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../../../../../l10n/generated/app_localizations.dart';
 import '../../../domain/entities/device_app.dart';
 import 'common_widgets.dart';
 import 'constants.dart';
@@ -16,6 +17,7 @@ class AppStatsRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
+    final l10n = AppLocalizations.of(context);
 
     return Container(
       padding: const EdgeInsets.all(AppDetailsSpacing.lg),
@@ -28,15 +30,15 @@ class AppStatsRow extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          _StatItem(label: "Version", value: app.version),
+          _StatItem(label: l10n.optionVersion, value: app.version),
           const StatDivider(),
           _StatItem(
-            label: "SDK",
+            label: l10n.optionSdk,
             value: "${app.minSdkVersion} - ${app.targetSdkVersion}",
           ),
           const StatDivider(),
           _StatItem(
-            label: "Updated",
+            label: l10n.updatedLabel,
             value: DateFormat("MMM d").format(app.updateDate),
           ),
         ],
@@ -61,8 +63,8 @@ class _StatItem extends StatelessWidget {
           Text(
             label.toUpperCase(),
             style: theme.textTheme.labelSmall?.copyWith(
-              color: theme.colorScheme.onSurface.withValues(alpha: 
-                AppDetailsOpacity.half,
+              color: theme.colorScheme.onSurface.withValues(
+                alpha: AppDetailsOpacity.half,
               ),
               fontWeight: FontWeight.bold,
               fontSize: AppDetailsFontSizes.sm,

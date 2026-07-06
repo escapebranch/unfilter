@@ -2,6 +2,7 @@ library;
 
 import 'package:flutter/material.dart';
 
+import '../../../../../l10n/generated/app_localizations.dart';
 import '../../../domain/entities/device_app.dart';
 import 'common_widgets.dart';
 import 'constants.dart';
@@ -25,7 +26,7 @@ class NativeLibsSection extends StatelessWidget {
       return _buildListMode(context, theme);
     }
 
-    return _buildChipsMode(theme, isDark);
+    return _buildChipsMode(context, theme, isDark);
   }
 
   Widget _buildListMode(BuildContext context, ThemeData theme) {
@@ -35,7 +36,7 @@ class NativeLibsSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SectionHeader(title: "Native Libraries"),
+        SectionHeader(title: AppLocalizations.of(context).nativeLibrariesLabel),
         const SizedBox(height: AppDetailsSpacing.standard),
         Container(
           width: double.infinity,
@@ -43,8 +44,8 @@ class NativeLibsSection extends StatelessWidget {
           decoration: BoxDecoration(
             color: theme.colorScheme.surface,
             border: Border.all(
-              color: theme.colorScheme.outline.withValues(alpha: 
-                AppDetailsOpacity.mediumLight,
+              color: theme.colorScheme.outline.withValues(
+                alpha: AppDetailsOpacity.mediumLight,
               ),
             ),
             borderRadius: BorderRadius.circular(AppDetailsBorderRadius.xl),
@@ -68,13 +69,13 @@ class NativeLibsSection extends StatelessWidget {
                       ),
                     ),
                     side: BorderSide(
-                      color: theme.colorScheme.primary.withValues(alpha: 
-                        AppDetailsOpacity.half,
+                      color: theme.colorScheme.primary.withValues(
+                        alpha: AppDetailsOpacity.half,
                       ),
                     ),
                   ),
                   child: Text(
-                    "View $remainingCount More",
+                    AppLocalizations.of(context).viewMoreLabel(remainingCount),
                     style: TextStyle(color: theme.colorScheme.primary),
                   ),
                 ),
@@ -86,11 +87,11 @@ class NativeLibsSection extends StatelessWidget {
     );
   }
 
-  Widget _buildChipsMode(ThemeData theme, bool isDark) {
+  Widget _buildChipsMode(BuildContext context, ThemeData theme, bool isDark) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SectionHeader(title: "Native Libraries"),
+        SectionHeader(title: AppLocalizations.of(context).nativeLibrariesLabel),
         const SizedBox(height: AppDetailsSpacing.standard),
         Wrap(
           spacing: AppDetailsSpacing.sm,
@@ -122,7 +123,7 @@ class NativeLibsSection extends StatelessWidget {
           child: Column(
             children: [
               PremiumModalHeader(
-                title: "Native Libraries",
+                title: AppLocalizations.of(context).nativeLibrariesLabel,
                 icon: Icons.memory_rounded,
                 onClose: () => Navigator.pop(context),
               ),
@@ -170,8 +171,8 @@ class _NativeLibRow extends StatelessWidget {
           Icon(
             Icons.settings_system_daydream_rounded,
             size: AppDetailsSizes.iconMedium,
-            color: theme.colorScheme.primary.withValues(alpha: 
-              AppDetailsOpacity.nearlyOpaque,
+            color: theme.colorScheme.primary.withValues(
+              alpha: AppDetailsOpacity.nearlyOpaque,
             ),
           ),
           const SizedBox(width: AppDetailsSpacing.md),
@@ -208,7 +209,9 @@ class _NativeLibChip extends StatelessWidget {
       decoration: BoxDecoration(
         color: isDark ? const Color(0xFF2C2C2E) : Colors.grey[100],
         border: Border.all(
-          color: theme.colorScheme.outline.withValues(alpha: AppDetailsOpacity.light),
+          color: theme.colorScheme.outline.withValues(
+            alpha: AppDetailsOpacity.light,
+          ),
         ),
         borderRadius: BorderRadius.circular(AppDetailsBorderRadius.md),
       ),
@@ -218,8 +221,8 @@ class _NativeLibChip extends StatelessWidget {
           Icon(
             Icons.settings_system_daydream_rounded,
             size: AppDetailsSizes.iconSmall,
-            color: theme.colorScheme.onSurface.withValues(alpha: 
-              AppDetailsOpacity.high,
+            color: theme.colorScheme.onSurface.withValues(
+              alpha: AppDetailsOpacity.high,
             ),
           ),
           const SizedBox(width: 6),
@@ -228,8 +231,8 @@ class _NativeLibChip extends StatelessWidget {
               library,
               style: theme.textTheme.bodySmall?.copyWith(
                 fontWeight: FontWeight.w600,
-                color: theme.colorScheme.onSurface.withValues(alpha: 
-                  AppDetailsOpacity.nearlyOpaque,
+                color: theme.colorScheme.onSurface.withValues(
+                  alpha: AppDetailsOpacity.nearlyOpaque,
                 ),
               ),
               overflow: TextOverflow.ellipsis,

@@ -342,6 +342,30 @@
   "failedToResync": "Failed to resync",
   "installDateLabel": "Install Date",
   "detectedPackagesTitle": "Detected Packages",
+  "packageLabel": "Package",
+  "uidLabel": "UID",
+  "nativeLibrariesLabel": "Native Libraries",
+  "permissionsLabel": "Permissions",
+  "updatedLabel": "Updated",
+  "viewMoreLabel": "View {count} More",
+  "@viewMoreLabel": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "activityLabel": "Activity",
+  "activityUsageSince": "Used for {duration} since installed on {date} ({days} days ago)",
+  "@activityUsageSince": {
+    "placeholders": {
+      "duration": { "type": "String" },
+      "date": { "type": "String" },
+      "days": { "type": "int" }
+    }
+  },
+  "activityNoChartData": "Adequate data not found to plot chart",
+  "activityNoRecentActivity": "No recent activity",
+  "activityNoUsageLastYear": "No usage recorded in last year",
+  "activityUnableToLoad": "Unable to load activity",
   "routeNotFound": "Route not found: {name}",
   "@routeNotFound": {
     "placeholders": {

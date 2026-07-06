@@ -336,28 +336,29 @@ class AppLocalizationsTa extends AppLocalizations {
 
   @override
   String shareTextBuiltWith(String stack) {
-    return 'Built with: $stack';
+    return '$stack மூலம் உருவாக்கப்பட்டது';
   }
 
   @override
   String shareTextVersion(String version) {
-    return 'Version: $version';
+    return 'பதிப்பு: $version';
   }
 
   @override
   String shareTextSize(String size) {
-    return 'Size: $size';
+    return 'அளவு: $size';
   }
 
   @override
-  String get shareTextMarketing1 => 'See what your apps are really made of.';
+  String get shareTextMarketing1 =>
+      'உங்கள் செயலிகள் எதில் உருவானது என்பதை அறியுங்கள்.';
 
   @override
   String get shareTextMarketing2 =>
       'github.com/r4khul/unfilter/releases/latest';
 
   @override
-  String get shareTextMarketing3 => 'Don\'t forget to give a star!';
+  String get shareTextMarketing3 => 'நட்சத்திரம் கொடுக்க மறவாதீர்கள்!';
 
   @override
   String get shareImage => 'படத்தை பகிர்';
@@ -571,7 +572,7 @@ class AppLocalizationsTa extends AppLocalizations {
 
   @override
   String get shareAnalyticsViralText =>
-      'Unfilter exposed my screen addiction 💀\n\nSee what apps are really made of. Real usage stats. No sugar coating.\n\n100% open source. No trackers. No BS.\n\nGet it: github.com/r4khul/unfilter/releases/latest\n\nDon\'t forget to give a star!\n';
+      'UnFilter என் திரை நேர அடிமைத்தனத்தை அம்பலப்படுத்தியது!\n\nஉங்கள் செயலிகள் எதில் உருவானது என்பதை அறியுங்கள். உண்மையான பயன்பாட்டு புள்ளிவிவரங்கள்.\n\n100% திறந்த மூலம். கண்காணிப்பு இல்லை.\n\nபெறுங்கள்: github.com/r4khul/unfilter/releases/latest\n\nநட்சத்திரம் கொடுக்க மறவாதீர்கள்!\n';
 
   @override
   String get noStorageInfoAvailable => 'சேமிப்பக தகவல் இல்லை';
@@ -822,6 +823,46 @@ class AppLocalizationsTa extends AppLocalizations {
 
   @override
   String get detectedPackagesTitle => 'கண்டறியப்பட்ட தொகுப்புகள்';
+
+  @override
+  String get packageLabel => 'தொகுப்பு';
+
+  @override
+  String get uidLabel => 'UID';
+
+  @override
+  String get nativeLibrariesLabel => 'நேட்டிவ் நூலகங்கள்';
+
+  @override
+  String get permissionsLabel => 'அனுமதிகள்';
+
+  @override
+  String get updatedLabel => 'புதுப்பிக்கப்பட்டது';
+
+  @override
+  String viewMoreLabel(int count) {
+    return '$count மேலும் பார்';
+  }
+
+  @override
+  String get activityLabel => 'Activity';
+
+  @override
+  String activityUsageSince(String duration, String date, int days) {
+    return '$date அன்று நிறுவியதிலிருந்து $duration பயன்படுத்தப்பட்டது ($days நாட்கள் முன்பு)';
+  }
+
+  @override
+  String get activityNoChartData => 'விளக்கப்படம் வரைய போதுமான தரவு இல்லை';
+
+  @override
+  String get activityNoRecentActivity => 'சமீபத்திய Activity இல்லை';
+
+  @override
+  String get activityNoUsageLastYear => 'கடந்த ஆண்டு பயன்பாடு பதிவாகவில்லை';
+
+  @override
+  String get activityUnableToLoad => 'Activity ஏற்ற முடியவில்லை';
 
   @override
   String routeNotFound(String name) {

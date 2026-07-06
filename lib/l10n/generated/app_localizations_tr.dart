@@ -12,7 +12,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get apps => 'Uygulamalar';
 
   @override
-  String get appTitle => 'UnFilter';
+  String get appTitle => 'Anfiltır';
 
   @override
   String get homeTitle => 'Ana Sayfa';
@@ -135,7 +135,8 @@ class AppLocalizationsTr extends AppLocalizations {
   String get deeplinkTesterTitle => 'Derin Bağlantı Test Aracı';
 
   @override
-  String get deeplinkInitialStatus => 'Test etmek için bir derin bağlantı girin.';
+  String get deeplinkInitialStatus =>
+      'Test etmek için bir derin bağlantı girin.';
 
   @override
   String get deeplinkEnterSchemeError => 'Lütfen en az bir şema girin.';
@@ -145,8 +146,7 @@ class AppLocalizationsTr extends AppLocalizations {
       'Geçersiz derin bağlantı. Geçerli bir URI şeması ekleyin.';
 
   @override
-  String get deeplinkCanHandle =>
-      'Bu derin bağlantı bu cihazda işlenebilir.';
+  String get deeplinkCanHandle => 'Bu derin bağlantı bu cihazda işlenebilir.';
 
   @override
   String get deeplinkNoHandler =>
@@ -222,7 +222,8 @@ class AppLocalizationsTr extends AppLocalizations {
   String get deeplinkExampleSendSms => 'SMS Gönder';
 
   @override
-  String get deeplinkMoreConfigsSoon => 'Daha fazla yapılandırma yakında geliyor!';
+  String get deeplinkMoreConfigsSoon =>
+      'Daha fazla yapılandırma yakında geliyor!';
 
   @override
   String get deeplinkParsedEmpty =>
@@ -672,7 +673,8 @@ class AppLocalizationsTr extends AppLocalizations {
   String get reportBug => 'Hata Bildir';
 
   @override
-  String get reportBugSubtitle => 'Bir sorun mu buldunuz? GitHub\'da bize bildirin';
+  String get reportBugSubtitle =>
+      'Bir sorun mu buldunuz? GitHub\'da bize bildirin';
 
   @override
   String get viewLogs => 'Günlükleri Görüntüle';
@@ -697,7 +699,7 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get crashRecoverySubtitle =>
-      'Başlatma sırasında kritik bir hata oluştu. Ne olduğunu görmek için günlüklere bakabilir veya geliştirmeye yardımcı olmak için bildirebilirsiniz.';
+      'Başlatma sırasında kritik bir hata oluştı. Ne olduğunu görmek için günlüklere bakabilir veya geliştirmeye yardımcı olmak için bildirebilirsiniz.';
 
   @override
   String get restartApp => 'Uygulamayı Yeniden Başlat';
@@ -821,6 +823,47 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get detectedPackagesTitle => 'Tespit Edilen Paketler';
+
+  @override
+  String get packageLabel => 'Paket';
+
+  @override
+  String get uidLabel => 'UID';
+
+  @override
+  String get nativeLibrariesLabel => 'Yerel Kütüphaneler';
+
+  @override
+  String get permissionsLabel => 'İzinler';
+
+  @override
+  String get updatedLabel => 'Güncellendi';
+
+  @override
+  String viewMoreLabel(int count) {
+    return '$count Daha Fazla Gör';
+  }
+
+  @override
+  String get activityLabel => 'Activity';
+
+  @override
+  String activityUsageSince(String duration, String date, int days) {
+    return '$date tarihinde kuruldu, $duration süredir kullanılıyor ($days gün önce)';
+  }
+
+  @override
+  String get activityNoChartData =>
+      'Grafik çizmek için yeterli veri bulunamadı';
+
+  @override
+  String get activityNoRecentActivity => 'Son Activity yok';
+
+  @override
+  String get activityNoUsageLastYear => 'Geçen yıl kullanım kaydedilmedi';
+
+  @override
+  String get activityUnableToLoad => 'Activity yüklenemedi';
 
   @override
   String routeNotFound(String name) {

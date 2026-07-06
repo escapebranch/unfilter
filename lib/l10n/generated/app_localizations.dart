@@ -1576,6 +1576,78 @@ abstract class AppLocalizations {
   /// **'Detected Packages'**
   String get detectedPackagesTitle;
 
+  /// No description provided for @packageLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Package'**
+  String get packageLabel;
+
+  /// No description provided for @uidLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'UID'**
+  String get uidLabel;
+
+  /// No description provided for @nativeLibrariesLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Native Libraries'**
+  String get nativeLibrariesLabel;
+
+  /// No description provided for @permissionsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Permissions'**
+  String get permissionsLabel;
+
+  /// No description provided for @updatedLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Updated'**
+  String get updatedLabel;
+
+  /// No description provided for @viewMoreLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'View {count} More'**
+  String viewMoreLabel(int count);
+
+  /// No description provided for @activityLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Activity'**
+  String get activityLabel;
+
+  /// No description provided for @activityUsageSince.
+  ///
+  /// In en, this message translates to:
+  /// **'Used for {duration} since installed on {date} ({days} days ago)'**
+  String activityUsageSince(String duration, String date, int days);
+
+  /// No description provided for @activityNoChartData.
+  ///
+  /// In en, this message translates to:
+  /// **'Adequate data not found to plot chart'**
+  String get activityNoChartData;
+
+  /// No description provided for @activityNoRecentActivity.
+  ///
+  /// In en, this message translates to:
+  /// **'No recent activity'**
+  String get activityNoRecentActivity;
+
+  /// No description provided for @activityNoUsageLastYear.
+  ///
+  /// In en, this message translates to:
+  /// **'No usage recorded in last year'**
+  String get activityNoUsageLastYear;
+
+  /// No description provided for @activityUnableToLoad.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to load activity'**
+  String get activityUnableToLoad;
+
   /// No description provided for @routeNotFound.
   ///
   /// In en, this message translates to:

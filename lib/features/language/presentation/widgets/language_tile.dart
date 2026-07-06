@@ -1,6 +1,45 @@
 import 'package:flutter/material.dart';
 import '../../domain/entities/language.dart';
 
+class _TranslationChip extends StatelessWidget {
+  final int progress;
+  final bool isSelected;
+
+  const _TranslationChip({required this.progress, required this.isSelected});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isComplete = progress >= 100;
+    final color = isComplete
+        ? Colors.green
+        : progress >= 75
+        ? Colors.orange
+        : Colors.red;
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: isSelected ? 0.18 : 0.1),
+        borderRadius: BorderRadius.circular(4),
+        border: Border.all(
+          color: color.withValues(alpha: isSelected ? 0.5 : 0.3),
+          width: 0.8,
+        ),
+      ),
+      child: Text(
+        '$progress% translated',
+        style: theme.textTheme.labelSmall?.copyWith(
+          color: color,
+          fontSize: 9,
+          fontWeight: FontWeight.w600,
+          letterSpacing: 0.2,
+        ),
+      ),
+    );
+  }
+}
+
 class LanguageTile extends StatelessWidget {
   final Language language;
   final bool isSelected;
@@ -49,7 +88,9 @@ class LanguageTile extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: isSelected
                         ? theme.colorScheme.primary.withValues(alpha: 0.2)
-                        : theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.4),
+                        : theme.colorScheme.surfaceContainerHighest.withValues(
+                            alpha: 0.4,
+                          ),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Center(
@@ -73,16 +114,29 @@ class LanguageTile extends StatelessWidget {
                       Text(
                         language.nativeName,
                         style: theme.textTheme.titleSmall?.copyWith(
-                          fontWeight: isSelected ? FontWeight.bold : FontWeight.w600,
+                          fontWeight: isSelected
+                              ? FontWeight.bold
+                              : FontWeight.w600,
                           color: theme.colorScheme.onSurface,
                         ),
                       ),
-                      const SizedBox(height: 2),
-                      Text(
-                        language.name,
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          color: theme.colorScheme.onSurfaceVariant,
-                        ),
+                      const SizedBox(height: 4),
+                      Row(
+                        children: [
+                          Text(
+                            language.name,
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: theme.colorScheme.onSurfaceVariant,
+                            ),
+                          ),
+                          if (language.code != 'en') ...[
+                            const SizedBox(width: 6),
+                            _TranslationChip(
+                              progress: language.translationProgress,
+                              isSelected: isSelected,
+                            ),
+                          ],
+                        ],
                       ),
                     ],
                   ),

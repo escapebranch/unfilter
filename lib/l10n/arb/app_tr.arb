@@ -1,7 +1,7 @@
 {
   "@@locale": "tr",
   "apps": "Uygulamalar",
-  "appTitle": "UnFilter",
+  "appTitle": "Anfiltır",
   "homeTitle": "Ana Sayfa",
   "chooseLanguageDialogTitle": "Dil Seçin",
   "chooseLanguageDialogSubtitle": "Dilinizi seçin",
@@ -315,6 +315,18 @@
   "failedToResync": "Yeniden eşitleme başarısız",
   "installDateLabel": "Kurulum Tarihi",
   "detectedPackagesTitle": "Tespit Edilen Paketler",
+  "packageLabel": "Paket",
+  "uidLabel": "UID",
+  "nativeLibrariesLabel": "Yerel Kütüphaneler",
+  "permissionsLabel": "İzinler",
+  "updatedLabel": "Güncellendi",
+  "viewMoreLabel": "{count} Daha Fazla Gör",
+  "activityLabel": "Activity",
+  "activityUsageSince": "{date} tarihinde kuruldu, {duration} süredir kullanılıyor ({days} gün önce)",
+  "activityNoChartData": "Grafik çizmek için yeterli veri bulunamadı",
+  "activityNoRecentActivity": "Son Activity yok",
+  "activityNoUsageLastYear": "Geçen yıl kullanım kaydedilmedi",
+  "activityUnableToLoad": "Activity yüklenemedi",
   "routeNotFound": "Rota bulunamadı: {name}",
   "@routeNotFound": {
     "placeholders": {

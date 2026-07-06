@@ -2,6 +2,7 @@ library;
 
 import 'package:flutter/material.dart';
 
+import '../../../../../l10n/generated/app_localizations.dart';
 import '../../../domain/entities/device_app.dart';
 import 'common_widgets.dart';
 import 'constants.dart';
@@ -23,7 +24,7 @@ class PermissionsSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SectionHeader(title: "Permissions"),
+        SectionHeader(title: AppLocalizations.of(context).permissionsLabel),
         const SizedBox(height: AppDetailsSpacing.standard),
         Container(
           width: double.infinity,
@@ -31,8 +32,8 @@ class PermissionsSection extends StatelessWidget {
           decoration: BoxDecoration(
             color: theme.colorScheme.surface,
             border: Border.all(
-              color: theme.colorScheme.outline.withValues(alpha: 
-                AppDetailsOpacity.mediumLight,
+              color: theme.colorScheme.outline.withValues(
+                alpha: AppDetailsOpacity.mediumLight,
               ),
             ),
             borderRadius: BorderRadius.circular(AppDetailsBorderRadius.xl),
@@ -57,13 +58,15 @@ class PermissionsSection extends StatelessWidget {
                         ),
                       ),
                       side: BorderSide(
-                        color: theme.colorScheme.primary.withValues(alpha: 
-                          AppDetailsOpacity.half,
+                        color: theme.colorScheme.primary.withValues(
+                          alpha: AppDetailsOpacity.half,
                         ),
                       ),
                     ),
                     child: Text(
-                      "View $remainingCount More",
+                      AppLocalizations.of(
+                        context,
+                      ).viewMoreLabel(remainingCount),
                       style: TextStyle(color: theme.colorScheme.primary),
                     ),
                   ),
@@ -94,7 +97,7 @@ class PermissionsSection extends StatelessWidget {
           child: Column(
             children: [
               PremiumModalHeader(
-                title: "Permissions",
+                title: AppLocalizations.of(context).permissionsLabel,
                 icon: Icons.security_rounded,
                 onClose: () => Navigator.pop(context),
               ),
@@ -125,8 +128,8 @@ class PermissionsSection extends StatelessWidget {
             permission,
             style: theme.textTheme.bodySmall?.copyWith(
               fontSize: AppDetailsFontSizes.sm,
-              color: theme.colorScheme.onSurface.withValues(alpha: 
-                AppDetailsOpacity.half,
+              color: theme.colorScheme.onSurface.withValues(
+                alpha: AppDetailsOpacity.half,
               ),
             ),
           ),

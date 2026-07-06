@@ -817,6 +817,46 @@ class AppLocalizationsEn extends AppLocalizations {
   String get detectedPackagesTitle => 'Detected Packages';
 
   @override
+  String get packageLabel => 'Package';
+
+  @override
+  String get uidLabel => 'UID';
+
+  @override
+  String get nativeLibrariesLabel => 'Native Libraries';
+
+  @override
+  String get permissionsLabel => 'Permissions';
+
+  @override
+  String get updatedLabel => 'Updated';
+
+  @override
+  String viewMoreLabel(int count) {
+    return 'View $count More';
+  }
+
+  @override
+  String get activityLabel => 'Activity';
+
+  @override
+  String activityUsageSince(String duration, String date, int days) {
+    return 'Used for $duration since installed on $date ($days days ago)';
+  }
+
+  @override
+  String get activityNoChartData => 'Adequate data not found to plot chart';
+
+  @override
+  String get activityNoRecentActivity => 'No recent activity';
+
+  @override
+  String get activityNoUsageLastYear => 'No usage recorded in last year';
+
+  @override
+  String get activityUnableToLoad => 'Unable to load activity';
+
+  @override
   String routeNotFound(String name) {
     return 'Route not found: $name';
   }

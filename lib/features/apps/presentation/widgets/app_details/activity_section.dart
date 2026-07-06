@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
+import '../../../../../l10n/generated/app_localizations.dart';
 import '../../../domain/entities/app_usage_point.dart';
 import '../../../domain/entities/device_app.dart';
 import '../usage_chart.dart';
@@ -25,6 +26,7 @@ class ActivitySection extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
+    final l10n = AppLocalizations.of(context);
 
     final totalDuration = Duration(milliseconds: app.totalTimeInForeground);
     final totalUsageStr = _formatDuration(totalDuration);
@@ -34,7 +36,7 @@ class ActivitySection extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildHeader(theme, totalUsageStr),
+        _buildHeader(context, theme, totalUsageStr),
         if (app.totalTimeInForeground > 0)
           Padding(
             padding: const EdgeInsets.only(
@@ -42,16 +44,20 @@ class ActivitySection extends ConsumerWidget {
               bottom: AppDetailsSpacing.xs,
             ),
             child: Text(
-              "Used for $totalUsageStr since installed on $installDateStr ($daysSinceInstall days ago)",
+              l10n.activityUsageSince(
+                totalUsageStr,
+                installDateStr,
+                daysSinceInstall,
+              ),
               style: theme.textTheme.bodySmall?.copyWith(
-                color: theme.colorScheme.onSurface.withValues(alpha: 
-                  AppDetailsOpacity.high,
+                color: theme.colorScheme.onSurface.withValues(
+                  alpha: AppDetailsOpacity.high,
                 ),
               ),
             ),
           ),
         const SizedBox(height: AppDetailsSpacing.standard),
-        _buildChart(theme, isDark),
+        _buildChart(context, theme, isDark),
       ],
     );
   }
@@ -63,11 +69,15 @@ class ActivitySection extends ConsumerWidget {
     return "${duration.inMinutes}m";
   }
 
-  Widget _buildHeader(ThemeData theme, String totalUsageStr) {
+  Widget _buildHeader(
+    BuildContext context,
+    ThemeData theme,
+    String totalUsageStr,
+  ) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        const SectionHeader(title: "Activity"),
+        SectionHeader(title: AppLocalizations.of(context).activityLabel),
         if (app.totalTimeInForeground > 0)
           Container(
             padding: const EdgeInsets.symmetric(
@@ -75,8 +85,8 @@ class ActivitySection extends ConsumerWidget {
               vertical: 6,
             ),
             decoration: BoxDecoration(
-              color: theme.colorScheme.primaryContainer.withValues(alpha: 
-                AppDetailsOpacity.light,
+              color: theme.colorScheme.primaryContainer.withValues(
+                alpha: AppDetailsOpacity.light,
               ),
               borderRadius: BorderRadius.circular(AppDetailsBorderRadius.lg),
             ),
@@ -102,15 +112,16 @@ class ActivitySection extends ConsumerWidget {
     );
   }
 
-  Widget _buildChart(ThemeData theme, bool isDark) {
+  Widget _buildChart(BuildContext context, ThemeData theme, bool isDark) {
     return historyAsync.when(
-      data: (history) => _buildDataState(history, theme, isDark),
+      data: (history) => _buildDataState(context, history, theme, isDark),
       loading: () => _buildLoadingState(isDark),
-      error: (_, _) => _buildErrorState(isDark, theme),
+      error: (_, _) => _buildErrorState(context, isDark, theme),
     );
   }
 
   Widget _buildDataState(
+    BuildContext context,
     List<AppUsagePoint> history,
     ThemeData theme,
     bool isDark,
@@ -132,9 +143,9 @@ class ActivitySection extends ConsumerWidget {
     if (hasGranular) {
       content = UsageChart(history: history, theme: theme, isDark: isDark);
     } else if (hasTotal) {
-      content = _buildNoChartDataState(theme);
+      content = _buildNoChartDataState(context, theme);
     } else {
-      content = _buildEmptyState(history, theme);
+      content = _buildEmptyState(context, history, theme);
     }
 
     return SectionContainer(
@@ -147,7 +158,7 @@ class ActivitySection extends ConsumerWidget {
     );
   }
 
-  Widget _buildNoChartDataState(ThemeData theme) {
+  Widget _buildNoChartDataState(BuildContext context, ThemeData theme) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -155,16 +166,16 @@ class ActivitySection extends ConsumerWidget {
           Icon(
             Icons.insights_rounded,
             size: AppDetailsSizes.iconLarge,
-            color: theme.colorScheme.onSurface.withValues(alpha: 
-              AppDetailsOpacity.standard,
+            color: theme.colorScheme.onSurface.withValues(
+              alpha: AppDetailsOpacity.standard,
             ),
           ),
           const SizedBox(height: AppDetailsSpacing.md),
           Text(
-            "Adequate data not found to plot chart",
+            AppLocalizations.of(context).activityNoChartData,
             style: theme.textTheme.bodyMedium?.copyWith(
-              color: theme.colorScheme.onSurface.withValues(alpha: 
-                AppDetailsOpacity.half,
+              color: theme.colorScheme.onSurface.withValues(
+                alpha: AppDetailsOpacity.half,
               ),
               fontWeight: FontWeight.w500,
             ),
@@ -175,7 +186,11 @@ class ActivitySection extends ConsumerWidget {
     );
   }
 
-  Widget _buildEmptyState(List<AppUsagePoint> history, ThemeData theme) {
+  Widget _buildEmptyState(
+    BuildContext context,
+    List<AppUsagePoint> history,
+    ThemeData theme,
+  ) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -183,18 +198,18 @@ class ActivitySection extends ConsumerWidget {
           Icon(
             Icons.bar_chart_rounded,
             size: AppDetailsSizes.iconXLarge,
-            color: theme.colorScheme.onSurface.withValues(alpha: 
-              AppDetailsOpacity.mediumLight,
+            color: theme.colorScheme.onSurface.withValues(
+              alpha: AppDetailsOpacity.mediumLight,
             ),
           ),
           const SizedBox(height: AppDetailsSpacing.md),
           Text(
             history.isEmpty
-                ? "No recent activity"
-                : "No usage recorded in last year",
+                ? AppLocalizations.of(context).activityNoRecentActivity
+                : AppLocalizations.of(context).activityNoUsageLastYear,
             style: theme.textTheme.bodyMedium?.copyWith(
-              color: theme.colorScheme.onSurface.withValues(alpha: 
-                AppDetailsOpacity.half,
+              color: theme.colorScheme.onSurface.withValues(
+                alpha: AppDetailsOpacity.half,
               ),
             ),
           ),
@@ -213,14 +228,14 @@ class ActivitySection extends ConsumerWidget {
     );
   }
 
-  Widget _buildErrorState(bool isDark, ThemeData theme) {
+  Widget _buildErrorState(BuildContext context, bool isDark, ThemeData theme) {
     return SectionContainer(
       useAltBackground: false,
       child: SizedBox(
         height: AppDetailsHeights.containerSmall,
         child: Center(
           child: Text(
-            "Unable to load activity",
+            AppLocalizations.of(context).activityUnableToLoad,
             style: theme.textTheme.bodySmall,
           ),
         ),
