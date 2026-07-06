@@ -112,7 +112,7 @@ class _ReleaseNotesSheetState extends ConsumerState<ReleaseNotesSheet> {
                 );
               },
               loading: () => const _LoadingBody(),
-              error: (_, __) => const _ErrorBody(),
+              error: (_, _) => const _ErrorBody(),
             ),
           ),
         ],
@@ -484,7 +484,7 @@ class _ActionButtons extends StatelessWidget {
         onDirectDownload: onDirectDownload,
         onViewReleasePage: onViewReleasePage,
       ),
-      error: (_, __) => _DownloadButtons(
+      error: (_, _) => _DownloadButtons(
         data: data,
         theme: theme,
         onDirectDownload: onDirectDownload,
