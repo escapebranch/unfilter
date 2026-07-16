@@ -53,7 +53,8 @@ class _TaskManagerPageState extends ConsumerState<TaskManagerPage> {
   double _calculateTotalCpu(AsyncValue<TaskManagerData> viewModelState) {
     return viewModelState.maybeWhen(
       data: (data) {
-        if (data.processesWithHistory.isEmpty) return 0;
+        // Return -1 to indicate OS-level restriction when no kernel processes can be read
+        if (data.processesWithHistory.isEmpty) return -1.0;
         double total = 0;
         for (final proc in data.processesWithHistory) {
           total += proc.currentCpu;
@@ -242,6 +243,14 @@ class _TaskManagerPageState extends ConsumerState<TaskManagerPage> {
           ),
         );
       }
+    } else if (hasPermission && _searchQuery.isEmpty) {
+      listItems.add(const SizedBox(height: TaskManagerSpacing.md));
+      listItems.add(
+        _ProcessSandboxedBanner(
+          message: AppLocalizations.of(context).processSandboxedMessage,
+        ),
+      );
+      listItems.add(const SizedBox(height: TaskManagerSpacing.md));
     }
 
     if (activeApps.isNotEmpty) {
@@ -362,6 +371,51 @@ class _ProcessErrorBanner extends StatelessWidget {
               ),
             ),
             TextButton(onPressed: onRetry, child: Text(AppLocalizations.of(context).retryLabel)),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _ProcessSandboxedBanner extends StatelessWidget {
+  final String message;
+
+  const _ProcessSandboxedBanner({required this.message});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+      child: Container(
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.4),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: theme.colorScheme.outlineVariant.withValues(alpha: 0.5),
+          ),
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Icon(
+              Icons.shield_outlined,
+              color: theme.colorScheme.primary,
+              size: 22,
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                message,
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                  height: 1.4,
+                ),
+              ),
+            ),
           ],
         ),
       ),

@@ -384,5 +384,6 @@
   "checkingUpdates": "Checking updates",
   "githubCtaTitle": "For detailed info",
   "githubCtaSubtitle": "Check out the source code on GitHub",
-  "reportIssueSubtitle": "Select how you want to report or investigate an issue."
+  "reportIssueSubtitle": "Select how you want to report or investigate an issue.",
+  "processSandboxedMessage": "Kernel-level process monitoring is secured by Android OS sandboxing (SELinux). Only user-space applications are accessible below."
 }

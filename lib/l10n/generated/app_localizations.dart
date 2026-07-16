@@ -1737,6 +1737,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Select how you want to report or investigate an issue.'**
   String get reportIssueSubtitle;
+
+  /// No description provided for @processSandboxedMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Kernel-level process monitoring is secured by Android OS sandboxing (SELinux). Only user-space applications are accessible below.'**
+  String get processSandboxedMessage;
 }
 
 class _AppLocalizationsDelegate

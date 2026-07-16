@@ -923,4 +923,8 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get reportIssueSubtitle =>
       'Wählen Sie aus, wie Sie ein Problem melden oder untersuchen möchten.';
+
+  @override
+  String get processSandboxedMessage =>
+      'Die Systemüberwachung auf Kernel-Ebene ist durch die Android-OS-Sandbox (SELinux) gesichert. Im Folgenden sind nur User-Space-Anwendungen zugänglich.';
 }

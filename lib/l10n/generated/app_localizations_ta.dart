@@ -910,4 +910,8 @@ class AppLocalizationsTa extends AppLocalizations {
   @override
   String get reportIssueSubtitle =>
       'ஒரு பிழையைப் புகாரளிக்க அல்லது விசாரிக்க நீங்கள் விரும்பும் வழியைத் தேர்ந்தெடுக்கவும்.';
+
+  @override
+  String get processSandboxedMessage =>
+      'Kernel-level process monitoring is secured by Android OS sandboxing (SELinux). Only user-space applications are accessible below.';
 }

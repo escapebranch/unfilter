@@ -902,4 +902,8 @@ class AppLocalizationsHi extends AppLocalizations {
   @override
   String get reportIssueSubtitle =>
       'चुनें कि आप किसी समस्या की रिपोर्ट या जांच कैसे करना चाहते हैं।';
+
+  @override
+  String get processSandboxedMessage =>
+      'Kernel-level process monitoring is secured by Android OS sandboxing (SELinux). Only user-space applications are accessible below.';
 }

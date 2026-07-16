@@ -271,5 +271,6 @@
   "checkingUpdates": "Updates werden überprüft",
   "githubCtaTitle": "Für detaillierte Informationen",
   "githubCtaSubtitle": "Schauen Sie sich den Quellcode auf GitHub an",
-  "reportIssueSubtitle": "Wählen Sie aus, wie Sie ein Problem melden oder untersuchen möchten."
+  "reportIssueSubtitle": "Wählen Sie aus, wie Sie ein Problem melden oder untersuchen möchten.",
+  "processSandboxedMessage": "Die Systemüberwachung auf Kernel-Ebene ist durch die Android-OS-Sandbox (SELinux) gesichert. Im Folgenden sind nur User-Space-Anwendungen zugänglich."
 }

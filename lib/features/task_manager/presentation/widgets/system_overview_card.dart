@@ -241,12 +241,15 @@ class _CompactCpuGauge extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     const size = 64.0;
+    
+    final bool isRestricted = percentage < 0;
+    final double displayValue = isRestricted ? 0.0 : percentage;
 
     return SizedBox(
       width: size,
       height: size,
       child: TweenAnimationBuilder<double>(
-        tween: Tween(begin: 0, end: percentage.clamp(0, 100)),
+        tween: Tween(begin: 0, end: displayValue.clamp(0, 100)),
         duration: const Duration(milliseconds: 600),
         curve: Curves.easeOutQuart,
         builder: (context, value, _) {
@@ -265,7 +268,9 @@ class _CompactCpuGauge extends StatelessWidget {
                 size: const Size(size, size),
                 painter: _RingPainter(
                   percentage: value,
-                  color: theme.colorScheme.primary,
+                  color: isRestricted 
+                      ? theme.colorScheme.outline.withValues(alpha: 0.3) 
+                      : theme.colorScheme.primary,
                   strokeWidth: 5,
                 ),
               ),
@@ -273,11 +278,13 @@ class _CompactCpuGauge extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    '${value.round()}%',
+                    isRestricted ? 'SECURED' : '${value.round()}%',
                     style: theme.textTheme.titleSmall?.copyWith(
                       fontWeight: FontWeight.bold,
                       fontFamily: 'monospace',
                       height: 1.0,
+                      fontSize: isRestricted ? 10 : null,
+                      color: isRestricted ? theme.colorScheme.onSurfaceVariant : null,
                     ),
                   ),
                   Text(
