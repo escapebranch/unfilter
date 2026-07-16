@@ -10,6 +10,12 @@ final languagesProvider = Provider<List<Language>>((ref) {
       translationProgress: 100,
     ),
     Language(
+      name: 'German',
+      nativeName: 'Deutsch',
+      code: 'de',
+      translationProgress: 100,
+    ),
+    Language(
       name: 'Tamil',
       nativeName: 'தமிழ்',
       code: 'ta',

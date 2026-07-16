@@ -61,6 +61,7 @@ void _showCrashScreen(Object error, StackTrace stack) {
           GlobalCupertinoLocalizations.delegate,
         ],
         supportedLocales: const [
+          Locale("de"),
           Locale("en"),
           Locale("hi"),
           Locale("id"),
@@ -92,6 +93,7 @@ class UnfilterApp extends ConsumerWidget {
         GlobalCupertinoLocalizations.delegate,
       ],
       supportedLocales: const [
+        Locale("de"),
         Locale("en"),
         Locale("hi"),
         Locale("id"),
