@@ -258,5 +258,18 @@
   "activityNoRecentActivity": "Tidak ada Activity terkini",
   "activityNoUsageLastYear": "Tidak ada penggunaan tercatat tahun lalu",
   "activityUnableToLoad": "Tidak dapat memuat Activity",
-  "routeNotFound": "Rute tidak ditemukan: {name}"
+  "routeNotFound": "Rute tidak ditemukan: {name}",
+  "searchInstalledApps": "Cari aplikasi terinstal...",
+  "searchApps": "Cari aplikasi...",
+  "scan": "Scan",
+  "scanOptions": "Opsi Scan",
+  "scanOptionsSubtitle": "Pilih bagaimana Anda ingin menyegarkan info aplikasi Anda.",
+  "fullSystemScan": "Scan Sistem Penuh",
+  "fullSystemScanSubtitle": "Analisis mendalam & fingerprint aplikasi",
+  "smartRevalidate": "Revalidasi Pintar",
+  "smartRevalidateSubtitle": "Periksa perubahan aplikasi dengan cepat",
+  "checkingUpdates": "Memeriksa pembaruan",
+  "githubCtaTitle": "Untuk informasi detail",
+  "githubCtaSubtitle": "Lihat kode sumber di GitHub",
+  "reportIssueSubtitle": "Pilih cara Anda ingin melaporkan atau menyelidiki masalah."
 }

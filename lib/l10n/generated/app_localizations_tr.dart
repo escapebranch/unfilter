@@ -869,4 +869,47 @@ class AppLocalizationsTr extends AppLocalizations {
   String routeNotFound(String name) {
     return 'Rota bulunamadı: $name';
   }
+
+  @override
+  String get searchInstalledApps => 'Yüklü uygulamaları ara...';
+
+  @override
+  String get searchApps => 'Uygulamaları ara...';
+
+  @override
+  String get scan => 'Tara';
+
+  @override
+  String get scanOptions => 'Tarama Seçenekleri';
+
+  @override
+  String get scanOptionsSubtitle =>
+      'Uygulama bilgilerinizi nasıl yenilemek istediğinizi seçin.';
+
+  @override
+  String get fullSystemScan => 'Tam Sistem Taraması';
+
+  @override
+  String get fullSystemScanSubtitle =>
+      'Derin analiz ve uygulama parmak izi tespiti';
+
+  @override
+  String get smartRevalidate => 'Akıllı Doğrulama';
+
+  @override
+  String get smartRevalidateSubtitle =>
+      'Uygulama değişikliklerini hızlıca kontrol edin';
+
+  @override
+  String get checkingUpdates => 'Güncellemeler kontrol ediliyor';
+
+  @override
+  String get githubCtaTitle => 'Detaylı bilgi için';
+
+  @override
+  String get githubCtaSubtitle => 'GitHub\'daki kaynak koduna göz atın';
+
+  @override
+  String get reportIssueSubtitle =>
+      'Bir sorunu nasıl bildirmek veya incelemek istediğinizi seçin.';
 }

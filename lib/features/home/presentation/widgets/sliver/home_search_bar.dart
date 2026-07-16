@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../../core/navigation/navigation.dart';
+import '../../../../../l10n/generated/app_localizations.dart';
 import '../../../../search/presentation/widgets/tech_stack_filter.dart';
 
 class HomeSearchBar extends StatelessWidget {
@@ -9,6 +10,7 @@ class HomeSearchBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
 
     return Row(
       children: [
@@ -43,7 +45,7 @@ class HomeSearchBar extends StatelessWidget {
                   const SizedBox(width: 12),
                   Expanded(
                     child: Text(
-                      'Search installed apps...',
+                      l10n.searchInstalledApps,
                       style: theme.textTheme.bodyMedium?.copyWith(
                         color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 
                           0.8,

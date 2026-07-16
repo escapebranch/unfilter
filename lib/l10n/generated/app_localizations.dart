@@ -1657,6 +1657,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Route not found: {name}'**
   String routeNotFound(String name);
+
+  /// No description provided for @searchInstalledApps.
+  ///
+  /// In en, this message translates to:
+  /// **'Search installed apps...'**
+  String get searchInstalledApps;
+
+  /// No description provided for @searchApps.
+  ///
+  /// In en, this message translates to:
+  /// **'Search apps...'**
+  String get searchApps;
+
+  /// No description provided for @scan.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan'**
+  String get scan;
+
+  /// No description provided for @scanOptions.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan Options'**
+  String get scanOptions;
+
+  /// No description provided for @scanOptionsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose how you want to refresh your app intel.'**
+  String get scanOptionsSubtitle;
+
+  /// No description provided for @fullSystemScan.
+  ///
+  /// In en, this message translates to:
+  /// **'Full System Scan'**
+  String get fullSystemScan;
+
+  /// No description provided for @fullSystemScanSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Deep analysis & app fingerprinting'**
+  String get fullSystemScanSubtitle;
+
+  /// No description provided for @smartRevalidate.
+  ///
+  /// In en, this message translates to:
+  /// **'Smart Revalidate'**
+  String get smartRevalidate;
+
+  /// No description provided for @smartRevalidateSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Quickly check for app changes'**
+  String get smartRevalidateSubtitle;
+
+  /// No description provided for @checkingUpdates.
+  ///
+  /// In en, this message translates to:
+  /// **'Checking updates'**
+  String get checkingUpdates;
+
+  /// No description provided for @githubCtaTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'For detailed info'**
+  String get githubCtaTitle;
+
+  /// No description provided for @githubCtaSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Check out the source code on GitHub'**
+  String get githubCtaSubtitle;
+
+  /// No description provided for @reportIssueSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Select how you want to report or investigate an issue.'**
+  String get reportIssueSubtitle;
 }
 
 class _AppLocalizationsDelegate

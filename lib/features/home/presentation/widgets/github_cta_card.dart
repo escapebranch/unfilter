@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../../../../l10n/generated/app_localizations.dart';
 
 class GithubCtaCard extends StatelessWidget {
   const GithubCtaCard({super.key});
@@ -11,6 +12,7 @@ class GithubCtaCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
+    final l10n = AppLocalizations.of(context);
 
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 24),
@@ -37,7 +39,7 @@ class GithubCtaCard extends StatelessWidget {
               children: [
                 _buildGitHubIcon(isDark),
                 const SizedBox(width: 16),
-                Expanded(child: _buildContent(theme)),
+                Expanded(child: _buildContent(theme, l10n)),
                 const SizedBox(width: 6),
                 Icon(
                   Icons.arrow_forward_rounded,
@@ -71,12 +73,12 @@ class GithubCtaCard extends StatelessWidget {
     );
   }
 
-  Widget _buildContent(ThemeData theme) {
+  Widget _buildContent(ThemeData theme, AppLocalizations l10n) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'For detailed info',
+          l10n.githubCtaTitle,
           style: theme.textTheme.titleSmall?.copyWith(
             fontWeight: FontWeight.bold,
             fontSize: 15,
@@ -84,7 +86,7 @@ class GithubCtaCard extends StatelessWidget {
         ),
         const SizedBox(height: 4),
         Text(
-          'Check out the source code on GitHub',
+          l10n.githubCtaSubtitle,
           style: theme.textTheme.bodySmall?.copyWith(
             color: theme.colorScheme.onSurfaceVariant,
             fontSize: 13,

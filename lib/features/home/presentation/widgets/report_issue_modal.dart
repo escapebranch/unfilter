@@ -14,10 +14,11 @@ class ReportIssueModal extends ConsumerWidget {
   const ReportIssueModal({super.key});
 
   static void show(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     showGeneralDialog(
       context: context,
       barrierDismissible: true,
-      barrierLabel: 'Report Issue Options',
+      barrierLabel: l10n.reportIssue,
       barrierColor: Colors.black.withValues(alpha: 0.5),
       transitionDuration: const Duration(milliseconds: 200),
       pageBuilder: (context, anim1, anim2) {
@@ -107,7 +108,7 @@ class ReportIssueModal extends ConsumerWidget {
                   theme: theme,
                   icon: Icons.bug_report_outlined,
                   title: l10n.reportIssue,
-                  subtitle: 'Select how you want to report or investigate an issue.',
+                  subtitle: l10n.reportIssueSubtitle,
                 ),
                 const SizedBox(height: 24),
                 _ReportOptionTile(

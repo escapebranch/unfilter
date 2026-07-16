@@ -258,5 +258,18 @@
   "activityNoRecentActivity": "कोई हालिया Activity नहीं",
   "activityNoUsageLastYear": "पिछले वर्ष कोई उपयोग दर्ज नहीं",
   "activityUnableToLoad": "Activity लोड नहीं हो सकी",
-  "routeNotFound": "रूट नहीं मिला: {name}"
+  "routeNotFound": "रूट नहीं मिला: {name}",
+  "searchInstalledApps": "स्थापित ऐप्स खोजें...",
+  "searchApps": "ऐप्स खोजें...",
+  "scan": "स्कैन",
+  "scanOptions": "स्कैन विकल्प",
+  "scanOptionsSubtitle": "चुनें कि आप अपने ऐप की जानकारी को कैसे रीफ्रेश करना चाहते हैं।",
+  "fullSystemScan": "पूर्ण सिस्टम स्कैन",
+  "fullSystemScanSubtitle": "गहन विश्लेषण और ऐप फ़िंगरप्रिंटिंग",
+  "smartRevalidate": "स्मार्ट सत्यापन",
+  "smartRevalidateSubtitle": "ऐप परिवर्तनों की त्वरित जांच करें",
+  "checkingUpdates": "अपडेट की जांच की जा रही है",
+  "githubCtaTitle": "विस्तृत जानकारी के लिए",
+  "githubCtaSubtitle": "GitHub पर सोर्स कोड देखें",
+  "reportIssueSubtitle": "चुनें कि आप किसी समस्या की रिपोर्ट या जांच कैसे करना चाहते हैं।"
 }

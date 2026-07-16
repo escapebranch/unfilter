@@ -371,5 +371,18 @@
     "placeholders": {
       "name": { "type": "String" }
     }
-  }
+  },
+  "searchInstalledApps": "Search installed apps...",
+  "searchApps": "Search apps...",
+  "scan": "Scan",
+  "scanOptions": "Scan Options",
+  "scanOptionsSubtitle": "Choose how you want to refresh your app intel.",
+  "fullSystemScan": "Full System Scan",
+  "fullSystemScanSubtitle": "Deep analysis & app fingerprinting",
+  "smartRevalidate": "Smart Revalidate",
+  "smartRevalidateSubtitle": "Quickly check for app changes",
+  "checkingUpdates": "Checking updates",
+  "githubCtaTitle": "For detailed info",
+  "githubCtaSubtitle": "Check out the source code on GitHub",
+  "reportIssueSubtitle": "Select how you want to report or investigate an issue."
 }

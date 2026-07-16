@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:unfilter/features/home/presentation/widgets/dialog_header.dart';
 
 import '../../../../core/navigation/navigation.dart';
+import '../../../../l10n/generated/app_localizations.dart';
 import '../../../apps/presentation/providers/apps_provider.dart';
 
 class ScanButton extends ConsumerStatefulWidget {
@@ -15,10 +16,11 @@ class ScanButton extends ConsumerStatefulWidget {
 
 class _ScanButtonState extends ConsumerState<ScanButton> {
   void _showScanDialog() {
+    final l10n = AppLocalizations.of(context);
     showGeneralDialog(
       context: context,
       barrierDismissible: true,
-      barrierLabel: 'Scan Options',
+      barrierLabel: l10n.scanOptions,
       barrierColor: Colors.black.withValues(alpha: 0.5),
       transitionDuration: const Duration(milliseconds: 200),
       pageBuilder: (context, anim1, anim2) {
@@ -84,6 +86,7 @@ class _ScanButtonState extends ConsumerState<ScanButton> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
+    final l10n = AppLocalizations.of(context);
 
     return GestureDetector(
       onTap: _showScanDialog,
@@ -116,7 +119,7 @@ class _ScanButtonState extends ConsumerState<ScanButton> {
             ),
             const SizedBox(width: 8),
             Text(
-              'Scan',
+              l10n.scan,
               style: theme.textTheme.labelLarge?.copyWith(
                 fontWeight: FontWeight.w600,
                 color: theme.colorScheme.primary,
@@ -142,6 +145,7 @@ class _ScanOptionsDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
+    final l10n = AppLocalizations.of(context);
 
     return Center(
       child: Material(
@@ -171,13 +175,13 @@ class _ScanOptionsDialog extends StatelessWidget {
                 DialogHeader(
                   theme: theme,
                   icon: Icons.radar_rounded,
-                  title: 'Scan Options',
-                  subtitle: 'Choose how you want to refresh your app intel.',
+                  title: l10n.scanOptions,
+                  subtitle: l10n.scanOptionsSubtitle,
                 ),
                 const SizedBox(height: 24),
                 _ScanOptionTile(
-                  title: 'Full System Scan',
-                  description: 'Deep analysis & app fingerprinting',
+                  title: l10n.fullSystemScan,
+                  description: l10n.fullSystemScanSubtitle,
                   icon: Icons.travel_explore_rounded,
                   color: isDark
                       ? const Color(0xFF64B5F6)
@@ -186,8 +190,8 @@ class _ScanOptionsDialog extends StatelessWidget {
                 ),
                 const SizedBox(height: 12),
                 _ScanOptionTile(
-                  title: 'Smart Revalidate',
-                  description: 'Quickly check for app changes',
+                  title: l10n.smartRevalidate,
+                  description: l10n.smartRevalidateSubtitle,
                   icon: Icons.published_with_changes_rounded,
                   color: isDark
                       ? const Color(0xFF81C784)
@@ -289,6 +293,7 @@ class _RevalidateLoadingDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
+    final l10n = AppLocalizations.of(context);
 
     return Center(
       child: Material(
@@ -329,7 +334,7 @@ class _RevalidateLoadingDialog extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               Text(
-                'Checking updates',
+                l10n.checkingUpdates,
                 style: theme.textTheme.labelLarge?.copyWith(
                   fontWeight: FontWeight.w600,
                   color: theme.colorScheme.onSurface.withValues(alpha: 0.9),

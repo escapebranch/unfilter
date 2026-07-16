@@ -861,4 +861,45 @@ class AppLocalizationsHi extends AppLocalizations {
   String routeNotFound(String name) {
     return 'रूट नहीं मिला: $name';
   }
+
+  @override
+  String get searchInstalledApps => 'स्थापित ऐप्स खोजें...';
+
+  @override
+  String get searchApps => 'ऐप्स खोजें...';
+
+  @override
+  String get scan => 'स्कैन';
+
+  @override
+  String get scanOptions => 'स्कैन विकल्प';
+
+  @override
+  String get scanOptionsSubtitle =>
+      'चुनें कि आप अपने ऐप की जानकारी को कैसे रीफ्रेश करना चाहते हैं।';
+
+  @override
+  String get fullSystemScan => 'पूर्ण सिस्टम स्कैन';
+
+  @override
+  String get fullSystemScanSubtitle => 'गहन विश्लेषण और ऐप फ़िंगरप्रिंटिंग';
+
+  @override
+  String get smartRevalidate => 'स्मार्ट सत्यापन';
+
+  @override
+  String get smartRevalidateSubtitle => 'ऐप परिवर्तनों की त्वरित जांच करें';
+
+  @override
+  String get checkingUpdates => 'अपडेट की जांच की जा रही है';
+
+  @override
+  String get githubCtaTitle => 'विस्तृत जानकारी के लिए';
+
+  @override
+  String get githubCtaSubtitle => 'GitHub पर सोर्स कोड देखें';
+
+  @override
+  String get reportIssueSubtitle =>
+      'चुनें कि आप किसी समस्या की रिपोर्ट या जांच कैसे करना चाहते हैं।';
 }

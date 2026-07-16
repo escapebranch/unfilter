@@ -868,4 +868,46 @@ class AppLocalizationsTa extends AppLocalizations {
   String routeNotFound(String name) {
     return 'பாதை கிடைக்கவில்லை: $name';
   }
+
+  @override
+  String get searchInstalledApps => 'நிறுவப்பட்ட செயலிகளைத் தேடு...';
+
+  @override
+  String get searchApps => 'செயலிகளைத் தேடு...';
+
+  @override
+  String get scan => 'ஸ்கேன்';
+
+  @override
+  String get scanOptions => 'ஸ்கேன் விருப்பங்கள்';
+
+  @override
+  String get scanOptionsSubtitle =>
+      'உங்கள் செயலி தகவலை எவ்வாறு புதுப்பிக்க வேண்டும் என்பதைத் தேர்ந்தெடுக்கவும்.';
+
+  @override
+  String get fullSystemScan => 'முழு கணினி ஸ்கேன்';
+
+  @override
+  String get fullSystemScanSubtitle => 'ஆழமான பகுப்பாய்வு & செயலி கண்டறிதல்';
+
+  @override
+  String get smartRevalidate => 'ஸ்மார்ட் சரிபார்ப்பு';
+
+  @override
+  String get smartRevalidateSubtitle =>
+      'செயலி மாற்றங்களை விரைவாக சரிபார்க்கவும்';
+
+  @override
+  String get checkingUpdates => 'புதுப்பிப்புகளைச் சரிபார்க்கிறது';
+
+  @override
+  String get githubCtaTitle => 'விவரமான தகவலுக்கு';
+
+  @override
+  String get githubCtaSubtitle => 'GitHub-இல் மூலக் குறியீட்டைப் பார்க்கவும்';
+
+  @override
+  String get reportIssueSubtitle =>
+      'ஒரு பிழையைப் புகாரளிக்க அல்லது விசாரிக்க நீங்கள் விரும்பும் வழியைத் தேர்ந்தெடுக்கவும்.';
 }

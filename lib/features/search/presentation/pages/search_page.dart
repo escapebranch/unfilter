@@ -4,6 +4,7 @@ import '../providers/search_provider.dart';
 import '../../../apps/presentation/widgets/category_slider.dart';
 import '../../../apps/presentation/widgets/app_card.dart';
 import '../../../apps/presentation/widgets/app_count_badge.dart';
+import '../../../../l10n/generated/app_localizations.dart';
 import '../widgets/tech_stack_filter.dart';
 
 class SearchPage extends ConsumerWidget {
@@ -14,6 +15,7 @@ class SearchPage extends ConsumerWidget {
     final theme = Theme.of(context);
     final apps = ref.watch(filteredAppsProvider);
     final searchQuery = ref.watch(searchFilterProvider);
+    final l10n = AppLocalizations.of(context);
 
     return AppCountOverlay(
       count: apps.length,
@@ -53,7 +55,7 @@ class SearchPage extends ConsumerWidget {
                     autofocus: true,
                     textAlignVertical: TextAlignVertical.center,
                     decoration: InputDecoration(
-                      hintText: "Search apps...",
+                      hintText: l10n.searchApps,
                       border: InputBorder.none,
                       focusedBorder: InputBorder.none,
                       enabledBorder: InputBorder.none,
@@ -118,7 +120,7 @@ class SearchPage extends ConsumerWidget {
                     ),
                     const SizedBox(height: 16),
                     Text(
-                      "No apps found",
+                      l10n.noAppsFound,
                       style: theme.textTheme.titleMedium?.copyWith(
                         color: theme.disabledColor,
                       ),

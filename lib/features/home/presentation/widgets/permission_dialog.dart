@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:ui';
+import '../../../../l10n/generated/app_localizations.dart';
 
 class PermissionDialog extends StatefulWidget {
   final VoidCallback onGrantPressed;
@@ -129,8 +130,9 @@ class _PermissionDialogState extends State<PermissionDialog>
   }
 
   Widget _buildTitle(ThemeData theme) {
+    final l10n = AppLocalizations.of(context);
     return Text(
-      'Permission Required',
+      l10n.permissionRequiredTitle,
       style: theme.textTheme.headlineSmall?.copyWith(
         fontWeight: FontWeight.bold,
         color: theme.colorScheme.onSurface,
@@ -140,10 +142,9 @@ class _PermissionDialogState extends State<PermissionDialog>
   }
 
   Widget _buildDescription(ThemeData theme) {
+    final l10n = AppLocalizations.of(context);
     return Text(
-      'UnFilter needs secure access to your usage stats so it can help you '
-      'spot what apps are made of and power the analytics view.\n\n'
-      'Your data never leaves your device.',
+      '${l10n.permissionDescription1}${l10n.permissionDescription2}${l10n.permissionDescription3}',
       style: theme.textTheme.bodyMedium?.copyWith(
         color: theme.colorScheme.onSurfaceVariant,
         height: 1.5,
@@ -153,6 +154,7 @@ class _PermissionDialogState extends State<PermissionDialog>
   }
 
   Widget _buildGrantButton(ThemeData theme) {
+    final l10n = AppLocalizations.of(context);
     return SizedBox(
       width: double.infinity,
       height: 50,
@@ -169,22 +171,23 @@ class _PermissionDialogState extends State<PermissionDialog>
             borderRadius: BorderRadius.circular(16),
           ),
         ),
-        child: const Text(
-          'Grant Access',
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+        child: Text(
+          l10n.grantAccess,
+          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
         ),
       ),
     );
   }
 
   Widget _buildDismissButton(ThemeData theme) {
+    final l10n = AppLocalizations.of(context);
     return TextButton(
       onPressed: () => Navigator.of(context).pop(),
       style: TextButton.styleFrom(
         foregroundColor: theme.colorScheme.secondary,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       ),
-      child: const Text('Maybe Later'),
+      child: Text(l10n.maybeLater),
     );
   }
 }

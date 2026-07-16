@@ -865,4 +865,47 @@ class AppLocalizationsId extends AppLocalizations {
   String routeNotFound(String name) {
     return 'Rute tidak ditemukan: $name';
   }
+
+  @override
+  String get searchInstalledApps => 'Cari aplikasi terinstal...';
+
+  @override
+  String get searchApps => 'Cari aplikasi...';
+
+  @override
+  String get scan => 'Scan';
+
+  @override
+  String get scanOptions => 'Opsi Scan';
+
+  @override
+  String get scanOptionsSubtitle =>
+      'Pilih bagaimana Anda ingin menyegarkan info aplikasi Anda.';
+
+  @override
+  String get fullSystemScan => 'Scan Sistem Penuh';
+
+  @override
+  String get fullSystemScanSubtitle =>
+      'Analisis mendalam & fingerprint aplikasi';
+
+  @override
+  String get smartRevalidate => 'Revalidasi Pintar';
+
+  @override
+  String get smartRevalidateSubtitle =>
+      'Periksa perubahan aplikasi dengan cepat';
+
+  @override
+  String get checkingUpdates => 'Memeriksa pembaruan';
+
+  @override
+  String get githubCtaTitle => 'Untuk informasi detail';
+
+  @override
+  String get githubCtaSubtitle => 'Lihat kode sumber di GitHub';
+
+  @override
+  String get reportIssueSubtitle =>
+      'Pilih cara Anda ingin melaporkan atau menyelidiki masalah.';
 }

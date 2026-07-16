@@ -332,5 +332,18 @@
     "placeholders": {
       "name": { "type": "String" }
     }
-  }
+  },
+  "searchInstalledApps": "Yüklü uygulamaları ara...",
+  "searchApps": "Uygulamaları ara...",
+  "scan": "Tara",
+  "scanOptions": "Tarama Seçenekleri",
+  "scanOptionsSubtitle": "Uygulama bilgilerinizi nasıl yenilemek istediğinizi seçin.",
+  "fullSystemScan": "Tam Sistem Taraması",
+  "fullSystemScanSubtitle": "Derin analiz ve uygulama parmak izi tespiti",
+  "smartRevalidate": "Akıllı Doğrulama",
+  "smartRevalidateSubtitle": "Uygulama değişikliklerini hızlıca kontrol edin",
+  "checkingUpdates": "Güncellemeler kontrol ediliyor",
+  "githubCtaTitle": "Detaylı bilgi için",
+  "githubCtaSubtitle": "GitHub'daki kaynak koduna göz atın",
+  "reportIssueSubtitle": "Bir sorunu nasıl bildirmek veya incelemek istediğinizi seçin."
 }

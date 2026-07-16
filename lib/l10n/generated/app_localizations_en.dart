@@ -860,4 +860,45 @@ class AppLocalizationsEn extends AppLocalizations {
   String routeNotFound(String name) {
     return 'Route not found: $name';
   }
+
+  @override
+  String get searchInstalledApps => 'Search installed apps...';
+
+  @override
+  String get searchApps => 'Search apps...';
+
+  @override
+  String get scan => 'Scan';
+
+  @override
+  String get scanOptions => 'Scan Options';
+
+  @override
+  String get scanOptionsSubtitle =>
+      'Choose how you want to refresh your app intel.';
+
+  @override
+  String get fullSystemScan => 'Full System Scan';
+
+  @override
+  String get fullSystemScanSubtitle => 'Deep analysis & app fingerprinting';
+
+  @override
+  String get smartRevalidate => 'Smart Revalidate';
+
+  @override
+  String get smartRevalidateSubtitle => 'Quickly check for app changes';
+
+  @override
+  String get checkingUpdates => 'Checking updates';
+
+  @override
+  String get githubCtaTitle => 'For detailed info';
+
+  @override
+  String get githubCtaSubtitle => 'Check out the source code on GitHub';
+
+  @override
+  String get reportIssueSubtitle =>
+      'Select how you want to report or investigate an issue.';
 }
