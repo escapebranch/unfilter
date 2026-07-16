@@ -1,4 +1,4 @@
-![Unfilter Banner](docs/assets/unfilter-banner.png)
+![Unfilter Banner](docs/readme/unfilter-banner.png)
 
 # Unfilter
 
@@ -40,54 +40,20 @@ It fingerprints installed apps using framework signals, native clues, and shared
 
 ## Gallery
 
-<table width="100%">
-  <tr>
-    <td align="center" valign="top" width="33.33%">
-      <b>Home</b><br><sub>App overview</sub><br>
-      <img src="docs/assets/home-white.jpg" width="40%" align="middle" alt="Light" />&nbsp;│&nbsp;<img src="docs/assets/home-black.jpg" width="40%" align="middle" alt="Dark" />
-    </td>
-    <td align="center" valign="top" width="33.33%">
-      <b>Menu</b><br><sub>Navigation</sub><br>
-      <img src="docs/assets/menu-white.jpg" width="40%" align="middle" alt="Light" />&nbsp;│&nbsp;<img src="docs/assets/menu-black.jpg" width="40%" align="middle" alt="Dark" />
-    </td>
-    <td align="center" valign="top" width="33.33%">
-      <b>Search</b><br><sub>App lookup</sub><br>
-      <img src="docs/assets/search-white.jpg" width="40%" align="middle" alt="Light" />&nbsp;│&nbsp;<img src="docs/assets/search-black.jpg" width="40%" align="middle" alt="Dark" />
-    </td>
-  </tr>
-  <tr>
-    <td align="center" valign="top" width="33.33%">
-      <b>Filters</b><br><sub>Sort by app fingerprint</sub><br>
-      <img src="docs/assets/filter-stack-bottomsheet-white.jpg" width="40%" align="middle" alt="Light" />&nbsp;│&nbsp;<img src="docs/assets/filter-stack-bottomsheet-black.jpg" width="40%" align="middle" alt="Dark" />
-    </td>
-    <td align="center" valign="top" width="33.33%">
-      <b>Task Manager</b><br><sub>Live processes</sub><br>
-      <img src="docs/assets/task-manager-white.jpg" width="40%" align="middle" alt="Light" />&nbsp;│&nbsp;<img src="docs/assets/task-manager-black.jpg" width="40%" align="middle" alt="Dark" />
-    </td>
-    <td align="center" valign="top" width="33.33%">
-      <b>Updates</b><br><sub>App updates</sub><br>
-      <img src="docs/assets/update-white.jpg" width="40%" align="middle" alt="Light" />&nbsp;│&nbsp;<img src="docs/assets/update-black.jpg" width="40%" align="middle" alt="Dark" />
-    </td>
-  </tr>
-  <tr>
-    <td align="center" valign="top" width="33.33%">
-      <b>Storage</b><br><sub>Storage analysis</sub><br>
-      <img src="docs/assets/storage-insights-white.jpg" width="40%" align="middle" alt="Light" />&nbsp;│&nbsp;<img src="docs/assets/storage-insights-black.jpg" width="40%" align="middle" alt="Dark" />
-    </td>
-    <td align="center" valign="top" width="33.33%">
-      <b>Statistics</b><br><sub>Usage metrics</sub><br>
-      <img src="docs/assets/usage-statistics-white.jpg" width="40%" align="middle" alt="Light" />&nbsp;│&nbsp;<img src="docs/assets/usage-statistics-black.jpg" width="40%" align="middle" alt="Dark" />
-    </td>
-    <td align="center" valign="top" width="33.33%">
-      <b>App Details</b><br><sub>Inspection</sub><br>
-      <img src="docs/assets/app-details-white.jpg" width="40%" align="middle" alt="Light" />&nbsp;│&nbsp;<img src="docs/assets/app-details-black.jpg" width="40%" align="middle" alt="Dark" />
-    </td>
-  </tr>
-</table>
+<p align="center">
+  <img src="docs/readme/1.png" width="32%" />
+  <img src="docs/readme/2.png" width="32%" />
+  <img src="docs/readme/3.png" width="32%" />
+</p>
+<p align="center">
+  <img src="docs/readme/4.png" width="32%" />
+  <img src="docs/readme/5.png" width="32%" />
+  <img src="docs/readme/6.png" width="32%" />
+</p>
 
 ## Installation
 
-![How to Install](docs/assets/how-to-install.png)
+![How to Install](docs/readme/how-to-install.png)
 
 ## Download
 
