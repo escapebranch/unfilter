@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:unfilter/features/sensor_diagnostics/utils/sensor_utils.dart';
 import 'package:unfilter/l10n/generated/app_localizations.dart';
 
 import '../../../../core/widgets/top_shadow_gradient.dart';
 import '../../../home/presentation/widgets/premium_app_bar.dart';
-import '../utils/sensor_utils.dart';
 import '../widgets/sensor_list_card.dart';
 
 class SensorDiagnosticsPage extends StatefulWidget {
@@ -221,6 +221,28 @@ class _SensorDiagnosticsPageState extends State<SensorDiagnosticsPage> {
           PremiumAppBar(
             title: l10n.sensorDiagnosticsTitle,
             scrollController: _scrollController,
+            actions: [
+              Container(
+                margin: const EdgeInsets.only(right: 4),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.primary.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: theme.colorScheme.primary.withValues(alpha: 0.2),
+                  ),
+                ),
+                child: Text(
+                  'BETA',
+                  style: theme.textTheme.labelSmall?.copyWith(
+                    color: theme.colorScheme.primary,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 9,
+                    letterSpacing: 1.2,
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
       ),

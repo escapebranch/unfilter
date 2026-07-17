@@ -135,6 +135,8 @@ class AppDrawer extends ConsumerWidget {
   }
 
   Widget _buildToolsSection(BuildContext context, AppLocalizations l10n) {
+    final theme = Theme.of(context);
+    
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -153,6 +155,25 @@ class AppDrawer extends ConsumerWidget {
           title: l10n.sensorDiagnosticsTitle,
           subtitle: l10n.sensorDiagnosticsSubtitle,
           icon: Icons.sensors_rounded,
+          trailing: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            decoration: BoxDecoration(
+              color: theme.colorScheme.primary.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(
+                color: theme.colorScheme.primary.withValues(alpha: 0.2),
+              ),
+            ),
+            child: Text(
+              'BETA',
+              style: theme.textTheme.labelSmall?.copyWith(
+                color: theme.colorScheme.primary,
+                fontWeight: FontWeight.bold,
+                fontSize: 9,
+                letterSpacing: 1.2,
+              ),
+            ),
+          ),
           onTap: () {
             Navigator.pop(context);
             AppRouteFactory.toSensorDiagnostics(context);
