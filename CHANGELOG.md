@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.6.0+18] - 2026-07-17
+
+### Added
+
+- **Live Hardware Sensor Diagnostics**: Built-in real-time sensor streams dashboard in the tools drawer menu for inspecting 3D Motion, Pedometer, Environmental, Proximity, and Orientation hardware sensors.
+- **Real-time Sparkline Charts**: Interactive high-frequency streams with dynamic scaling, axis metrics, and zero-latency hardware feedback.
+- **Fixed Header & BETA Ribbon**: Added fixed app bar pinning mode and top-left ribbon sash badges.
+
+### Improved
+
+- **60+ FPS Stream Throttling**: Rate-limited UI frame updates to ~16ms (~60 FPS cap) to prevent UI thread starvation and maintain buttery smooth performance on low-end devices.
+- **Native Memory Optimization**: Pre-allocated array list buffers in native Kotlin `SensorDiagnosticsManager` to eliminate GC pressure.
+
+### Fixed
+
+- **Sensor Null-Safety**: Hardened native map extraction and floating-point conversion against null, NaN, and unexpected casting exceptions.
+
 ## [1.5.1+17] - 2026-07-06
 
 ### Added
