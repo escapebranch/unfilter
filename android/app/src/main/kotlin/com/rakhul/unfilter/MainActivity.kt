@@ -48,6 +48,7 @@ private val REVIEW_CHANNEL = "com.escapebranch.unfilter/review"
     private lateinit var batteryAnalyzer: BatteryAnalyzer
     private lateinit var updateManager: UpdateManager
     private lateinit var reviewManager: com.google.android.play.core.review.ReviewManager
+    private lateinit var sensorDiagnosticsManager: SensorDiagnosticsManager
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
@@ -61,6 +62,8 @@ private val REVIEW_CHANNEL = "com.escapebranch.unfilter/review"
         batteryAnalyzer = BatteryAnalyzer(this)
         updateManager = UpdateManager(this)
         reviewManager = ReviewManagerFactory.create(this)
+        sensorDiagnosticsManager = SensorDiagnosticsManager(this)
+        sensorDiagnosticsManager.register(flutterEngine.dartExecutor.binaryMessenger)
         
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler { call, result ->
             when (call.method) {
@@ -546,6 +549,7 @@ private val REVIEW_CHANNEL = "com.escapebranch.unfilter/review"
             appRepository.shutdown()
             storageAnalyzer.shutdown()
             updateManager.unregisterListener()
+            sensorDiagnosticsManager.onCancel(null)
         } catch (e: Exception) {
         }
     }
