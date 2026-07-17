@@ -13,6 +13,8 @@ class DrawerNavTile extends StatelessWidget {
 
   final bool showBadge;
 
+  final String? sashText;
+
   const DrawerNavTile({
     super.key,
     required this.title,
@@ -21,6 +23,7 @@ class DrawerNavTile extends StatelessWidget {
     required this.onTap,
     this.trailing,
     this.showBadge = false,
+    this.sashText,
   });
 
   @override
@@ -37,35 +40,77 @@ class DrawerNavTile extends StatelessWidget {
           overlayColor: WidgetStateProperty.all(
             theme.colorScheme.primary.withValues(alpha: 0.05),
           ),
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            decoration: BoxDecoration(
-              color: theme.colorScheme.surface,
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(
-                color: theme.colorScheme.outlineVariant.withValues(alpha: 0.4),
-                width: 1,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.01),
-                  blurRadius: 10,
-                  offset: const Offset(0, 4),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(20),
+            child: Stack(
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.surface,
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                      color: theme.colorScheme.outlineVariant.withValues(alpha: 0.4),
+                      width: 1,
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.01),
+                        blurRadius: 10,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    children: [
+                      _buildIconContainer(theme),
+                      const SizedBox(width: 8),
+                      Expanded(child: _buildTextContent(theme)),
+                      if (trailing != null) ...[trailing!, const SizedBox(width: 8)],
+                      Icon(
+                        Icons.arrow_forward_ios_rounded,
+                        size: 14,
+                        color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.4),
+                      ),
+                    ],
+                  ),
                 ),
+                if (sashText != null) _buildSash(theme),
               ],
             ),
-            child: Row(
-              children: [
-                _buildIconContainer(theme),
-                const SizedBox(width: 8),
-                Expanded(child: _buildTextContent(theme)),
-                if (trailing != null) ...[trailing!, const SizedBox(width: 8)],
-                Icon(
-                  Icons.arrow_forward_ios_rounded,
-                  size: 14,
-                  color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.4),
-                ),
-              ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSash(ThemeData theme) {
+    return Positioned(
+      top: 8,
+      left: -22,
+      child: Transform.rotate(
+        angle: -0.785398, // -45 degrees
+        child: Container(
+          width: 80,
+          padding: const EdgeInsets.symmetric(vertical: 2.5),
+          decoration: BoxDecoration(
+            color: theme.colorScheme.primary,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.2),
+                blurRadius: 4,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: Text(
+            sashText!.toUpperCase(),
+            textAlign: TextAlign.center,
+            style: theme.textTheme.labelSmall?.copyWith(
+              color: theme.colorScheme.onPrimary,
+              fontWeight: FontWeight.w900,
+              fontSize: 8,
+              letterSpacing: 1.2,
             ),
           ),
         ),

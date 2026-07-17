@@ -10,6 +10,7 @@ class PremiumAppBar extends StatefulWidget {
   final List<Widget>? actions;
   final List<PremiumAppBarMenuAction>? menuActions;
   final ScrollController? scrollController;
+  final bool isFixed;
 
   const PremiumAppBar({
     super.key,
@@ -19,6 +20,7 @@ class PremiumAppBar extends StatefulWidget {
     this.actions,
     this.menuActions,
     this.scrollController,
+    this.isFixed = false,
   });
 
   @override
@@ -35,15 +37,20 @@ class _PremiumAppBarState extends State<PremiumAppBar> {
   @override
   void initState() {
     super.initState();
-    widget.scrollController?.addListener(_onScroll);
+    if (!widget.isFixed) {
+      widget.scrollController?.addListener(_onScroll);
+    }
   }
 
   @override
   void didUpdateWidget(PremiumAppBar oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.scrollController != widget.scrollController) {
+    if (oldWidget.scrollController != widget.scrollController ||
+        oldWidget.isFixed != widget.isFixed) {
       oldWidget.scrollController?.removeListener(_onScroll);
-      widget.scrollController?.addListener(_onScroll);
+      if (!widget.isFixed) {
+        widget.scrollController?.addListener(_onScroll);
+      }
     }
   }
 
@@ -56,7 +63,7 @@ class _PremiumAppBarState extends State<PremiumAppBar> {
   }
 
   void _onScroll() {
-    if (!mounted) return;
+    if (!mounted || widget.isFixed) return;
 
     if (_isMenuOpen) {
       _removeOverlay();
