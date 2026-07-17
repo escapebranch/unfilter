@@ -47,7 +47,10 @@ class _SensorDiagnosticsPageState extends State<SensorDiagnosticsPage> {
       final List<dynamic>? result = await _sensorsChannel.invokeMethod<List<dynamic>>('getSensorsList');
       if (result != null) {
         setState(() {
-          _allSensors = result.map((e) => Map<String, dynamic>.from(e as Map)).toList();
+          _allSensors = result
+              .where((e) => e != null && e is Map)
+              .map((e) => Map<String, dynamic>.from(e as Map))
+              .toList();
           _isLoading = false;
         });
       } else {
@@ -67,7 +70,7 @@ class _SensorDiagnosticsPageState extends State<SensorDiagnosticsPage> {
   List<Map<String, dynamic>> get _filteredSensors {
     if (_allSensors == null) return [];
     return _allSensors!.where((sensor) {
-      final type = sensor['type'] as int? ?? -1;
+      final type = (sensor['type'] as num?)?.toInt() ?? -1;
       final name = (sensor['name'] as String? ?? '').toLowerCase();
       final vendor = (sensor['vendor'] as String? ?? '').toLowerCase();
 
@@ -90,17 +93,13 @@ class _SensorDiagnosticsPageState extends State<SensorDiagnosticsPage> {
       backgroundColor: theme.scaffoldBackgroundColor,
       body: Stack(
         children: [
-          CustomScrollView(
-            controller: _scrollController,
-            physics: const BouncingScrollPhysics(),
-            slivers: [
-              SliverToBoxAdapter(
-                child: SizedBox(
-                  height: 46.0 + (8.0 * 2) + MediaQuery.of(context).padding.top,
-                ),
+          Column(
+            children: [
+              SizedBox(
+                height: 46.0 + (8.0 * 2) + MediaQuery.of(context).padding.top,
               ),
               if (_isLoading)
-                const SliverFillRemaining(
+                const Expanded(
                   child: Center(
                     child: CircularProgressIndicator(
                       strokeWidth: 2,
@@ -108,7 +107,7 @@ class _SensorDiagnosticsPageState extends State<SensorDiagnosticsPage> {
                   ),
                 )
               else if (_error != null)
-                SliverFillRemaining(
+                Expanded(
                   child: Center(
                     child: Padding(
                       padding: const EdgeInsets.all(24.0),
@@ -138,82 +137,78 @@ class _SensorDiagnosticsPageState extends State<SensorDiagnosticsPage> {
                   ),
                 )
               else ...[
-                // Search & Category Filters
-                SliverToBoxAdapter(
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
-                    child: Column(
-                      children: [
-                        // Search Input Field
-                        TextField(
-                          controller: _searchController,
-                          onChanged: (val) => setState(() => _searchQuery = val),
-                          decoration: InputDecoration(
-                            hintText: 'Search hardware sensors...',
-                            prefixIcon: const Icon(Icons.search_rounded, size: 20),
-                            suffixIcon: _searchQuery.isNotEmpty
-                                ? IconButton(
-                                    icon: const Icon(Icons.clear_rounded, size: 18),
-                                    onPressed: () {
-                                      _searchController.clear();
-                                      setState(() => _searchQuery = '');
-                                    },
-                                  )
-                                : null,
-                            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                            filled: true,
-                            fillColor: theme.colorScheme.surface,
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(16),
-                              borderSide: BorderSide(
-                                color: theme.colorScheme.outlineVariant.withValues(alpha: 0.2),
-                              ),
+                // Search & Category Filters (Fixed)
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
+                  child: Column(
+                    children: [
+                      // Search Input Field
+                      TextField(
+                        controller: _searchController,
+                        onChanged: (val) => setState(() => _searchQuery = val),
+                        decoration: InputDecoration(
+                          hintText: 'Search hardware sensors...',
+                          prefixIcon: const Icon(Icons.search_rounded, size: 20),
+                          suffixIcon: _searchQuery.isNotEmpty
+                              ? IconButton(
+                                  icon: const Icon(Icons.clear_rounded, size: 18),
+                                  onPressed: () {
+                                    _searchController.clear();
+                                    setState(() => _searchQuery = '');
+                                  },
+                                )
+                              : null,
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                          filled: true,
+                          fillColor: theme.colorScheme.surface,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(16),
+                            borderSide: BorderSide(
+                              color: theme.colorScheme.outlineVariant.withValues(alpha: 0.2),
                             ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(16),
-                              borderSide: BorderSide(
-                                color: theme.colorScheme.outlineVariant.withValues(alpha: 0.2),
-                              ),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(16),
+                            borderSide: BorderSide(
+                              color: theme.colorScheme.outlineVariant.withValues(alpha: 0.2),
                             ),
                           ),
                         ),
-                        const SizedBox(height: 12),
-                        // Category Filter Chips
-                        SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          physics: const BouncingScrollPhysics(),
-                          child: Row(
-                            children: [
-                              _buildCategoryChip(theme, 'All (${_allSensors?.length ?? 0})', null),
-                              _buildCategoryChip(theme, '3D Motion', SensorCategory.motion3D),
-                              _buildCategoryChip(theme, 'Environment', SensorCategory.environment1D),
-                              _buildCategoryChip(theme, 'Pedometer', SensorCategory.pedometer),
-                              _buildCategoryChip(theme, 'Proximity', SensorCategory.proximity),
-                              _buildCategoryChip(theme, 'Orientation', SensorCategory.orientation),
-                            ],
-                          ),
+                      ),
+                      const SizedBox(height: 12),
+                      // Category Filter Chips
+                      SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        physics: const BouncingScrollPhysics(),
+                        child: Row(
+                          children: [
+                            _buildCategoryChip(theme, 'All (${_allSensors?.length ?? 0})', null),
+                            _buildCategoryChip(theme, '3D Motion', SensorCategory.motion3D),
+                            _buildCategoryChip(theme, 'Environment', SensorCategory.environment1D),
+                            _buildCategoryChip(theme, 'Pedometer', SensorCategory.pedometer),
+                            _buildCategoryChip(theme, 'Proximity', SensorCategory.proximity),
+                            _buildCategoryChip(theme, 'Orientation', SensorCategory.orientation),
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
-                if (_filteredSensors.isEmpty)
-                  SliverFillRemaining(
-                    child: _buildEmptyState(theme),
-                  )
-                else
-                  SliverPadding(
-                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
-                    sliver: SliverList(
-                      delegate: SliverChildBuilderDelegate(
-                        (context, index) {
-                          final sensor = _filteredSensors[index];
-                          return SensorListCard(sensor: sensor);
-                        },
-                        childCount: _filteredSensors.length,
-                      ),
-                    ),
-                  ),
+                // Scrollable Cards
+                Expanded(
+                  child: _filteredSensors.isEmpty
+                      ? _buildEmptyState(theme)
+                      : ListView.builder(
+                          controller: _scrollController,
+                          physics: const BouncingScrollPhysics(),
+                          padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
+                          itemCount: _filteredSensors.length,
+                          itemBuilder: (context, index) {
+                            final sensor = _filteredSensors[index];
+                            return SensorListCard(sensor: sensor);
+                          },
+                        ),
+                ),
               ],
             ],
           ),
@@ -221,6 +216,7 @@ class _SensorDiagnosticsPageState extends State<SensorDiagnosticsPage> {
           PremiumAppBar(
             title: l10n.sensorDiagnosticsTitle,
             scrollController: _scrollController,
+            isFixed: true,
             actions: [
               Container(
                 margin: const EdgeInsets.only(right: 4),

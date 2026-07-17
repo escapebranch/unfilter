@@ -10,7 +10,7 @@ class SensorListCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final int type = sensor['type'] as int? ?? -1;
+    final int type = (sensor['type'] as num?)?.toInt() ?? -1;
     final String name = sensor['name'] as String? ?? 'Unknown Sensor';
     
     final icon = getSensorIcon(type);

@@ -16,7 +16,7 @@ class SensorDetailPage extends StatelessWidget {
     final theme = Theme.of(context);
     final ScrollController scrollController = ScrollController();
     
-    final int type = sensor['type'] as int? ?? -1;
+    final int type = (sensor['type'] as num?)?.toInt() ?? -1;
     final String name = sensor['name'] as String? ?? 'Unknown Sensor';
     final String vendor = sensor['vendor'] as String? ?? 'Unknown Vendor';
     final double power = (sensor['power'] as num?)?.toDouble() ?? 0.0;
@@ -112,6 +112,28 @@ class SensorDetailPage extends StatelessWidget {
           PremiumAppBar(
             title: name,
             scrollController: scrollController,
+            actions: [
+              Container(
+                margin: const EdgeInsets.only(right: 4),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.primary.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: theme.colorScheme.primary.withValues(alpha: 0.2),
+                  ),
+                ),
+                child: Text(
+                  'BETA',
+                  style: theme.textTheme.labelSmall?.copyWith(
+                    color: theme.colorScheme.primary,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 9,
+                    letterSpacing: 1.2,
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
       ),
