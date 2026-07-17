@@ -634,6 +634,13 @@ class AppLocalizationsId extends AppLocalizations {
   String get taskManagerSubtitle => 'Pantau sumber daya sistem';
 
   @override
+  String get sensorDiagnosticsTitle => 'Diagnostik Sensor';
+
+  @override
+  String get sensorDiagnosticsSubtitle =>
+      'Aliran data sensor perangkat keras waktu nyata';
+
+  @override
   String get drawerTools => 'ALAT';
 
   @override

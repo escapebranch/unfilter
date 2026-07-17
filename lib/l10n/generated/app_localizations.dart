@@ -1222,6 +1222,18 @@ abstract class AppLocalizations {
   /// **'Monitor system resources'**
   String get taskManagerSubtitle;
 
+  /// No description provided for @sensorDiagnosticsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Sensor Diagnostics'**
+  String get sensorDiagnosticsTitle;
+
+  /// No description provided for @sensorDiagnosticsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Real-time hardware sensor streams'**
+  String get sensorDiagnosticsSubtitle;
+
   /// No description provided for @drawerTools.
   ///
   /// In en, this message translates to:

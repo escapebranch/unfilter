@@ -186,6 +186,8 @@
   "usageStatisticsSubtitle": "உங்கள் டிஜிட்டல் நலப் பயன்பாடு காண்க",
   "storageInsightsSubtitle": "சேமிப்பகத்தின் விவரங்கள்",
   "taskManagerSubtitle": "கணினி வளங்களை கண்காணிக்கவும்",
+  "sensorDiagnosticsTitle": "சென்சார் கண்டறிதல்",
+  "sensorDiagnosticsSubtitle": "சாதன சென்சார்களின் நேரடி விவரங்கள்",
   "drawerTools": "கருவிகள்",
   "deeplinkTesterSubtitle": "URI நடத்தை சோதிக்கவும்",
   "drawerInformation": "தகவல்",

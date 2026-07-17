@@ -630,6 +630,13 @@ class AppLocalizationsHi extends AppLocalizations {
   String get taskManagerSubtitle => 'सिस्टम संसाधन मॉनिटर करें';
 
   @override
+  String get sensorDiagnosticsTitle => 'सेंसर डायग्नोस्टिक्स';
+
+  @override
+  String get sensorDiagnosticsSubtitle =>
+      'वास्तविक समय हार्डवेयर सेंसर स्ट्रीम';
+
+  @override
   String get drawerTools => 'उपकरण';
 
   @override

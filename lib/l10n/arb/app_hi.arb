@@ -186,6 +186,8 @@
   "usageStatisticsSubtitle": "अपनी डिजिटल सेहत देखें",
   "storageInsightsSubtitle": "बिना फ़िल्टर स्थान विवरण",
   "taskManagerSubtitle": "सिस्टम संसाधन मॉनिटर करें",
+  "sensorDiagnosticsTitle": "सेंसर डायग्नोस्टिक्स",
+  "sensorDiagnosticsSubtitle": "वास्तविक समय हार्डवेयर सेंसर स्ट्रीम",
   "drawerTools": "उपकरण",
   "deeplinkTesterSubtitle": "URI व्यवहार परीक्षण और निरीक्षण करें",
   "drawerInformation": "जानकारी",

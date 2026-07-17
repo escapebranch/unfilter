@@ -240,6 +240,8 @@
   "usageStatisticsSubtitle": "Dijital sağlığınızı görüntüleyin",
   "storageInsightsSubtitle": "Depolama dökümü",
   "taskManagerSubtitle": "Sistem kaynaklarını izle",
+  "sensorDiagnosticsTitle": "Sensör Teşhisi",
+  "sensorDiagnosticsSubtitle": "Gerçek zamanlı donanım sensörü akışları",
   "drawerTools": "ARAÇLAR",
   "deeplinkTesterSubtitle": "URI davranışını test et ve incele",
   "drawerInformation": "BİLGİ",

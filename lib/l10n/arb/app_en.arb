@@ -267,6 +267,8 @@
   "usageStatisticsSubtitle": "View your digital wellbeing",
   "storageInsightsSubtitle": "Unfiltered space breakdown",
   "taskManagerSubtitle": "Monitor system resources",
+  "sensorDiagnosticsTitle": "Sensor Diagnostics",
+  "sensorDiagnosticsSubtitle": "Real-time hardware sensor streams",
   "drawerTools": "TOOLS",
   "deeplinkTesterSubtitle": "Test and inspect URI behavior",
   "drawerInformation": "INFORMATION",

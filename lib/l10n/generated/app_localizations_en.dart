@@ -630,6 +630,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get taskManagerSubtitle => 'Monitor system resources';
 
   @override
+  String get sensorDiagnosticsTitle => 'Sensor Diagnostics';
+
+  @override
+  String get sensorDiagnosticsSubtitle => 'Real-time hardware sensor streams';
+
+  @override
   String get drawerTools => 'TOOLS';
 
   @override

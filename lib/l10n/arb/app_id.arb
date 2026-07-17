@@ -186,6 +186,8 @@
   "usageStatisticsSubtitle": "Lihat kesehatan digital Anda",
   "storageInsightsSubtitle": "Rincian ruang yang tidak difilter",
   "taskManagerSubtitle": "Pantau sumber daya sistem",
+  "sensorDiagnosticsTitle": "Diagnostik Sensor",
+  "sensorDiagnosticsSubtitle": "Aliran data sensor perangkat keras waktu nyata",
   "drawerTools": "ALAT",
   "deeplinkTesterSubtitle": "Uji dan periksa perilaku URI",
   "drawerInformation": "INFORMASI",

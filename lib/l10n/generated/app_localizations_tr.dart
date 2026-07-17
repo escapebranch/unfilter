@@ -637,6 +637,13 @@ class AppLocalizationsTr extends AppLocalizations {
   String get taskManagerSubtitle => 'Sistem kaynaklarını izle';
 
   @override
+  String get sensorDiagnosticsTitle => 'Sensör Teşhisi';
+
+  @override
+  String get sensorDiagnosticsSubtitle =>
+      'Gerçek zamanlı donanım sensörü akışları';
+
+  @override
   String get drawerTools => 'ARAÇLAR';
 
   @override

@@ -648,6 +648,12 @@ class AppLocalizationsDe extends AppLocalizations {
   String get taskManagerSubtitle => 'Systemressourcen überwachen';
 
   @override
+  String get sensorDiagnosticsTitle => 'Sensor-Diagnose';
+
+  @override
+  String get sensorDiagnosticsSubtitle => 'Echtzeit-Hardware-Sensorströme';
+
+  @override
   String get drawerTools => 'WERKZEUGE';
 
   @override

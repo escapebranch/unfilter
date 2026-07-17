@@ -638,6 +638,12 @@ class AppLocalizationsTa extends AppLocalizations {
   String get taskManagerSubtitle => 'கணினி வளங்களை கண்காணிக்கவும்';
 
   @override
+  String get sensorDiagnosticsTitle => 'சென்சார் கண்டறிதல்';
+
+  @override
+  String get sensorDiagnosticsSubtitle => 'சாதன சென்சார்களின் நேரடி விவரங்கள்';
+
+  @override
   String get drawerTools => 'கருவிகள்';
 
   @override

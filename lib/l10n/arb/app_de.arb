@@ -186,6 +186,8 @@
   "usageStatisticsSubtitle": "Sehen Sie sich Ihr digitales Wohlbefinden an",
   "storageInsightsSubtitle": "Ungefilterte Speicherplatzaufschlüsselung",
   "taskManagerSubtitle": "Systemressourcen überwachen",
+  "sensorDiagnosticsTitle": "Sensor-Diagnose",
+  "sensorDiagnosticsSubtitle": "Echtzeit-Hardware-Sensorströme",
   "drawerTools": "WERKZEUGE",
   "deeplinkTesterSubtitle": "URI-Verhalten testen und überprüfen",
   "drawerInformation": "INFORMATIONEN",
