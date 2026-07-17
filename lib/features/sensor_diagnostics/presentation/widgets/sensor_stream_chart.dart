@@ -31,14 +31,6 @@ class _LiveSensorStreamWidgetState extends State<LiveSensorStreamWidget> {
   bool _isWaitingForData = true;
   Timer? _waitingTimer;
 
-  // Real-time Hz Sampling Rate Calculation
-  final List<int> _timestamps = [];
-  double _currentHz = 0.0;
-
-  // Manual Test Mode / Impulse Injection
-  bool _isSimulatingImpulse = false;
-  Timer? _simulationTimer;
-
   // Stats for 1D environmental & scalar sensors
   double? _minVal;
   double? _maxVal;
@@ -48,7 +40,7 @@ class _LiveSensorStreamWidgetState extends State<LiveSensorStreamWidget> {
 
   // Step counter specific state
   int _stepCount = 0;
-  final List<int> _stepHistory = List.filled(20, 0);
+  final List<int> _stepHistory = List.filled(20, 0, growable: true);
 
   @override
   void initState() {
@@ -59,9 +51,10 @@ class _LiveSensorStreamWidgetState extends State<LiveSensorStreamWidget> {
   @override
   void dispose() {
     _unsubscribe();
-    _simulationTimer?.cancel();
     super.dispose();
   }
+
+  DateTime _lastRenderTime = DateTime.fromMillisecondsSinceEpoch(0);
 
   void _subscribe() {
     try {
@@ -77,21 +70,23 @@ class _LiveSensorStreamWidgetState extends State<LiveSensorStreamWidget> {
           .receiveBroadcastStream(widget.sensorType)
           .listen(
         (event) {
-          if (!mounted) return;
-          if (_isSimulatingImpulse) return; // Ignore real stream while simulating test wave
+          if (!mounted || event == null || event is! Map) return;
 
-          final map = event as Map;
-          final List<dynamic> rawValues = (map['values'] as List?) ?? [];
-          final int timestamp = (map['timestamp'] as num?)?.toInt() ?? DateTime.now().microsecondsSinceEpoch * 1000;
-          final int accuracy = (map['accuracy'] as num?)?.toInt() ?? 3;
+          final map = event;
+          final rawValues = map['values'];
+          if (rawValues is! List || rawValues.isEmpty) return;
 
-          // Sanitize floating point values (Filter NaN & Infinity)
-          final List<double> values = rawValues.map((v) {
-            final d = (v as num).toDouble();
-            return d.isFinite ? d : 0.0;
-          }).toList();
+          final List<double> values = [];
+          for (final v in rawValues) {
+            if (v == null || v is! num) continue;
+            final d = v.toDouble();
+            values.add(d.isFinite ? d : 0.0);
+          }
 
           if (values.isEmpty) return;
+
+          final int timestamp = (map['timestamp'] as num?)?.toInt() ?? DateTime.now().microsecondsSinceEpoch * 1000;
+          final int accuracy = (map['accuracy'] as num?)?.toInt() ?? 3;
 
           _processSensorValues(values, timestamp, accuracy);
         },
@@ -110,93 +105,44 @@ class _LiveSensorStreamWidgetState extends State<LiveSensorStreamWidget> {
   }
 
   void _processSensorValues(List<double> values, int timestampNs, int accuracy) {
-    setState(() {
-      _currentValues = values;
-      _history.add(values);
-      if (_history.length > 100) {
-        _history.removeAt(0);
+    _currentValues = values;
+    _history.add(values);
+    if (_history.length > 80) {
+      _history.removeAt(0);
+    }
+
+    _accuracy = accuracy;
+    _error = null;
+    _isWaitingForData = false;
+
+    // Calculate min, max, avg for scalar/environmental values
+    final val = values.first;
+    _minVal = _minVal == null ? val : math.min(_minVal!, val);
+    _maxVal = _maxVal == null ? val : math.max(_maxVal!, val);
+    _sumVal += val;
+    _sampleCount++;
+
+    // Pedometer step tracking logic
+    if (widget.sensorType == 19) { // TYPE_STEP_COUNTER
+      _stepCount = val.toInt();
+      _stepHistory.add(_stepCount);
+      if (_stepHistory.length > 20) _stepHistory.removeAt(0);
+    } else if (widget.sensorType == 18) { // TYPE_STEP_DETECTOR
+      _stepCount += 1;
+      _stepHistory.add(_stepCount);
+      if (_stepHistory.length > 20) _stepHistory.removeAt(0);
+    }
+
+    // Rate-limit UI rebuilds to max 60 FPS (~16ms rate limit) to guarantee smooth performance on low-end devices
+    final now = DateTime.now();
+    if (now.difference(_lastRenderTime).inMilliseconds >= 16) {
+      _lastRenderTime = now;
+      if (mounted) {
+        setState(() {});
       }
-
-      _accuracy = accuracy;
-      _error = null;
-      _isWaitingForData = false;
-
-      // Update Hz Sampling Rate
-      final nowMs = DateTime.now().millisecondsSinceEpoch;
-      _timestamps.add(nowMs);
-      if (_timestamps.length > 30) _timestamps.removeAt(0);
-      if (_timestamps.length > 1) {
-        final elapsedSec = (_timestamps.last - _timestamps.first) / 1000.0;
-        if (elapsedSec > 0) {
-          _currentHz = (_timestamps.length - 1) / elapsedSec;
-        }
-      }
-
-      // Calculate min, max, avg for scalar/environmental values
-      final val = values.first;
-      _minVal = _minVal == null ? val : math.min(_minVal!, val);
-      _maxVal = _maxVal == null ? val : math.max(_maxVal!, val);
-      _sumVal += val;
-      _sampleCount++;
-
-      // Pedometer step tracking logic
-      if (widget.sensorType == 19) { // TYPE_STEP_COUNTER
-        _stepCount = val.toInt();
-        _stepHistory.add(_stepCount);
-        if (_stepHistory.length > 20) _stepHistory.removeAt(0);
-      } else if (widget.sensorType == 18) { // TYPE_STEP_DETECTOR
-        _stepCount += 1;
-        _stepHistory.add(_stepCount);
-        if (_stepHistory.length > 20) _stepHistory.removeAt(0);
-      }
-    });
-  }
-
-  void _toggleTestImpulseSimulation() {
-    if (_isSimulatingImpulse) {
-      _simulationTimer?.cancel();
-      _simulationTimer = null;
-      setState(() {
-        _isSimulatingImpulse = false;
-      });
-    } else {
-      setState(() {
-        _isSimulatingImpulse = true;
-        _error = null;
-        _isWaitingForData = false;
-      });
-
-      int tick = 0;
-      _simulationTimer = Timer.periodic(const Duration(milliseconds: 50), (timer) {
-        if (!mounted) {
-          timer.cancel();
-          return;
-        }
-        tick++;
-        final double phase = tick * 0.1;
-        
-        List<double> simulatedValues;
-        final category = getSensorCategory(widget.sensorType);
-
-        if (category == SensorCategory.pedometer) {
-          simulatedValues = [(100 + tick).toDouble()];
-        } else if (category == SensorCategory.proximity) {
-          simulatedValues = [(math.sin(phase) > 0) ? 5.0 : 0.0];
-        } else if (category == SensorCategory.environment1D) {
-          simulatedValues = [25.0 + math.sin(phase) * 3.0];
-        } else {
-          // 3D Motion wave
-          simulatedValues = [
-            math.sin(phase) * 9.8,
-            math.cos(phase * 1.3) * 5.0,
-            9.8 + math.sin(phase * 0.7) * 2.0,
-          ];
-        }
-
-        _processSensorValues(simulatedValues, DateTime.now().microsecondsSinceEpoch * 1000, 3);
-      });
     }
   }
+
 
   void _unsubscribe() {
     _waitingTimer?.cancel();
@@ -243,12 +189,6 @@ class _LiveSensorStreamWidgetState extends State<LiveSensorStreamWidget> {
                   color: theme.colorScheme.onSurface.withValues(alpha: 0.8),
                   height: 1.4,
                 ),
-              ),
-              const SizedBox(height: 12),
-              OutlinedButton.icon(
-                onPressed: _toggleTestImpulseSimulation,
-                icon: const Icon(Icons.science_rounded, size: 16),
-                label: const Text('Inject Test Impulse Wave'),
               ),
             ],
           ),
@@ -303,15 +243,6 @@ class _LiveSensorStreamWidgetState extends State<LiveSensorStreamWidget> {
                   height: 1.4,
                 ),
               ),
-              const SizedBox(height: 16),
-              ElevatedButton.icon(
-                onPressed: _toggleTestImpulseSimulation,
-                icon: const Icon(Icons.play_arrow_rounded, size: 18),
-                label: const Text('Inject Interactive Test Wave'),
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                ),
-              ),
             ],
           ),
         ),
@@ -346,33 +277,9 @@ class _LiveSensorStreamWidgetState extends State<LiveSensorStreamWidget> {
       children: [
         _buildMetricBadge(
           theme,
-          label: 'RATE',
-          value: '${_currentHz.toStringAsFixed(1)} Hz',
-          color: theme.colorScheme.primary,
-        ),
-        const SizedBox(width: 8),
-        _buildMetricBadge(
-          theme,
           label: 'ACCURACY',
           value: accuracyLabel,
           color: _accuracy == 3 ? Colors.green : Colors.orange,
-        ),
-        const SizedBox(width: 8),
-        _buildMetricBadge(
-          theme,
-          label: 'SAMPLES',
-          value: '$_sampleCount',
-          color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
-        ),
-        const Spacer(),
-        IconButton(
-          onPressed: _toggleTestImpulseSimulation,
-          tooltip: _isSimulatingImpulse ? 'Switch to Real Sensor Stream' : 'Simulate Test Impulse Wave',
-          icon: Icon(
-            _isSimulatingImpulse ? Icons.sensors_off_rounded : Icons.science_rounded,
-            color: _isSimulatingImpulse ? theme.colorScheme.tertiary : theme.colorScheme.onSurface.withValues(alpha: 0.5),
-            size: 20,
-          ),
         ),
       ],
     );

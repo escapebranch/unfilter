@@ -137,16 +137,24 @@ class SensorDiagnosticsManager(private val context: Context) : MethodChannel.Met
             val listener = object : SensorEventListener {
                 override fun onSensorChanged(event: SensorEvent?) {
                     if (event != null && event.sensor.type == sensorType) {
-                        val sanitizedValues = event.values.map { 
-                            if (it.isNaN() || it.isInfinite()) 0.0 else it.toDouble() 
+                        try {
+                            val rawValues = event.values ?: return
+                            val size = rawValues.size
+                            val sanitizedValues = ArrayList<Double>(size)
+                            for (i in 0 until size) {
+                                val v = rawValues[i].toDouble()
+                                sanitizedValues.add(if (v.isNaN() || v.isInfinite()) 0.0 else v)
+                            }
+                            val valuesMap = mapOf(
+                                "values" to sanitizedValues,
+                                "timestamp" to event.timestamp,
+                                "accuracy" to event.accuracy,
+                                "reportingMode" to sensor.reportingMode
+                            )
+                            activeSink?.success(valuesMap)
+                        } catch (e: Exception) {
+                            Log.e(TAG, "Error processing sensor event: ${e.message}", e)
                         }
-                        val valuesMap = mapOf(
-                            "values" to sanitizedValues,
-                            "timestamp" to event.timestamp,
-                            "accuracy" to event.accuracy,
-                            "reportingMode" to sensor.reportingMode
-                        )
-                        activeSink?.success(valuesMap)
                     }
                 }
 
