@@ -637,8 +637,7 @@ class AppLocalizationsId extends AppLocalizations {
   String get sensorDiagnosticsTitle => 'Diagnostik Sensor';
 
   @override
-  String get sensorDiagnosticsSubtitle =>
-      'Aliran data sensor perangkat keras waktu nyata';
+  String get sensorDiagnosticsSubtitle => 'Stream sensor real-time';
 
   @override
   String get drawerTools => 'ALAT';
@@ -918,5 +917,5 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get processSandboxedMessage =>
-      'Kernel-level process monitoring is secured by Android OS sandboxing (SELinux). Only user-space applications are accessible below.';
+      'Pemantauan proses tingkat kernel diamankan oleh sandboxing OS Android (SELinux). Hanya aplikasi ruang pengguna yang dapat diakses di bawah ini.';
 }

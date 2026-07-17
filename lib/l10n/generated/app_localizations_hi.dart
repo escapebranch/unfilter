@@ -633,8 +633,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get sensorDiagnosticsTitle => 'सेंसर डायग्नोस्टिक्स';
 
   @override
-  String get sensorDiagnosticsSubtitle =>
-      'वास्तविक समय हार्डवेयर सेंसर स्ट्रीम';
+  String get sensorDiagnosticsSubtitle => 'रियल-टाइम सेंसर स्ट्रीम्स';
 
   @override
   String get drawerTools => 'उपकरण';
@@ -912,5 +911,5 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get processSandboxedMessage =>
-      'Kernel-level process monitoring is secured by Android OS sandboxing (SELinux). Only user-space applications are accessible below.';
+      'कर्नेल-स्तर की प्रक्रिया निगरानी एंड्रॉइड ओएस सैंडबॉक्सिंग (SELinux) द्वारा सुरक्षित है। नीचे केवल उपयोगकर्ता-स्पेस एप्लिकेशन सुलभ हैं।';
 }

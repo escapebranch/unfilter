@@ -651,7 +651,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get sensorDiagnosticsTitle => 'Sensor-Diagnose';
 
   @override
-  String get sensorDiagnosticsSubtitle => 'Echtzeit-Hardware-Sensorströme';
+  String get sensorDiagnosticsSubtitle => 'Echtzeit-Sensor-Streams';
 
   @override
   String get drawerTools => 'WERKZEUGE';

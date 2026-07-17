@@ -1231,7 +1231,7 @@ abstract class AppLocalizations {
   /// No description provided for @sensorDiagnosticsSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'Real-time hardware sensor streams'**
+  /// **'Real-time sensor streams'**
   String get sensorDiagnosticsSubtitle;
 
   /// No description provided for @drawerTools.

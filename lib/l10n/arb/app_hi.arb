@@ -187,7 +187,7 @@
   "storageInsightsSubtitle": "बिना फ़िल्टर स्थान विवरण",
   "taskManagerSubtitle": "सिस्टम संसाधन मॉनिटर करें",
   "sensorDiagnosticsTitle": "सेंसर डायग्नोस्टिक्स",
-  "sensorDiagnosticsSubtitle": "वास्तविक समय हार्डवेयर सेंसर स्ट्रीम",
+  "sensorDiagnosticsSubtitle": "रियल-टाइम सेंसर स्ट्रीम्स",
   "drawerTools": "उपकरण",
   "deeplinkTesterSubtitle": "URI व्यवहार परीक्षण और निरीक्षण करें",
   "drawerInformation": "जानकारी",
@@ -273,5 +273,6 @@
   "checkingUpdates": "अपडेट की जांच की जा रही है",
   "githubCtaTitle": "विस्तृत जानकारी के लिए",
   "githubCtaSubtitle": "GitHub पर सोर्स कोड देखें",
-  "reportIssueSubtitle": "चुनें कि आप किसी समस्या की रिपोर्ट या जांच कैसे करना चाहते हैं।"
+  "reportIssueSubtitle": "चुनें कि आप किसी समस्या की रिपोर्ट या जांच कैसे करना चाहते हैं।",
+  "processSandboxedMessage": "कर्नेल-स्तर की प्रक्रिया निगरानी एंड्रॉइड ओएस सैंडबॉक्सिंग (SELinux) द्वारा सुरक्षित है। नीचे केवल उपयोगकर्ता-स्पेस एप्लिकेशन सुलभ हैं।"
 }

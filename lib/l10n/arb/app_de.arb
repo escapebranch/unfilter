@@ -187,7 +187,7 @@
   "storageInsightsSubtitle": "Ungefilterte Speicherplatzaufschlüsselung",
   "taskManagerSubtitle": "Systemressourcen überwachen",
   "sensorDiagnosticsTitle": "Sensor-Diagnose",
-  "sensorDiagnosticsSubtitle": "Echtzeit-Hardware-Sensorströme",
+  "sensorDiagnosticsSubtitle": "Echtzeit-Sensor-Streams",
   "drawerTools": "WERKZEUGE",
   "deeplinkTesterSubtitle": "URI-Verhalten testen und überprüfen",
   "drawerInformation": "INFORMATIONEN",

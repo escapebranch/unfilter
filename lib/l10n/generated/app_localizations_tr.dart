@@ -640,8 +640,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get sensorDiagnosticsTitle => 'Sensör Teşhisi';
 
   @override
-  String get sensorDiagnosticsSubtitle =>
-      'Gerçek zamanlı donanım sensörü akışları';
+  String get sensorDiagnosticsSubtitle => 'Gerçek zamanlı sensör akışları';
 
   @override
   String get drawerTools => 'ARAÇLAR';
@@ -922,5 +921,5 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get processSandboxedMessage =>
-      'Kernel-level process monitoring is secured by Android OS sandboxing (SELinux). Only user-space applications are accessible below.';
+      'Çekirdek düzeyindeki işlem izleme, Android OS korumalı alanı (SELinux) ile güvence altına alınmıştır. Aşağıda yalnızca kullanıcı alanı uygulamalarına erişilebilir.';
 }

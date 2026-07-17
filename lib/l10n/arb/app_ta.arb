@@ -187,7 +187,7 @@
   "storageInsightsSubtitle": "சேமிப்பகத்தின் விவரங்கள்",
   "taskManagerSubtitle": "கணினி வளங்களை கண்காணிக்கவும்",
   "sensorDiagnosticsTitle": "சென்சார் கண்டறிதல்",
-  "sensorDiagnosticsSubtitle": "சாதன சென்சார்களின் நேரடி விவரங்கள்",
+  "sensorDiagnosticsSubtitle": "நேரலை சென்சார் ஸ்ட்ரீம்கள்",
   "drawerTools": "கருவிகள்",
   "deeplinkTesterSubtitle": "URI நடத்தை சோதிக்கவும்",
   "drawerInformation": "தகவல்",
@@ -273,5 +273,6 @@
   "checkingUpdates": "புதுப்பிப்புகளைச் சரிபார்க்கிறது",
   "githubCtaTitle": "விவரமான தகவலுக்கு",
   "githubCtaSubtitle": "GitHub-இல் மூலக் குறியீட்டைப் பார்க்கவும்",
-  "reportIssueSubtitle": "ஒரு பிழையைப் புகாரளிக்க அல்லது விசாரிக்க நீங்கள் விரும்பும் வழியைத் தேர்ந்தெடுக்கவும்."
+  "reportIssueSubtitle": "ஒரு பிழையைப் புகாரளிக்க அல்லது விசாரிக்க நீங்கள் விரும்பும் வழியைத் தேர்ந்தெடுக்கவும்.",
+  "processSandboxedMessage": "கர்னல்-நிலை செயலாக்கக் கண்காணிப்பு Android OS சாண்ட்பாக்ஸிங் (SELinux) மூலம் பாதுகாக்கப்படுகிறது. பயனர்-வெளி பயன்பாடுகள் மட்டுமே கீழே கிடைக்கின்றன."
 }

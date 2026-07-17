@@ -241,7 +241,7 @@
   "storageInsightsSubtitle": "Depolama dökümü",
   "taskManagerSubtitle": "Sistem kaynaklarını izle",
   "sensorDiagnosticsTitle": "Sensör Teşhisi",
-  "sensorDiagnosticsSubtitle": "Gerçek zamanlı donanım sensörü akışları",
+  "sensorDiagnosticsSubtitle": "Gerçek zamanlı sensör akışları",
   "drawerTools": "ARAÇLAR",
   "deeplinkTesterSubtitle": "URI davranışını test et ve incele",
   "drawerInformation": "BİLGİ",
@@ -347,5 +347,6 @@
   "checkingUpdates": "Güncellemeler kontrol ediliyor",
   "githubCtaTitle": "Detaylı bilgi için",
   "githubCtaSubtitle": "GitHub'daki kaynak koduna göz atın",
-  "reportIssueSubtitle": "Bir sorunu nasıl bildirmek veya incelemek istediğinizi seçin."
+  "reportIssueSubtitle": "Bir sorunu nasıl bildirmek veya incelemek istediğinizi seçin.",
+  "processSandboxedMessage": "Çekirdek düzeyindeki işlem izleme, Android OS korumalı alanı (SELinux) ile güvence altına alınmıştır. Aşağıda yalnızca kullanıcı alanı uygulamalarına erişilebilir."
 }

@@ -187,7 +187,7 @@
   "storageInsightsSubtitle": "Rincian ruang yang tidak difilter",
   "taskManagerSubtitle": "Pantau sumber daya sistem",
   "sensorDiagnosticsTitle": "Diagnostik Sensor",
-  "sensorDiagnosticsSubtitle": "Aliran data sensor perangkat keras waktu nyata",
+  "sensorDiagnosticsSubtitle": "Stream sensor real-time",
   "drawerTools": "ALAT",
   "deeplinkTesterSubtitle": "Uji dan periksa perilaku URI",
   "drawerInformation": "INFORMASI",
@@ -273,5 +273,6 @@
   "checkingUpdates": "Memeriksa pembaruan",
   "githubCtaTitle": "Untuk informasi detail",
   "githubCtaSubtitle": "Lihat kode sumber di GitHub",
-  "reportIssueSubtitle": "Pilih cara Anda ingin melaporkan atau menyelidiki masalah."
+  "reportIssueSubtitle": "Pilih cara Anda ingin melaporkan atau menyelidiki masalah.",
+  "processSandboxedMessage": "Pemantauan proses tingkat kernel diamankan oleh sandboxing OS Android (SELinux). Hanya aplikasi ruang pengguna yang dapat diakses di bawah ini."
 }

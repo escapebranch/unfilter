@@ -641,7 +641,7 @@ class AppLocalizationsTa extends AppLocalizations {
   String get sensorDiagnosticsTitle => 'சென்சார் கண்டறிதல்';
 
   @override
-  String get sensorDiagnosticsSubtitle => 'சாதன சென்சார்களின் நேரடி விவரங்கள்';
+  String get sensorDiagnosticsSubtitle => 'நேரலை சென்சார் ஸ்ட்ரீம்கள்';
 
   @override
   String get drawerTools => 'கருவிகள்';
@@ -919,5 +919,5 @@ class AppLocalizationsTa extends AppLocalizations {
 
   @override
   String get processSandboxedMessage =>
-      'Kernel-level process monitoring is secured by Android OS sandboxing (SELinux). Only user-space applications are accessible below.';
+      'கர்னல்-நிலை செயலாக்கக் கண்காணிப்பு Android OS சாண்ட்பாக்ஸிங் (SELinux) மூலம் பாதுகாக்கப்படுகிறது. பயனர்-வெளி பயன்பாடுகள் மட்டுமே கீழே கிடைக்கின்றன.';
 }
