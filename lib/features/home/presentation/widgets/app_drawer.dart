@@ -149,6 +149,15 @@ class AppDrawer extends ConsumerWidget {
             AppRouteFactory.toDeeplinkTester(context);
           },
         ),
+        DrawerNavTile(
+          title: l10n.sensorDiagnosticsTitle,
+          subtitle: l10n.sensorDiagnosticsSubtitle,
+          icon: Icons.sensors_rounded,
+          onTap: () {
+            Navigator.pop(context);
+            AppRouteFactory.toSensorDiagnostics(context);
+          },
+        ),
       ],
     );
   }

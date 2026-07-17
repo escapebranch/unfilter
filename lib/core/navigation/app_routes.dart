@@ -11,6 +11,8 @@ import '../../features/home/presentation/pages/info/privacy_page.dart';
 import '../../features/home/presentation/pages/info/deeplink_tester_page.dart';
 import '../../features/home/presentation/pages/info/sponsors_page.dart';
 import '../../features/home/presentation/pages/info/contributors_page.dart';
+import '../../features/sensor_diagnostics/presentation/pages/sensor_diagnostics_page.dart';
+import '../../features/sensor_diagnostics/presentation/pages/sensor_detail_page.dart';
 import '../../features/home/presentation/pages/view_logs_page.dart';
 import '../../features/apps/presentation/pages/app_details_page.dart';
 import '../../features/apps/presentation/pages/app_details_by_package_page.dart';
@@ -34,6 +36,8 @@ abstract class AppRoutes {
   static const String howItWorks = '/how-it-works';
   static const String privacy = '/privacy';
   static const String deeplinkTester = '/deeplink-tester';
+  static const String sensorDiagnostics = '/sensor-diagnostics';
+  static const String sensorDetail = '/sensor-detail';
   static const String sponsors = '/sponsors';
   static const String contributors = '/contributors';
   static const String appDetails = '/app-details';
@@ -113,6 +117,21 @@ class AppRouteFactory {
       case AppRoutes.deeplinkTester:
         return BubbleRevealPageRoute(
           page: const DeeplinkTesterPage(),
+          settings: settings,
+          tapPosition: TapTracker.lastTapPosition,
+        );
+      
+      case AppRoutes.sensorDiagnostics:
+        return BubbleRevealPageRoute(
+          page: const SensorDiagnosticsPage(),
+          settings: settings,
+          tapPosition: TapTracker.lastTapPosition,
+        );
+
+      case AppRoutes.sensorDetail:
+        final sensor = settings.arguments as Map<String, dynamic>;
+        return BubbleRevealPageRoute(
+          page: SensorDetailPage(sensor: sensor),
           settings: settings,
           tapPosition: TapTracker.lastTapPosition,
         );
@@ -261,6 +280,14 @@ class AppRouteFactory {
 
   static Future<void> toLogs(BuildContext context) {
     return PremiumNavigation.push(context, const ViewLogsPage());
+  }
+
+  static Future<void> toSensorDiagnostics(BuildContext context) {
+    return PremiumNavigation.push(context, const SensorDiagnosticsPage());
+  }
+
+  static Future<void> toSensorDetail(BuildContext context, Map<String, dynamic> sensor) {
+    return PremiumNavigation.push(context, SensorDetailPage(sensor: sensor));
   }
 }
 
