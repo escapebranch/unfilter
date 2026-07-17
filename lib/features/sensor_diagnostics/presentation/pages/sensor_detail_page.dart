@@ -22,6 +22,10 @@ class SensorDetailPage extends StatelessWidget {
     final double power = (sensor['power'] as num?)?.toDouble() ?? 0.0;
     final double resolution = (sensor['resolution'] as num?)?.toDouble() ?? 0.0;
     final double maximumRange = (sensor['maximumRange'] as num?)?.toDouble() ?? 0.0;
+    final String reportingMode = sensor['reportingMode'] as String? ?? 'continuous';
+    final bool isWakeUp = sensor['isWakeUp'] as bool? ?? false;
+    final int minDelay = (sensor['minDelay'] as num?)?.toInt() ?? 0;
+    final int fifoMaxEventCount = (sensor['fifoMaxEventCount'] as num?)?.toInt() ?? 0;
     
     final unit = getSensorUnit(type);
     final icon = getSensorIcon(type);
@@ -63,7 +67,11 @@ class SensorDetailPage extends StatelessWidget {
               ),
               // Live Data Stream Widget (Tailored per SensorCategory)
               SliverToBoxAdapter(
-                child: LiveSensorStreamWidget(sensorType: type, unit: unit),
+                child: LiveSensorStreamWidget(
+                  sensorType: type,
+                  unit: unit,
+                  sensorMetadata: sensor,
+                ),
               ),
               // Hardware Specs Section Header
               SliverPadding(
@@ -87,6 +95,10 @@ class SensorDetailPage extends StatelessWidget {
                           resolution: resolution,
                           maxRange: maximumRange,
                           typeId: type,
+                          reportingMode: reportingMode,
+                          isWakeUp: isWakeUp,
+                          minDelay: minDelay,
+                          fifoMaxEventCount: fifoMaxEventCount,
                         ),
                       ],
                     ),
@@ -161,3 +173,4 @@ class SensorDetailPage extends StatelessWidget {
     );
   }
 }
+

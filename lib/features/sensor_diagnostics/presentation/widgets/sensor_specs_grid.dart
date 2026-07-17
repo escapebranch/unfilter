@@ -5,6 +5,10 @@ class SensorSpecsGrid extends StatelessWidget {
   final double resolution;
   final double maxRange;
   final int typeId;
+  final String reportingMode;
+  final bool isWakeUp;
+  final int minDelay;
+  final int fifoMaxEventCount;
 
   const SensorSpecsGrid({
     super.key,
@@ -12,6 +16,10 @@ class SensorSpecsGrid extends StatelessWidget {
     required this.resolution,
     required this.maxRange,
     required this.typeId,
+    this.reportingMode = 'continuous',
+    this.isWakeUp = false,
+    this.minDelay = 0,
+    this.fifoMaxEventCount = 0,
   });
 
   @override
@@ -28,6 +36,8 @@ class SensorSpecsGrid extends StatelessWidget {
       fontFamily: 'monospace',
       fontWeight: FontWeight.w500,
     );
+
+    final formattedMode = reportingMode.replaceAll('_', ' ').toUpperCase();
 
     return Table(
       children: [
@@ -49,6 +59,30 @@ class SensorSpecsGrid extends StatelessWidget {
             _buildSpecCell('TYPE ID', typeId.toString(), labelStyle, valueStyle),
           ],
         ),
+        const TableRow(
+          children: [
+            SizedBox(height: 12),
+            SizedBox(height: 12),
+          ],
+        ),
+        TableRow(
+          children: [
+            _buildSpecCell('REPORTING MODE', formattedMode, labelStyle, valueStyle),
+            _buildSpecCell('WAKE-UP SENSOR', isWakeUp ? 'YES' : 'NO', labelStyle, valueStyle),
+          ],
+        ),
+        const TableRow(
+          children: [
+            SizedBox(height: 12),
+            SizedBox(height: 12),
+          ],
+        ),
+        TableRow(
+          children: [
+            _buildSpecCell('MIN DELAY', minDelay > 0 ? '$minDelay µs' : 'Dynamic / 0 µs', labelStyle, valueStyle),
+            _buildSpecCell('FIFO BUFFER', fifoMaxEventCount > 0 ? '$fifoMaxEventCount events' : 'None', labelStyle, valueStyle),
+          ],
+        ),
       ],
     );
   }
@@ -65,3 +99,4 @@ class SensorSpecsGrid extends StatelessWidget {
     );
   }
 }
+

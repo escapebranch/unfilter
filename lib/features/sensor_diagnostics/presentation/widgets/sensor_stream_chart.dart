@@ -8,11 +8,13 @@ import '../../utils/sensor_utils.dart';
 class LiveSensorStreamWidget extends StatefulWidget {
   final int sensorType;
   final String unit;
+  final Map<String, dynamic>? sensorMetadata;
 
   const LiveSensorStreamWidget({
     super.key,
     required this.sensorType,
     required this.unit,
+    this.sensorMetadata,
   });
 
   @override
@@ -22,17 +24,27 @@ class LiveSensorStreamWidget extends StatefulWidget {
 class _LiveSensorStreamWidgetState extends State<LiveSensorStreamWidget> {
   static const EventChannel _eventChannel = EventChannel('com.escapebranch.unfilter/sensor_stream');
   StreamSubscription? _subscription;
+
   final List<List<double>> _history = [];
   List<double> _currentValues = [];
   String? _error;
-  bool _isWaitingForData = false;
+  bool _isWaitingForData = true;
   Timer? _waitingTimer;
 
-  // Stats for 1D environmental sensors
+  // Real-time Hz Sampling Rate Calculation
+  final List<int> _timestamps = [];
+  double _currentHz = 0.0;
+
+  // Manual Test Mode / Impulse Injection
+  bool _isSimulatingImpulse = false;
+  Timer? _simulationTimer;
+
+  // Stats for 1D environmental & scalar sensors
   double? _minVal;
   double? _maxVal;
   double _sumVal = 0;
   int _sampleCount = 0;
+  int _accuracy = 3; // 0=Unreliable, 1=Low, 2=Medium, 3=High
 
   // Step counter specific state
   int _stepCount = 0;
@@ -47,12 +59,13 @@ class _LiveSensorStreamWidgetState extends State<LiveSensorStreamWidget> {
   @override
   void dispose() {
     _unsubscribe();
+    _simulationTimer?.cancel();
     super.dispose();
   }
 
   void _subscribe() {
     try {
-      _waitingTimer = Timer(const Duration(milliseconds: 1500), () {
+      _waitingTimer = Timer(const Duration(milliseconds: 1200), () {
         if (mounted && _currentValues.isEmpty && _error == null) {
           setState(() {
             _isWaitingForData = true;
@@ -65,39 +78,22 @@ class _LiveSensorStreamWidgetState extends State<LiveSensorStreamWidget> {
           .listen(
         (event) {
           if (!mounted) return;
+          if (_isSimulatingImpulse) return; // Ignore real stream while simulating test wave
+
           final map = event as Map;
-          final List<double> values = List<double>.from(map['values'] as List);
-          
-          setState(() {
-            _currentValues = values;
-            _history.add(values);
-            if (_history.length > 100) {
-              _history.removeAt(0);
-            }
+          final List<dynamic> rawValues = (map['values'] as List?) ?? [];
+          final int timestamp = (map['timestamp'] as num?)?.toInt() ?? DateTime.now().microsecondsSinceEpoch * 1000;
+          final int accuracy = (map['accuracy'] as num?)?.toInt() ?? 3;
 
-            // Calculate min, max, avg for 1D sensors
-            if (values.isNotEmpty) {
-              final val = values.first;
-              _minVal = _minVal == null ? val : math.min(_minVal!, val);
-              _maxVal = _maxVal == null ? val : math.max(_maxVal!, val);
-              _sumVal += val;
-              _sampleCount++;
+          // Sanitize floating point values (Filter NaN & Infinity)
+          final List<double> values = rawValues.map((v) {
+            final d = (v as num).toDouble();
+            return d.isFinite ? d : 0.0;
+          }).toList();
 
-              // Pedometer logic
-              if (widget.sensorType == 19) { // TYPE_STEP_COUNTER
-                _stepCount = val.toInt();
-                _stepHistory.add(_stepCount);
-                if (_stepHistory.length > 20) _stepHistory.removeAt(0);
-              } else if (widget.sensorType == 18) { // TYPE_STEP_DETECTOR
-                _stepCount += 1;
-                _stepHistory.add(_stepCount);
-                if (_stepHistory.length > 20) _stepHistory.removeAt(0);
-              }
-            }
+          if (values.isEmpty) return;
 
-            _error = null;
-            _isWaitingForData = false;
-          });
+          _processSensorValues(values, timestamp, accuracy);
         },
         onError: (err) {
           if (!mounted) return;
@@ -113,6 +109,95 @@ class _LiveSensorStreamWidgetState extends State<LiveSensorStreamWidget> {
     }
   }
 
+  void _processSensorValues(List<double> values, int timestampNs, int accuracy) {
+    setState(() {
+      _currentValues = values;
+      _history.add(values);
+      if (_history.length > 100) {
+        _history.removeAt(0);
+      }
+
+      _accuracy = accuracy;
+      _error = null;
+      _isWaitingForData = false;
+
+      // Update Hz Sampling Rate
+      final nowMs = DateTime.now().millisecondsSinceEpoch;
+      _timestamps.add(nowMs);
+      if (_timestamps.length > 30) _timestamps.removeAt(0);
+      if (_timestamps.length > 1) {
+        final elapsedSec = (_timestamps.last - _timestamps.first) / 1000.0;
+        if (elapsedSec > 0) {
+          _currentHz = (_timestamps.length - 1) / elapsedSec;
+        }
+      }
+
+      // Calculate min, max, avg for scalar/environmental values
+      final val = values.first;
+      _minVal = _minVal == null ? val : math.min(_minVal!, val);
+      _maxVal = _maxVal == null ? val : math.max(_maxVal!, val);
+      _sumVal += val;
+      _sampleCount++;
+
+      // Pedometer step tracking logic
+      if (widget.sensorType == 19) { // TYPE_STEP_COUNTER
+        _stepCount = val.toInt();
+        _stepHistory.add(_stepCount);
+        if (_stepHistory.length > 20) _stepHistory.removeAt(0);
+      } else if (widget.sensorType == 18) { // TYPE_STEP_DETECTOR
+        _stepCount += 1;
+        _stepHistory.add(_stepCount);
+        if (_stepHistory.length > 20) _stepHistory.removeAt(0);
+      }
+    });
+  }
+
+  void _toggleTestImpulseSimulation() {
+    if (_isSimulatingImpulse) {
+      _simulationTimer?.cancel();
+      _simulationTimer = null;
+      setState(() {
+        _isSimulatingImpulse = false;
+      });
+    } else {
+      setState(() {
+        _isSimulatingImpulse = true;
+        _error = null;
+        _isWaitingForData = false;
+      });
+
+      int tick = 0;
+      _simulationTimer = Timer.periodic(const Duration(milliseconds: 50), (timer) {
+        if (!mounted) {
+          timer.cancel();
+          return;
+        }
+        tick++;
+        final double phase = tick * 0.1;
+        
+        List<double> simulatedValues;
+        final category = getSensorCategory(widget.sensorType);
+
+        if (category == SensorCategory.pedometer) {
+          simulatedValues = [(100 + tick).toDouble()];
+        } else if (category == SensorCategory.proximity) {
+          simulatedValues = [(math.sin(phase) > 0) ? 5.0 : 0.0];
+        } else if (category == SensorCategory.environment1D) {
+          simulatedValues = [25.0 + math.sin(phase) * 3.0];
+        } else {
+          // 3D Motion wave
+          simulatedValues = [
+            math.sin(phase) * 9.8,
+            math.cos(phase * 1.3) * 5.0,
+            9.8 + math.sin(phase * 0.7) * 2.0,
+          ];
+        }
+
+        _processSensorValues(simulatedValues, DateTime.now().microsecondsSinceEpoch * 1000, 3);
+      });
+    }
+  }
+
   void _unsubscribe() {
     _waitingTimer?.cancel();
     _subscription?.cancel();
@@ -125,20 +210,48 @@ class _LiveSensorStreamWidgetState extends State<LiveSensorStreamWidget> {
 
     if (_error != null) {
       return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
-        child: Row(
-          children: [
-            Icon(Icons.error_outline_rounded, color: theme.colorScheme.error, size: 20),
-            const SizedBox(width: 8),
-            Expanded(
-              child: Text(
-                '$_error',
+        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: theme.colorScheme.errorContainer.withValues(alpha: 0.2),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: theme.colorScheme.error.withValues(alpha: 0.3)),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Icon(Icons.warning_amber_rounded, color: theme.colorScheme.error, size: 24),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      'Sensor Initialization / Stream Message',
+                      style: theme.textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: theme.colorScheme.error,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              Text(
+                _error!,
                 style: theme.textTheme.bodySmall?.copyWith(
-                  color: theme.colorScheme.error,
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.8),
+                  height: 1.4,
                 ),
               ),
-            ),
-          ],
+              const SizedBox(height: 12),
+              OutlinedButton.icon(
+                onPressed: _toggleTestImpulseSimulation,
+                icon: const Icon(Icons.science_rounded, size: 16),
+                label: const Text('Inject Test Impulse Wave'),
+              ),
+            ],
+          ),
         ),
       );
     }
@@ -148,29 +261,55 @@ class _LiveSensorStreamWidgetState extends State<LiveSensorStreamWidget> {
     if (_currentValues.isEmpty) {
       return Padding(
         padding: const EdgeInsets.symmetric(vertical: 24.0, horizontal: 20.0),
-        child: Center(
+        child: Container(
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: theme.colorScheme.surface,
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(
+              color: theme.colorScheme.outlineVariant.withValues(alpha: 0.2),
+            ),
+          ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               if (!_isWaitingForData)
                 const SizedBox(
-                  width: 20,
-                  height: 20,
-                  child: CircularProgressIndicator(strokeWidth: 2),
+                  width: 24,
+                  height: 24,
+                  child: CircularProgressIndicator(strokeWidth: 2.5),
                 )
               else
-                Icon(Icons.directions_walk_rounded, color: theme.colorScheme.onSurface.withValues(alpha: 0.3), size: 36),
-              const SizedBox(height: 12),
+                Icon(
+                  Icons.sensors_rounded,
+                  color: theme.colorScheme.primary,
+                  size: 40,
+                ),
+              const SizedBox(height: 16),
+              Text(
+                'Awaiting Hardware Sensor Stream...',
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 8),
               Text(
                 category == SensorCategory.pedometer
-                    ? 'Awaiting step data...\n(Move your device to trigger step events)'
-                    : (_isWaitingForData
-                        ? 'Awaiting sensor data...\n(Interact with device if needed)'
-                        : 'Connecting to sensor...'),
+                    ? 'Step counter sensors fire on physical movement. Move device or trigger motion.'
+                    : 'On-Change sensors (Light, Temp, Proximity) fire when the physical state changes.',
                 textAlign: TextAlign.center,
                 style: theme.textTheme.bodySmall?.copyWith(
-                  color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                   height: 1.4,
+                ),
+              ),
+              const SizedBox(height: 16),
+              ElevatedButton.icon(
+                onPressed: _toggleTestImpulseSimulation,
+                icon: const Icon(Icons.play_arrow_rounded, size: 18),
+                label: const Text('Inject Interactive Test Wave'),
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                 ),
               ),
             ],
@@ -179,6 +318,101 @@ class _LiveSensorStreamWidgetState extends State<LiveSensorStreamWidget> {
       );
     }
 
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Live Diagnostic Metrics Bar (Hz, Accuracy, Mode, Test Toggle)
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 4.0),
+          child: _buildDiagnosticMetricsHeader(theme),
+        ),
+        const SizedBox(height: 12),
+
+        // Main Chart / Visualization Content
+        _buildCategorySpecificView(theme, category),
+      ],
+    );
+  }
+
+  Widget _buildDiagnosticMetricsHeader(ThemeData theme) {
+    final accuracyLabel = switch (_accuracy) {
+      3 => 'High',
+      2 => 'Medium',
+      1 => 'Low',
+      _ => 'Uncalibrated',
+    };
+
+    return Row(
+      children: [
+        _buildMetricBadge(
+          theme,
+          label: 'RATE',
+          value: '${_currentHz.toStringAsFixed(1)} Hz',
+          color: theme.colorScheme.primary,
+        ),
+        const SizedBox(width: 8),
+        _buildMetricBadge(
+          theme,
+          label: 'ACCURACY',
+          value: accuracyLabel,
+          color: _accuracy == 3 ? Colors.green : Colors.orange,
+        ),
+        const SizedBox(width: 8),
+        _buildMetricBadge(
+          theme,
+          label: 'SAMPLES',
+          value: '$_sampleCount',
+          color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+        ),
+        const Spacer(),
+        IconButton(
+          onPressed: _toggleTestImpulseSimulation,
+          tooltip: _isSimulatingImpulse ? 'Switch to Real Sensor Stream' : 'Simulate Test Impulse Wave',
+          icon: Icon(
+            _isSimulatingImpulse ? Icons.sensors_off_rounded : Icons.science_rounded,
+            color: _isSimulatingImpulse ? theme.colorScheme.tertiary : theme.colorScheme.onSurface.withValues(alpha: 0.5),
+            size: 20,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildMetricBadge(ThemeData theme, {required String label, required String value, required Color color}) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: color.withValues(alpha: 0.2)),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            '$label: ',
+            style: theme.textTheme.bodySmall?.copyWith(
+              fontSize: 9,
+              fontWeight: FontWeight.bold,
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+              letterSpacing: 0.5,
+            ),
+          ),
+          Text(
+            value,
+            style: theme.textTheme.bodySmall?.copyWith(
+              fontSize: 11,
+              fontFamily: 'monospace',
+              fontWeight: FontWeight.bold,
+              color: color,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCategorySpecificView(ThemeData theme, SensorCategory category) {
     switch (category) {
       case SensorCategory.pedometer:
         return _buildPedometerView(theme);
@@ -188,11 +422,11 @@ class _LiveSensorStreamWidgetState extends State<LiveSensorStreamWidget> {
         return _buildEnvironmentalView(theme);
       case SensorCategory.motion3D:
       default:
-        return _buildMotion3DView(theme);
+        return _buildMultiAxisView(theme);
     }
   }
 
-  // 1. Pedometer View: Step count badge, histogram, movement tip
+  // 1. Pedometer View
   Widget _buildPedometerView(ThemeData theme) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -238,7 +472,6 @@ class _LiveSensorStreamWidgetState extends State<LiveSensorStreamWidget> {
           ),
         ),
         const SizedBox(height: 16),
-        // Step Activity Bar Chart
         if (_stepHistory.isNotEmpty)
           SizedBox(
             height: 100,
@@ -266,22 +499,11 @@ class _LiveSensorStreamWidgetState extends State<LiveSensorStreamWidget> {
               ),
             ),
           ),
-        const SizedBox(height: 12),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-          child: Text(
-            'Note: Step sensors only fire events when movement is detected.',
-            style: theme.textTheme.bodySmall?.copyWith(
-              color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
-              fontStyle: FontStyle.italic,
-            ),
-          ),
-        ),
       ],
     );
   }
 
-  // 2. Proximity View: NEAR vs FAR state badge + distance graph
+  // 2. Proximity View
   Widget _buildProximityView(ThemeData theme) {
     final dist = _currentValues.isNotEmpty ? _currentValues.first : 0.0;
     final isNear = dist < 2.0;
@@ -341,7 +563,7 @@ class _LiveSensorStreamWidgetState extends State<LiveSensorStreamWidget> {
     );
   }
 
-  // 3. Environmental View: Min/Max/Avg Badges + Area Gradient Line Chart
+  // 3. Environmental View
   Widget _buildEnvironmentalView(ThemeData theme) {
     final avg = _sampleCount > 0 ? _sumVal / _sampleCount : 0.0;
     final current = _currentValues.isNotEmpty ? _currentValues.first : 0.0;
@@ -392,16 +614,23 @@ class _LiveSensorStreamWidgetState extends State<LiveSensorStreamWidget> {
     );
   }
 
-  // 4. 3D Motion View: Legend badges for X, Y, Z + Vector Magnitude + Smooth line chart
-  Widget _buildMotion3DView(ThemeData theme) {
+  // 4. Multi-Axis Dynamic View (Handles 1 to N Series seamlessly)
+  Widget _buildMultiAxisView(ThemeData theme) {
     double magnitude = 0;
     if (_currentValues.length >= 3) {
       magnitude = math.sqrt(
-        _currentValues[0] * _currentValues[0] +
-        _currentValues[1] * _currentValues[1] +
-        _currentValues[2] * _currentValues[2]
+        _currentValues.sublist(0, 3).fold(0.0, (acc, val) => acc + (val * val))
       );
     }
+
+    final axisColors = [
+      theme.colorScheme.primary,
+      theme.colorScheme.tertiary,
+      theme.colorScheme.secondary,
+      Colors.orange,
+      Colors.purple,
+      Colors.teal,
+    ];
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -410,38 +639,31 @@ class _LiveSensorStreamWidgetState extends State<LiveSensorStreamWidget> {
           padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 4.0),
           child: Wrap(
             spacing: 16,
-            runSpacing: 12,
+            runSpacing: 8,
             children: [
               ..._currentValues.asMap().entries.map((entry) {
                 final idx = entry.key;
                 final val = entry.value;
                 
-                String label = 'Value';
-                Color color = theme.colorScheme.primary;
+                String label = 'Axis $idx';
+                final color = axisColors[idx % axisColors.length];
 
                 if (_currentValues.length == 3) {
-                  if (idx == 0) {
-                    label = 'X Axis';
-                    color = theme.colorScheme.primary;
-                  } else if (idx == 1) {
-                    label = 'Y Axis';
-                    color = theme.colorScheme.primary.withValues(alpha: 0.6);
-                  } else {
-                    label = 'Z Axis';
-                    color = theme.colorScheme.primary.withValues(alpha: 0.3);
-                  }
+                  if (idx == 0) label = 'X Axis';
+                  if (idx == 1) label = 'Y Axis';
+                  if (idx == 2) label = 'Z Axis';
                 }
 
                 return Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Container(
-                      width: 12,
-                      height: 4,
-                      margin: const EdgeInsets.only(right: 8),
+                      width: 10,
+                      height: 10,
+                      margin: const EdgeInsets.only(right: 6),
                       decoration: BoxDecoration(
                         color: color,
-                        borderRadius: BorderRadius.circular(2),
+                        shape: BoxShape.circle,
                       ),
                     ),
                     RichText(
@@ -462,7 +684,7 @@ class _LiveSensorStreamWidgetState extends State<LiveSensorStreamWidget> {
                             text: '${val.toStringAsFixed(3)} ${widget.unit}',
                             style: const TextStyle(
                               fontWeight: FontWeight.bold,
-                              fontSize: 13,
+                              fontSize: 12,
                             ),
                           ),
                         ],
@@ -480,7 +702,7 @@ class _LiveSensorStreamWidgetState extends State<LiveSensorStreamWidget> {
                     ),
                     children: [
                       TextSpan(
-                        text: 'Mag: ',
+                        text: 'Magnitude: ',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
@@ -488,9 +710,10 @@ class _LiveSensorStreamWidgetState extends State<LiveSensorStreamWidget> {
                       ),
                       TextSpan(
                         text: '${magnitude.toStringAsFixed(3)} ${widget.unit}',
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          fontSize: 13,
+                          fontSize: 12,
+                          color: theme.colorScheme.primary,
                         ),
                       ),
                     ],
@@ -507,14 +730,21 @@ class _LiveSensorStreamWidgetState extends State<LiveSensorStreamWidget> {
 
   Widget _buildLineGraph(ThemeData theme, {bool fillGradient = false}) {
     return SizedBox(
-      height: 140,
+      height: 150,
       width: double.infinity,
       child: RepaintBoundary(
         child: LineChart(
           LineChartData(
             minY: _getMinY(),
             maxY: _getMaxY(),
-            gridData: const FlGridData(show: false),
+            gridData: FlGridData(
+              show: true,
+              drawVerticalLine: false,
+              getDrawingHorizontalLine: (value) => FlLine(
+                color: theme.colorScheme.outlineVariant.withValues(alpha: 0.1),
+                strokeWidth: 1,
+              ),
+            ),
             titlesData: const FlTitlesData(show: false),
             borderData: FlBorderData(show: false),
             lineTouchData: const LineTouchData(enabled: false),
@@ -525,74 +755,73 @@ class _LiveSensorStreamWidgetState extends State<LiveSensorStreamWidget> {
     );
   }
 
-  double? _getMinY() {
-    if (_history.isEmpty) return null;
+  double _getMinY() {
+    if (_history.isEmpty) return 0.0;
     double minVal = double.infinity;
     for (final point in _history) {
       for (final val in point) {
-        if (val < minVal) minVal = val;
+        if (val.isFinite && val < minVal) minVal = val;
       }
+    }
+    if (!minVal.isFinite) return 0.0;
+    final maxVal = _getMaxY();
+    if ((maxVal - minVal).abs() < 0.001) {
+      return minVal - 1.0; // Prevent flat zero-height span crash
     }
     return minVal - (minVal.abs() * 0.1 + 0.1);
   }
 
-  double? _getMaxY() {
-    if (_history.isEmpty) return null;
+  double _getMaxY() {
+    if (_history.isEmpty) return 1.0;
     double maxVal = double.negativeInfinity;
     for (final point in _history) {
       for (final val in point) {
-        if (val > maxVal) maxVal = val;
+        if (val.isFinite && val > maxVal) maxVal = val;
       }
     }
+    if (!maxVal.isFinite) return 1.0;
     return maxVal + (maxVal.abs() * 0.1 + 0.1);
   }
 
   List<LineChartBarData> _getLineBarsData(ThemeData theme, {bool fillGradient = false}) {
     if (_history.isEmpty) return [];
 
-    final primaryColor = theme.colorScheme.primary;
     final numLines = _currentValues.length;
+    final axisColors = [
+      theme.colorScheme.primary,
+      theme.colorScheme.tertiary,
+      theme.colorScheme.secondary,
+      Colors.orange,
+      Colors.purple,
+      Colors.teal,
+    ];
 
     return List.generate(numLines, (lineIdx) {
       final List<FlSpot> spots = [];
       for (int i = 0; i < _history.length; i++) {
         if (lineIdx < _history[i].length) {
-          spots.add(FlSpot(i.toDouble(), _history[i][lineIdx]));
+          final val = _history[i][lineIdx];
+          if (val.isFinite) {
+            spots.add(FlSpot(i.toDouble(), val));
+          }
         }
       }
 
-      Color color;
-      List<int>? dashArray;
-      if (numLines == 3) {
-        if (lineIdx == 0) {
-          color = primaryColor;
-          dashArray = null;
-        } else if (lineIdx == 1) {
-          color = primaryColor.withValues(alpha: 0.6);
-          dashArray = [5, 5];
-        } else {
-          color = primaryColor.withValues(alpha: 0.3);
-          dashArray = [2, 4];
-        }
-      } else {
-        color = primaryColor;
-        dashArray = null;
-      }
+      final color = axisColors[lineIdx % axisColors.length];
 
       return LineChartBarData(
         spots: spots,
         isCurved: true,
-        curveSmoothness: 0.35,
+        curveSmoothness: 0.3,
         preventCurveOverShooting: true,
-        barWidth: 1.5,
+        barWidth: 1.8,
         color: color,
-        dashArray: dashArray,
         dotData: const FlDotData(show: false),
         belowBarData: BarAreaData(
-          show: fillGradient,
+          show: fillGradient && lineIdx == 0,
           gradient: LinearGradient(
             colors: [
-              color.withValues(alpha: 0.25),
+              color.withValues(alpha: 0.2),
               color.withValues(alpha: 0.0),
             ],
             begin: Alignment.topCenter,
@@ -603,3 +832,4 @@ class _LiveSensorStreamWidgetState extends State<LiveSensorStreamWidget> {
     });
   }
 }
+

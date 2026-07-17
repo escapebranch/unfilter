@@ -4,6 +4,7 @@ import 'package:unfilter/l10n/generated/app_localizations.dart';
 
 import '../../../../core/widgets/top_shadow_gradient.dart';
 import '../../../home/presentation/widgets/premium_app_bar.dart';
+import '../utils/sensor_utils.dart';
 import '../widgets/sensor_list_card.dart';
 
 class SensorDiagnosticsPage extends StatefulWidget {
@@ -16,8 +17,11 @@ class SensorDiagnosticsPage extends StatefulWidget {
 class _SensorDiagnosticsPageState extends State<SensorDiagnosticsPage> {
   static const MethodChannel _sensorsChannel = MethodChannel('com.escapebranch.unfilter/sensors');
   final ScrollController _scrollController = ScrollController();
+  final TextEditingController _searchController = TextEditingController();
 
-  List<Map<String, dynamic>>? _sensors;
+  List<Map<String, dynamic>>? _allSensors;
+  String _searchQuery = '';
+  SensorCategory? _selectedCategory;
   String? _error;
   bool _isLoading = true;
 
@@ -30,6 +34,7 @@ class _SensorDiagnosticsPageState extends State<SensorDiagnosticsPage> {
   @override
   void dispose() {
     _scrollController.dispose();
+    _searchController.dispose();
     super.dispose();
   }
 
@@ -42,7 +47,7 @@ class _SensorDiagnosticsPageState extends State<SensorDiagnosticsPage> {
       final List<dynamic>? result = await _sensorsChannel.invokeMethod<List<dynamic>>('getSensorsList');
       if (result != null) {
         setState(() {
-          _sensors = result.map((e) => Map<String, dynamic>.from(e as Map)).toList();
+          _allSensors = result.map((e) => Map<String, dynamic>.from(e as Map)).toList();
           _isLoading = false;
         });
       } else {
@@ -57,6 +62,23 @@ class _SensorDiagnosticsPageState extends State<SensorDiagnosticsPage> {
         _isLoading = false;
       });
     }
+  }
+
+  List<Map<String, dynamic>> get _filteredSensors {
+    if (_allSensors == null) return [];
+    return _allSensors!.where((sensor) {
+      final type = sensor['type'] as int? ?? -1;
+      final name = (sensor['name'] as String? ?? '').toLowerCase();
+      final vendor = (sensor['vendor'] as String? ?? '').toLowerCase();
+
+      final matchesQuery = _searchQuery.isEmpty ||
+          name.contains(_searchQuery.toLowerCase()) ||
+          vendor.contains(_searchQuery.toLowerCase());
+
+      final matchesCategory = _selectedCategory == null || getSensorCategory(type) == _selectedCategory;
+
+      return matchesQuery && matchesCategory;
+    }).toList();
   }
 
   @override
@@ -115,25 +137,84 @@ class _SensorDiagnosticsPageState extends State<SensorDiagnosticsPage> {
                     ),
                   ),
                 )
-              else if (_sensors == null || _sensors!.isEmpty)
-                const SliverFillRemaining(
-                  child: Center(
-                    child: Text('No sensors detected on this device.'),
-                  ),
-                )
-              else
-                SliverPadding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                  sliver: SliverList(
-                    delegate: SliverChildBuilderDelegate(
-                      (context, index) {
-                        final sensor = _sensors![index];
-                        return SensorListCard(sensor: sensor);
-                      },
-                      childCount: _sensors!.length,
+              else ...[
+                // Search & Category Filters
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
+                    child: Column(
+                      children: [
+                        // Search Input Field
+                        TextField(
+                          controller: _searchController,
+                          onChanged: (val) => setState(() => _searchQuery = val),
+                          decoration: InputDecoration(
+                            hintText: 'Search hardware sensors...',
+                            prefixIcon: const Icon(Icons.search_rounded, size: 20),
+                            suffixIcon: _searchQuery.isNotEmpty
+                                ? IconButton(
+                                    icon: const Icon(Icons.clear_rounded, size: 18),
+                                    onPressed: () {
+                                      _searchController.clear();
+                                      setState(() => _searchQuery = '');
+                                    },
+                                  )
+                                : null,
+                            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                            filled: true,
+                            fillColor: theme.colorScheme.surface,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(16),
+                              borderSide: BorderSide(
+                                color: theme.colorScheme.outlineVariant.withValues(alpha: 0.2),
+                              ),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(16),
+                              borderSide: BorderSide(
+                                color: theme.colorScheme.outlineVariant.withValues(alpha: 0.2),
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        // Category Filter Chips
+                        SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          physics: const BouncingScrollPhysics(),
+                          child: Row(
+                            children: [
+                              _buildCategoryChip(theme, 'All (${_allSensors?.length ?? 0})', null),
+                              _buildCategoryChip(theme, '3D Motion', SensorCategory.motion3D),
+                              _buildCategoryChip(theme, 'Environment', SensorCategory.environment1D),
+                              _buildCategoryChip(theme, 'Pedometer', SensorCategory.pedometer),
+                              _buildCategoryChip(theme, 'Proximity', SensorCategory.proximity),
+                              _buildCategoryChip(theme, 'Orientation', SensorCategory.orientation),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
+                if (_filteredSensors.isEmpty)
+                  SliverFillRemaining(
+                    child: _buildEmptyState(theme),
+                  )
+                else
+                  SliverPadding(
+                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
+                    sliver: SliverList(
+                      delegate: SliverChildBuilderDelegate(
+                        (context, index) {
+                          final sensor = _filteredSensors[index];
+                          return SensorListCard(sensor: sensor);
+                        },
+                        childCount: _filteredSensors.length,
+                      ),
+                    ),
+                  ),
+              ],
             ],
           ),
           const TopShadowGradient(),
@@ -145,4 +226,63 @@ class _SensorDiagnosticsPageState extends State<SensorDiagnosticsPage> {
       ),
     );
   }
+
+  Widget _buildCategoryChip(ThemeData theme, String label, SensorCategory? category) {
+    final isSelected = _selectedCategory == category;
+    return Padding(
+      padding: const EdgeInsets.only(right: 8.0),
+      child: FilterChip(
+        selected: isSelected,
+        label: Text(label),
+        onSelected: (selected) {
+          setState(() {
+            _selectedCategory = isSelected ? null : category;
+          });
+        },
+        selectedColor: theme.colorScheme.primary.withValues(alpha: 0.15),
+        checkmarkColor: theme.colorScheme.primary,
+        labelStyle: theme.textTheme.bodySmall?.copyWith(
+          color: isSelected ? theme.colorScheme.primary : theme.colorScheme.onSurface.withValues(alpha: 0.7),
+          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+          side: BorderSide(
+            color: isSelected ? theme.colorScheme.primary : theme.colorScheme.outlineVariant.withValues(alpha: 0.2),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildEmptyState(ThemeData theme) {
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            Icons.sensors_off_rounded,
+            size: 48,
+            color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
+          ),
+          const SizedBox(height: 16),
+          Text(
+            'No matching sensors found',
+            style: theme.textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.bold,
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Try adjusting your search query or category filters.',
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
+
