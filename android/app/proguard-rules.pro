@@ -14,7 +14,11 @@
 # prevents accidental stripping or aggressive obfuscation if future reflection is added.
 -keep class com.escapebranch.unfilter.** { *; }
 
+# Google Play Core (In-App Updates & Reviews)
+-keep class com.google.android.play.core.** { *; }
+
 # Default Android checks and harmless warnings
 -dontwarn android.support.**
 -dontwarn androidx.**
 -dontwarn io.flutter.**
+-dontwarn com.google.android.play.**
