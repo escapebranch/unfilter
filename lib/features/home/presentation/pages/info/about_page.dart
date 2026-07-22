@@ -353,7 +353,7 @@ class _CreditsSection extends StatelessWidget {
         _SectionHeader(title: 'CREDITS'),
         const SizedBox(height: 16),
         const _InfoRow(label: 'Developer', value: 'Rakhul'),
-        const _InfoRow(label: 'License', value: 'MIT Open Source'),
+        const _InfoRow(label: 'License', value: 'GPLv3 Open Source'),
       ],
     );
   }

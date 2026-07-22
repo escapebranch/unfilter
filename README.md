@@ -14,7 +14,7 @@
   <img src="https://img.shields.io/github/stars/r4khul/unfilter?style=for-the-badge&logo=github&color=FFD700" alt="Stars"/>
 </a>
 <a href="https://github.com/r4khul/unfilter/blob/main/LICENSE">
-  <img src="https://img.shields.io/badge/License-MIT-orange?style=for-the-badge&logo=opensourceinitiative&logoColor=white" alt="License"/>
+  <img src="https://img.shields.io/badge/License-GPLv3-blue?style=for-the-badge&logo=gnu&logoColor=white" alt="License"/>
 </a>
 
 <br><br>
@@ -89,4 +89,4 @@ For more detailed instructions, check the [Contributing Guide](CONTRIBUTING.md).
 - [**Code of Conduct**](CODE_OF_CONDUCT.md): Our community standards and expectations.
 - [**Security Policy**](SECURITY.md): How to report security vulnerabilities.
 - [**Changelog**](CHANGELOG.md): Detailed history of changes and versions.
-- [**License**](LICENSE): The MIT License.
+- [**License**](LICENSE): GNU General Public License v3.0 (GPL-3.0).
