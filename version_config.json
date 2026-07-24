@@ -1,5 +1,5 @@
 {
-  "latest_native_version": "1.6.0+18",
+  "latest_native_version": "1.7.0+19",
   "min_supported_native_version": "1.0.0+1",
   "release_page_url": "https://github.com/r4khul/unfilter/releases",
   "apk_direct_download_url": "https://github.com/r4khul/unfilter/releases/latest/download/UnFilter_universal.apk",
@@ -9,16 +9,16 @@
     "x86_64": "https://github.com/r4khul/unfilter/releases/latest/download/UnFilter_x86_64.apk"
   },
   "use_per_abi": true,
-  "release_notes": "v1.6.0+18: Introduced Live Hardware Sensor Diagnostics dashboard with real-time stream graphs, 60+ FPS rate limiting, and robust hardware sensor enumeration.",
+  "release_notes": "v1.7.0+19: Introduced Smart Scan Intimation Popover with seamless vector pointers, session-based scheduling, German localizations, and performance optimizations.",
   "force_update": false,
   "features": [
-    "New 'Live Hardware Sensor Diagnostics' feature in app drawer and tools menu.",
-    "Real-time streaming charts for 3D Motion, Environment, Pedometer, Proximity, and Orientation hardware sensors.",
-    "BETA sash indicator and fixed pinned header bar for seamless scrolling diagnostics.",
-    "Engineered 60+ FPS frame rate-limiting and microtask buffering for low-end Android hardware."
+    "Smart Scan Intimation Popover below Scan button for quick app updates.",
+    "Seamless single-path vector popover bubble with dynamic sub-pixel button alignment.",
+    "Smart session scheduling: intimates on 2nd, 4th, and 8th app launches.",
+    "Added complete German (de) language translation."
   ],
   "fixes": [
-    "Hardened native Kotlin sensor event listeners against null pointer and float casting exceptions.",
-    "Optimized memory allocations by pre-allocating native double array buffers during sensor stream delivery."
+    "Isolated popover animations with RepaintBoundary for smooth 60+ FPS on low-power devices.",
+    "Synchronized multi-language localizations across all supported locales."
   ]
 }

@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.7.0+19] - 2026-07-24
+
+### Added
+
+- **Smart Scan Intimation Popover**: New compact popover widget anchored below the Scan button to prompt users returning to the app to run a Smart Scan (`New App? Smart scan to update`).
+- **Seamless Vector Pointer Bubble**: Continuous single-path popover canvas (`_UnifiedPopoverPainter`) combining pointer tip and rounded container with zero interior dividing lines.
+- **Dynamic Button Coordinate Calculation**: Automatically aligns pointer tip to the sub-pixel center X of the `@ Scan` button on any screen width or orientation.
+- **Localization — German**: Added full German (`de`) translation and synchronized ARB localizations across all supported languages.
+
+### Improved
+
+- **Smart Session Scheduling**: Popover intimations trigger strictly on the 2nd, 4th, and 8th app opens ({2, 4, 8}), respecting user dismissal and session limits.
+- **Low-Power Performance Optimization**: Isolated popover micro-animations using `RepaintBoundary` for zero frame drops on low-end hardware.
+- **Gesture Interactions**: Implemented Flutter `TapRegion` for tap-outside dismissal and body tap to open Scan modal.
+
 ## [1.6.0+18] - 2026-07-17
 
 ### Added
