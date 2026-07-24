@@ -348,5 +348,8 @@
   "githubCtaTitle": "Detaylı bilgi için",
   "githubCtaSubtitle": "GitHub'daki kaynak koduna göz atın",
   "reportIssueSubtitle": "Bir sorunu nasıl bildirmek veya incelemek istediğinizi seçin.",
+  "languageGerman": "Almanca",
+  "smartScanHintTitle": "Yeni Uygulama?",
+  "smartScanHintSubtitle": "Güncellemek için akıllı tarama",
   "processSandboxedMessage": "Çekirdek düzeyindeki işlem izleme, Android OS korumalı alanı (SELinux) ile güvence altına alınmıştır. Aşağıda yalnızca kullanıcı alanı uygulamalarına erişilebilir."
 }

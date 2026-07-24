@@ -27,6 +27,9 @@ class AppLocalizationsId extends AppLocalizations {
   String get languageEnglish => 'Inggris';
 
   @override
+  String get languageGerman => 'Jerman';
+
+  @override
   String get languageTamil => 'Tamil';
 
   @override
@@ -914,6 +917,12 @@ class AppLocalizationsId extends AppLocalizations {
   @override
   String get reportIssueSubtitle =>
       'Pilih cara Anda ingin melaporkan atau menyelidiki masalah.';
+
+  @override
+  String get smartScanHintTitle => 'Aplikasi Baru?';
+
+  @override
+  String get smartScanHintSubtitle => 'Pindai pintar untuk memperbarui';
 
   @override
   String get processSandboxedMessage =>

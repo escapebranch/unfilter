@@ -28,6 +28,9 @@ class AppLocalizationsTa extends AppLocalizations {
   String get languageEnglish => 'ஆங்கிலம்';
 
   @override
+  String get languageGerman => 'ஜெர்மன்';
+
+  @override
   String get languageTamil => 'தமிழ்';
 
   @override
@@ -916,6 +919,12 @@ class AppLocalizationsTa extends AppLocalizations {
   @override
   String get reportIssueSubtitle =>
       'ஒரு பிழையைப் புகாரளிக்க அல்லது விசாரிக்க நீங்கள் விரும்பும் வழியைத் தேர்ந்தெடுக்கவும்.';
+
+  @override
+  String get smartScanHintTitle => 'புதிய செயலியா?';
+
+  @override
+  String get smartScanHintSubtitle => 'புதுப்பிக்க ஸ்மார்ட் ஸ்கேன் செய்யுங்கள்';
 
   @override
   String get processSandboxedMessage =>

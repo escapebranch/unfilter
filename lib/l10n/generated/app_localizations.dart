@@ -142,6 +142,12 @@ abstract class AppLocalizations {
   /// **'English'**
   String get languageEnglish;
 
+  /// German language name shown in selector
+  ///
+  /// In en, this message translates to:
+  /// **'German'**
+  String get languageGerman;
+
   /// Tamil language name shown in selector
   ///
   /// In en, this message translates to:
@@ -1749,6 +1755,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Select how you want to report or investigate an issue.'**
   String get reportIssueSubtitle;
+
+  /// No description provided for @smartScanHintTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'New App?'**
+  String get smartScanHintTitle;
+
+  /// No description provided for @smartScanHintSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Smart scan to update'**
+  String get smartScanHintSubtitle;
 
   /// No description provided for @processSandboxedMessage.
   ///

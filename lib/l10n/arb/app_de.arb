@@ -274,5 +274,8 @@
   "githubCtaTitle": "Für detaillierte Informationen",
   "githubCtaSubtitle": "Schauen Sie sich den Quellcode auf GitHub an",
   "reportIssueSubtitle": "Wählen Sie aus, wie Sie ein Problem melden oder untersuchen möchten.",
+  "languageGerman": "Deutsch",
+  "smartScanHintTitle": "Neue App?",
+  "smartScanHintSubtitle": "Intelligenter Scan zum Aktualisieren",
   "processSandboxedMessage": "Die Systemüberwachung auf Kernel-Ebene ist durch die Android-OS-Sandbox (SELinux) gesichert. Im Folgenden sind nur User-Space-Anwendungen zugänglich."
 }

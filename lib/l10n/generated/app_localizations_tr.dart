@@ -27,6 +27,9 @@ class AppLocalizationsTr extends AppLocalizations {
   String get languageEnglish => 'İngilizce';
 
   @override
+  String get languageGerman => 'Almanca';
+
+  @override
   String get languageTamil => 'Tamilce';
 
   @override
@@ -918,6 +921,12 @@ class AppLocalizationsTr extends AppLocalizations {
   @override
   String get reportIssueSubtitle =>
       'Bir sorunu nasıl bildirmek veya incelemek istediğinizi seçin.';
+
+  @override
+  String get smartScanHintTitle => 'Yeni Uygulama?';
+
+  @override
+  String get smartScanHintSubtitle => 'Güncellemek için akıllı tarama';
 
   @override
   String get processSandboxedMessage =>

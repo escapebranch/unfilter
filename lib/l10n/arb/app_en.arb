@@ -21,6 +21,10 @@
   "@languageEnglish": {
     "description": "English language name shown in selector"
   },
+  "languageGerman": "German",
+  "@languageGerman": {
+    "description": "German language name shown in selector"
+  },
   "languageTamil": "Tamil",
   "@languageTamil": {
     "description": "Tamil language name shown in selector"
@@ -387,5 +391,7 @@
   "githubCtaTitle": "For detailed info",
   "githubCtaSubtitle": "Check out the source code on GitHub",
   "reportIssueSubtitle": "Select how you want to report or investigate an issue.",
+  "smartScanHintTitle": "New App?",
+  "smartScanHintSubtitle": "Smart scan to update",
   "processSandboxedMessage": "Kernel-level process monitoring is secured by Android OS sandboxing (SELinux). Only user-space applications are accessible below."
 }

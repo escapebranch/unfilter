@@ -274,5 +274,8 @@
   "githubCtaTitle": "विस्तृत जानकारी के लिए",
   "githubCtaSubtitle": "GitHub पर सोर्स कोड देखें",
   "reportIssueSubtitle": "चुनें कि आप किसी समस्या की रिपोर्ट या जांच कैसे करना चाहते हैं।",
+  "languageGerman": "जर्मन",
+  "smartScanHintTitle": "नया ऐप?",
+  "smartScanHintSubtitle": "अपडेट के लिए स्मार्ट स्कैन करें",
   "processSandboxedMessage": "कर्नेल-स्तर की प्रक्रिया निगरानी एंड्रॉइड ओएस सैंडबॉक्सिंग (SELinux) द्वारा सुरक्षित है। नीचे केवल उपयोगकर्ता-स्पेस एप्लिकेशन सुलभ हैं।"
 }

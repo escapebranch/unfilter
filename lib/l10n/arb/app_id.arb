@@ -274,5 +274,8 @@
   "githubCtaTitle": "Untuk informasi detail",
   "githubCtaSubtitle": "Lihat kode sumber di GitHub",
   "reportIssueSubtitle": "Pilih cara Anda ingin melaporkan atau menyelidiki masalah.",
+  "languageGerman": "Jerman",
+  "smartScanHintTitle": "Aplikasi Baru?",
+  "smartScanHintSubtitle": "Pindai pintar untuk memperbarui",
   "processSandboxedMessage": "Pemantauan proses tingkat kernel diamankan oleh sandboxing OS Android (SELinux). Hanya aplikasi ruang pengguna yang dapat diakses di bawah ini."
 }
