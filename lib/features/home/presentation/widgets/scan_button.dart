@@ -10,12 +10,7 @@ import '../../../apps/presentation/providers/apps_provider.dart';
 class ScanButton extends ConsumerStatefulWidget {
   const ScanButton({super.key});
 
-  @override
-  ConsumerState<ScanButton> createState() => _ScanButtonState();
-}
-
-class _ScanButtonState extends ConsumerState<ScanButton> {
-  void _showScanDialog() {
+  static void showScanOptions(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
     showGeneralDialog(
       context: context,
@@ -23,13 +18,13 @@ class _ScanButtonState extends ConsumerState<ScanButton> {
       barrierLabel: l10n.scanOptions,
       barrierColor: Colors.black.withValues(alpha: 0.5),
       transitionDuration: const Duration(milliseconds: 200),
-      pageBuilder: (context, anim1, anim2) {
+      pageBuilder: (dialogContext, anim1, anim2) {
         return _ScanOptionsDialog(
           onFullScan: () {
-            Navigator.pop(context);
+            Navigator.pop(dialogContext);
             AppRouteFactory.toScan(context);
           },
-          onRevalidate: () => _handleRevalidate(context),
+          onRevalidate: () => handleRevalidate(context, ref, dialogContext),
         );
       },
       transitionBuilder: (context, anim1, anim2, child) {
@@ -52,7 +47,11 @@ class _ScanButtonState extends ConsumerState<ScanButton> {
     );
   }
 
-  void _handleRevalidate(BuildContext dialogContext) {
+  static void handleRevalidate(
+    BuildContext context,
+    WidgetRef ref,
+    BuildContext dialogContext,
+  ) {
     Navigator.pop(dialogContext);
 
     showGeneralDialog(
@@ -82,6 +81,17 @@ class _ScanButtonState extends ConsumerState<ScanButton> {
     });
   }
 
+  static final GlobalKey scanButtonKey = GlobalKey();
+
+  @override
+  ConsumerState<ScanButton> createState() => _ScanButtonState();
+}
+
+class _ScanButtonState extends ConsumerState<ScanButton> {
+  void _showScanDialog() {
+    ScanButton.showScanOptions(context, ref);
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -89,6 +99,7 @@ class _ScanButtonState extends ConsumerState<ScanButton> {
     final l10n = AppLocalizations.of(context);
 
     return GestureDetector(
+      key: ScanButton.scanButtonKey,
       onTap: _showScanDialog,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),

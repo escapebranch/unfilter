@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:unfilter/l10n/generated/app_localizations.dart';
 
+import '../../providers/smart_scan_hint_provider.dart';
 import '../scan_button.dart';
 import '../settings_menu.dart';
+import '../smart_scan_popover.dart';
 
-class HomeTopAppBar extends StatelessWidget {
+class HomeTopAppBar extends ConsumerWidget {
   final int appCount;
 
   final double transitionProgress;
@@ -16,24 +19,71 @@ class HomeTopAppBar extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
+    final showSmartScanHint = ref.watch(smartScanHintProvider);
 
     return SafeArea(
       bottom: false,
-      child: Container(
-        height: 56,
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: Row(
-          children: [
-            Expanded(child: _buildTitleLogoTransition(context, theme)),
-            const ScanButton(),
-            const SizedBox(width: 4),
-            const SettingsMenu(),
-          ],
-        ),
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          Container(
+            height: 56,
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Row(
+              children: [
+                Expanded(child: _buildTitleLogoTransition(context, theme)),
+                const ScanButton(),
+                const SizedBox(width: 4),
+                const SettingsMenu(),
+              ],
+            ),
+          ),
+          if (showSmartScanHint)
+            Positioned(
+              top: 48,
+              right: 20,
+              child: TapRegion(
+                groupId: 'smart_scan_popover',
+                onTapOutside: (_) {
+                  ref.read(smartScanHintProvider.notifier).dismiss();
+                },
+                child: RepaintBoundary(
+                  child: SmartScanPopover(
+                    pointerOffsetFromRight: _calculatePointerOffset(context),
+                    onTap: () {
+                      ref.read(smartScanHintProvider.notifier).dismiss();
+                      ScanButton.showScanOptions(context, ref);
+                    },
+                    onDismiss: () {
+                      ref.read(smartScanHintProvider.notifier).dismiss();
+                    },
+                  ),
+                ),
+              ),
+            ),
+        ],
       ),
     );
+  }
+
+  double _calculatePointerOffset(BuildContext context) {
+    try {
+      final renderBox = ScanButton.scanButtonKey.currentContext?.findRenderObject()
+          as RenderBox?;
+      if (renderBox != null && renderBox.hasSize) {
+        final buttonPosition = renderBox.localToGlobal(Offset.zero);
+        final scanButtonCenterX = buttonPosition.dx + (renderBox.size.width / 2);
+        final screenWidth = MediaQuery.of(context).size.width;
+        final popoverRightX = screenWidth - 20.0;
+        final offset = popoverRightX - scanButtonCenterX;
+        return offset.clamp(16.0, 180.0);
+      }
+    } catch (_) {
+      // Fallback to static offset if render box is not ready
+    }
+    return 48.0;
   }
 
   Widget _buildTitleLogoTransition(BuildContext context, ThemeData theme) {
