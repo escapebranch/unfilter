@@ -1,12 +1,14 @@
 package com.escapebranch.unfilter
 
 import android.content.Intent
+import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.provider.Settings
 import android.util.Log
+import androidx.activity.enableEdgeToEdge
 import com.google.android.play.core.review.ReviewManagerFactory
-import io.flutter.embedding.android.FlutterActivity
+import io.flutter.embedding.android.FlutterFragmentActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.MethodChannel
@@ -14,7 +16,12 @@ import java.util.concurrent.Executors
 import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.withLock
 
-class MainActivity : FlutterActivity() {
+class MainActivity : FlutterFragmentActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        enableEdgeToEdge()
+        super.onCreate(savedInstanceState)
+    }
+
 private val CHANNEL = "com.escapebranch.unfilter/apps"
 private val EVENT_CHANNEL = "com.escapebranch.unfilter/scan_progress"
 private val UPDATE_CHANNEL = "com.escapebranch.unfilter/update"
